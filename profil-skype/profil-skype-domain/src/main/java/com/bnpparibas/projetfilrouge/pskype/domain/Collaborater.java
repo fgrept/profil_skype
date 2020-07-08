@@ -1,7 +1,6 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+
 
 /**
  * Cette classe permet contient la liste des collaborateurs.
@@ -36,8 +35,8 @@ public class Collaborater extends Person {
 		this.deskPhoneNumber=deskPhoneNumber;
 		this.mobilePhoneNumber=mobilePhoneNumber;
 		this.mailAdress=mailAdress;
-		this.setNomPerson(nom);
-		this.setPrenomPerson(prenom);
+		this.setFirstNamePerson(prenom);
+		this.setLastNamePerson(nom);
 	}
 	
 

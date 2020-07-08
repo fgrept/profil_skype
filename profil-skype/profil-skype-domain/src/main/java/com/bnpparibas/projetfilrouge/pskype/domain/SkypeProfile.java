@@ -34,6 +34,7 @@ public class SkypeProfile {
 	//par défaut vaut "user"
 	private String objectClass;
 	private String skypeProfileStatus;
+	
 	@NotNull
 	private Collaborater collaborater;
 	
@@ -54,7 +55,11 @@ public class SkypeProfile {
 	public void setSIP(String sIP) {
 		SIP = sIP;
 	}
-
+/*
+ * cette méthode permet de vérifier la validité d'une adresse mail selon la norme RFC 2822
+ * Elle est mis en commentaire car devrait se trouver dans une autre couche et/ou dans une autre classe
+ * 
+ * 
 	private static boolean isValidEmailAddress(String email) {
 		   boolean result = true;
 		   try {
@@ -65,6 +70,7 @@ public class SkypeProfile {
 		   }
 		   return result;
 	}
+	*/
 	
 	public boolean isEnterpriseVoiceEnabled() {
 		return enterpriseVoiceEnabled;

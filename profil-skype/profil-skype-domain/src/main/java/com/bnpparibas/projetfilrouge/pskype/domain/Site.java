@@ -11,11 +11,15 @@ public class Site {
 	private String siteCode;
 	private String siteName;
 	private String siteAddress;
+	private String sitePostalCode;
+	private String siteCity;
 	
-	public Site(String code,String name,String address) {
+	public Site(String code,String name,String address,String postalCode, String city) {
 		this.siteCode=code;
 		this.siteName=name;
 		this.siteAddress=address;
+		this.sitePostalCode=postalCode;
+		this.siteCity=city;
 	}
 
 	public String getSiteCode() {
@@ -28,6 +32,14 @@ public class Site {
 
 	public String getSiteAddress() {
 		return siteAddress;
+	}
+
+	public String getSitePostalCode() {
+		return sitePostalCode;
+	}
+
+	public String getSiteCity() {
+		return siteCity;
 	}
 	
 }

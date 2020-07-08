@@ -48,4 +48,8 @@ public class ItCorrespendent extends Collaborater {
 		return roles;
 	}
 	
+	public void removeRole (RoleTypeEnum role) {
+		roles.remove(role);
+	}
+	
 }

@@ -7,20 +7,21 @@ package com.bnpparibas.projetfilrouge.pskype.domain;
  *
  */
 public abstract class Person {
-	private String nomPerson;
-	private String prenomPerson;
+	private String lastNamePerson;
+	private String firstNamePerson;
+	public String getLastNamePerson() {
+		return lastNamePerson;
+	}
+	public void setLastNamePerson(String lastNamePerson) {
+		this.lastNamePerson = lastNamePerson;
+	}
+	public String getFirstNamePerson() {
+		return firstNamePerson;
+	}
+	public void setFirstNamePerson(String firstNamePerson) {
+		this.firstNamePerson = firstNamePerson;
+	}
 	
-	public String getNomPerson() {
-		return nomPerson;
-	}
-	public void setNomPerson(String nomPerson) {
-		this.nomPerson = nomPerson;
-	}
-	public String getPrenomPerson() {
-		return prenomPerson;
-	}
-	public void setPrenomPerson(String prenomPerson) {
-		this.prenomPerson = prenomPerson;
-	}
+
 	
 }
