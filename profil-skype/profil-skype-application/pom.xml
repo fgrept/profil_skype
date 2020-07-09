@@ -7,6 +7,10 @@
   </parent>
   <artifactId>profil-skype-application</artifactId>
   
+   	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+	
       <dependencies>
         <dependency>
             <groupId>com.bnpparibas.projetfilrouge</groupId>
