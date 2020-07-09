@@ -2,12 +2,29 @@ package com.bnpparibas.projetfilrouge.pskype.domain;
 
 import java.util.List;
 
+/**
+ * 
+ * @author 116453
+ * 
+ *
+ */
 public interface ICollaboratorManagement {
-
-	public Collaborater searchById (Long id);
-	public List<Collaborater> searchByName (String firstname, String lastname);
+	/**
+	 * Méthode permettant de récupérer un collaborateur avec ses critères d'UO et de site d'affectation
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public CollaboraterWithAffectation searchById (Long id);
 	
-	// TODO
-	// Créer une méthode qui renvoit le collaborateur, son uo et son site selon critères
-	// public List<T> searchAllById (Long id);
+	/**
+	 * Méthode permettant de récupérer une liste de collaborateur
+	 * avec leurs critères d'UO et de site d'affectation
+	 * 
+	 * @param firstname
+	 * @param lastname
+	 * @return
+	 */
+	public List<CollaboraterWithAffectation> searchByName (String firstname, String lastname);
+	
 }
