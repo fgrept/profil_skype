@@ -1,6 +1,6 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
-
+import com.bnpparibas.projetfilrouge.pskype.domain.Person;
 
 /**
  * Cette classe permet contient la liste des collaborateurs.
