@@ -26,8 +26,6 @@ hs_err_pid*
 .classpath
 .project
 .settings/
-<<<<<<< HEAD
-target/
-=======
-target/
->>>>>>> v0-judi
+target
+target/*
+pom.properties
