@@ -1,6 +1,12 @@
-C:\Users\Stagiaire\profil-skype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\Person.java
-C:\Users\Stagiaire\profil-skype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\RoleTypeEnum.java
-C:\Users\Stagiaire\profil-skype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\Site.java
-C:\Users\Stagiaire\profil-skype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\SkypeProfile.java
-C:\Users\Stagiaire\profil-skype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\Collaborater.java
-C:\Users\Stagiaire\profil-skype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\OrganizationUnity.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\TypeEventEnum.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\SkypeProfileEvent.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\OrganizationUnity.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\SkypeProfile.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\Site.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\ItCorrespendent.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\ISkypeProfileManagement.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\Person.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\RoleTypeEnum.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\IRepositorySkypeProfile.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\SkypeProfileManagmentImplementation.java
+C:\Formation\Projet Fil rouge\ProfilSkype\profil_skype\profil-skype\profil-skype-domain\src\main\java\com\bnpparibas\projetfilrouge\pskype\domain\Collaborater.java
