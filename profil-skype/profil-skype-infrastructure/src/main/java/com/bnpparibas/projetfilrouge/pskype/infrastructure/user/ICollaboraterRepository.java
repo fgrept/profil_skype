@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * 
- * Liste des méthodes du collaborateur exposées à la couche application
+ * Liste des méthodes de type dao du collaborateur 
  * @author Judicael
  *
  */

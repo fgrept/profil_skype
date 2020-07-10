@@ -63,6 +63,40 @@ private IItCorrespondantRepository itCorrespondantRepository;
 		}
 		return listItCorrespondant;
 	}
+	
+	/**
+	 * Mise à jour du rôle du CIL
+	 * @author Judicaël
+	 */
+	@Override
+	public void update(ItCorrespondant itCorrespondant) {
+		
+		if (itCorrespondantRepository.findByCollaboraterId(itCorrespondant.getCollaboraterId()) == null) {
+			throw new RuntimeException("Mise à jour impossible, id : "+itCorrespondant.getCollaboraterId()+" non trouvé");
+		}else {
+			itCorrespondantRepository.save(entityMapper.mapToEntity(itCorrespondant));
+		}
+		
+	}
+
+	/**
+	 * @param String id annuaire du CIL
+	 * @return l'objet CIL correspondant
+	 * @author Judicaël
+	 * @version V0.1
+	 */
+	@Override
+	public ItCorrespondant findItCorrespondantByCollaboraterId(String id) {
+		// TODO Auto-generated method stub
+		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterId(id);
+		if (entity == null) {
+			throw new RuntimeException("Pas de colaborateur trouvé pour id : "+id);
+		}
+		else {
+			return entityMapper.mapToDomain(entity);
+		}
+
+	}
 
 
 }

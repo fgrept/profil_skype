@@ -36,11 +36,13 @@ public class ItCorrespondant extends Collaborater {
 		// TODO Auto-generated constructor stub
 	}
 	/**
-	 * Ajout d'un rôle parmi l'énumération
+	 * Ajout d'un rôle parmi l'énumération.
+	 * Les rôles étant inclusifs, l'ajout d'un rôle supprimer tous les autres.
 	 * @param role
 	 */
 	
 	public void addRole(final RoleTypeEnum role) {
+		roles.clear();
 		roles.add(role);
 	}
 

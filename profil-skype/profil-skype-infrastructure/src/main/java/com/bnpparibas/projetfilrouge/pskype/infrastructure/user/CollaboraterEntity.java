@@ -29,7 +29,12 @@ public class CollaboraterEntity {
 	}
 	public CollaboraterEntity(String nom, String prenom, String id, String deskPhoneNumber2, String mobilePhoneNumber2,
 			String mailAdress2) {
-		// TODO Auto-generated constructor stub
+		this.collaboraterId = id;
+		this.firstName=prenom;
+		this.lastName=nom;
+		this.deskPhoneNumber=deskPhoneNumber2;
+		this.mobilePhoneNumber=mobilePhoneNumber2;
+		this.mailAdress=mailAdress2;
 	}
 	public String getLastName() {
 		return lastName;

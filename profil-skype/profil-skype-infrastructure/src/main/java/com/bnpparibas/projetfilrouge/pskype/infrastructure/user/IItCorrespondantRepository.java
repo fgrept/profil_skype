@@ -6,14 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
-
-
 /**
  * 
- * Liste des méthodes du CIL exposées à la couche application
+ * Liste des méthodes de type dao du CIL 
  * @author Judicael
  *
  */
+
 @Repository
 public interface IItCorrespondantRepository extends JpaRepository <ItCorrespondantEntity, Long>{
 //	void create(ItCorrespondantEntity itc);
