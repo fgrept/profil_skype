@@ -15,7 +15,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 
 @Entity
 @DiscriminatorValue("ItCorrespondant")
-public class ItCorrespondantEntity extends Collaborater {
+public class ItCorrespondantEntity extends CollaboraterEntity {
 	
 	@ElementCollection
 	@Enumerated(EnumType.STRING)
