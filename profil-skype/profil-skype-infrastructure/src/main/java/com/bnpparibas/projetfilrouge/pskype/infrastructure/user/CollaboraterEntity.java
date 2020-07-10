@@ -26,12 +26,10 @@ public class CollaboraterEntity {
 	private String mobilePhoneNumber;
 	private String mailAdress;
 	
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	private OrganizationUnityEntity orgaUnit;
 	
 	
-
 	public CollaboraterEntity() {
 		
 	}
@@ -44,7 +42,6 @@ public class CollaboraterEntity {
 		this.mobilePhoneNumber=mobilePhoneNumber2;
 		this.mailAdress=mailAdress2;
 	}
-
 	public String getLastName() {
 		return lastName;
 	}
