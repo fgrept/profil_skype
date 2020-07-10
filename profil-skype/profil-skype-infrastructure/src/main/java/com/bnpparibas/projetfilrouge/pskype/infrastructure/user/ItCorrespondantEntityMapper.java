@@ -11,6 +11,7 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
  * @author Judicaël
  *
  */
+
 @Component
 public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant, ItCorrespondantEntity> {
 
