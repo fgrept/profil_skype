@@ -10,7 +10,7 @@ import java.util.Set;
  * @version V0.1
  *
  */
-public class ItCorrespendent extends Collaborater {
+public class ItCorrespondant extends Collaborater {
 
 	private final Set<RoleTypeEnum> roles;
 	private Date dateLastUpdate;
@@ -23,12 +23,12 @@ public class ItCorrespendent extends Collaborater {
 		this.dateLastUpdate = dateLastUpdate;
 	}
 
-	public ItCorrespendent() {
+	public ItCorrespondant() {
 		this.roles = null;
 		
 	}
 	
-	public ItCorrespendent(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,
+	public ItCorrespondant(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,
 			String mailAdress) {
 		super(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress);
 		this.roles =  new HashSet<RoleTypeEnum>();
@@ -36,11 +36,13 @@ public class ItCorrespendent extends Collaborater {
 		// TODO Auto-generated constructor stub
 	}
 	/**
-	 * Ajout d'un rôle parmi l'énumération
+	 * Ajout d'un rôle parmi l'énumération.
+	 * Les rôles étant inclusifs, l'ajout d'un rôle supprimer tous les autres.
 	 * @param role
 	 */
 	
 	public void addRole(final RoleTypeEnum role) {
+		roles.clear();
 		roles.add(role);
 	}
 

@@ -26,10 +26,25 @@ public class CollaboraterEntity {
 	private String mobilePhoneNumber;
 	private String mailAdress;
 	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private OrganizationUnityEntity orgaUnit;
 	
 	
+
+	public CollaboraterEntity() {
+		
+	}
+	public CollaboraterEntity(String nom, String prenom, String id, String deskPhoneNumber2, String mobilePhoneNumber2,
+			String mailAdress2) {
+		this.collaboraterId = id;
+		this.firstName=prenom;
+		this.lastName=nom;
+		this.deskPhoneNumber=deskPhoneNumber2;
+		this.mobilePhoneNumber=mobilePhoneNumber2;
+		this.mailAdress=mailAdress2;
+	}
+
 	public String getLastName() {
 		return lastName;
 	}
