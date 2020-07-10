@@ -30,6 +30,13 @@ public class CollaboraterEntity {
 	private OrganizationUnityEntity orgaUnit;
 	
 	
+	public CollaboraterEntity() {
+		
+	}
+	public CollaboraterEntity(String nom, String prenom, String id, String deskPhoneNumber2, String mobilePhoneNumber2,
+			String mailAdress2) {
+		// TODO Auto-generated constructor stub
+	}
 	public String getLastName() {
 		return lastName;
 	}

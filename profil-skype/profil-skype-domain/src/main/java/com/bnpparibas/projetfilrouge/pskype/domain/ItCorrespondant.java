@@ -10,7 +10,7 @@ import java.util.Set;
  * @version V0.1
  *
  */
-public class ItCorrespendent extends Collaborater {
+public class ItCorrespondant extends Collaborater {
 
 	private final Set<RoleTypeEnum> roles;
 	private Date dateLastUpdate;
@@ -23,12 +23,12 @@ public class ItCorrespendent extends Collaborater {
 		this.dateLastUpdate = dateLastUpdate;
 	}
 
-	public ItCorrespendent() {
+	public ItCorrespondant() {
 		this.roles = null;
 		
 	}
 	
-	public ItCorrespendent(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,
+	public ItCorrespondant(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,
 			String mailAdress) {
 		super(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress);
 		this.roles =  new HashSet<RoleTypeEnum>();
