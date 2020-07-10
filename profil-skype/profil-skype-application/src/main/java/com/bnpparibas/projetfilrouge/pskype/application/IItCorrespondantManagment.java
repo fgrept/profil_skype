@@ -15,5 +15,5 @@ public interface IItCorrespondantManagment {
 			String mailAdress);
 	List<ItCorrespondant> listItCorrespondant();
 	void updateRoleCIL(String idAnnuaire, RoleTypeEnum role);
-
+	void deleteCIL(String idAnnuaire);
 }
