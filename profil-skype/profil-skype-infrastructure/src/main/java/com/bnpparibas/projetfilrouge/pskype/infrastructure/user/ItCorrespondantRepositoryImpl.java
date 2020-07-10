@@ -87,7 +87,7 @@ private IItCorrespondantRepository itCorrespondantRepository;
 	 */
 	@Override
 	public ItCorrespondant findItCorrespondantByCollaboraterId(String id) {
-		// TODO Auto-generated method stub
+		
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterId(id);
 		if (entity == null) {
 			throw new RuntimeException("Pas de colaborateur trouvé pour id : "+id);
@@ -96,6 +96,17 @@ private IItCorrespondantRepository itCorrespondantRepository;
 			return entityMapper.mapToDomain(entity);
 		}
 
+	}
+
+	/**
+	 * Suppression d'un CIL en base (US008)
+	 * @param ItCorrespondant CIL
+	 */
+	@Override
+	public void delete(ItCorrespondant itCorrespondant) {
+		
+		ItCorrespondantEntity entity = entityMapper.mapToEntity(itCorrespondant);
+		itCorrespondantRepository.delete(entity);
 	}
 
 

@@ -64,9 +64,28 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	public void updateRoleCIL(String idAnnuaire, RoleTypeEnum role) {
 		
 		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
-		itCorrespondant.addRole(role);
-		itCorrespodantDomain.update(itCorrespondant);
+		if (itCorrespondant == null) {
+			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
+		}else {
+			itCorrespondant.addRole(role);
+			itCorrespodantDomain.update(itCorrespondant);
+		}
+	}
+
+	/**
+	 * Suppression d'un CIL (US008)
+	 * @param String idAnnuaire
+	 * 
+	 */
+	@Override
+	public void deleteCIL(String idAnnuaire) {
 		
+		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
+		if (itCorrespondant == null) {
+			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
+		}else {
+			itCorrespodantDomain.delete(itCorrespondant);
+		}
 	}
 
 }
