@@ -29,3 +29,8 @@ hs_err_pid*
 target
 target/*
 pom.properties
+
+/profil-skype/profil-skype-exposition/.classpath
+/profil-skype/profil-skype-exposition/.project
+/profil-skype/profil-skype-exposition/.project~origin_v0-judi
+/profil-skype/profil-skype-exposition/pom.xml

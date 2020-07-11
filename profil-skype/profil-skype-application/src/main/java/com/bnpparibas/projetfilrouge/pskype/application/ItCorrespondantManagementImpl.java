@@ -38,6 +38,8 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 			String mailAdress) {
 		ItCorrespondant itCorrespondant = new ItCorrespondant(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress);
 		itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
+		System.out.println("id "+itCorrespondant.getCollaboraterId());
+		System.out.println("roles "+itCorrespondant.getRoles());
 		itCorrespodantDomain.create(itCorrespondant);
 	}
 
@@ -88,13 +90,5 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		}
 	}
 
-	/**
-	 * Suppression d'un CIL
-	 */
-	@Override
-	public void deleteCIL(String idAnnuaire) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

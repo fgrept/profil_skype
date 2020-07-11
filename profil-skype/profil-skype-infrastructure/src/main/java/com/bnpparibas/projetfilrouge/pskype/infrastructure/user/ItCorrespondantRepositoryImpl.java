@@ -58,7 +58,7 @@ private IItCorrespondantRepository itCorrespondantRepository;
 		// TODO Auto-generated method stub
 		
 		List<ItCorrespondant> listItCorrespondant = new ArrayList<ItCorrespondant>();
-		for (ItCorrespondantEntity entity : itCorrespondantRepository.findAllItCorrespondantEntities()) {
+		for (ItCorrespondantEntity entity : itCorrespondantRepository.findByCollaboraterIdNotNull()) {
 			listItCorrespondant.add(entityMapper.mapToDomain(entity));
 		}
 		return listItCorrespondant;

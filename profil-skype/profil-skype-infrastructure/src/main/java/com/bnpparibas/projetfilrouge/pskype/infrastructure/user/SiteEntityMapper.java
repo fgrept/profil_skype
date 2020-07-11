@@ -1,8 +1,11 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
+import org.springframework.stereotype.Component;
+
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
+@Component
 public class SiteEntityMapper extends AbstractMapper<Site, SiteEntity>{
 
 	@Override

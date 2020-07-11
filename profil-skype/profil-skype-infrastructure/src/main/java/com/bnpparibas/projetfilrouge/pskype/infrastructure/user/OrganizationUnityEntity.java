@@ -1,5 +1,6 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * plusieurs UO sont  rattachées à un site
  * fetch en eager car les données sont toujours affichées avec les infos adresse du site
  */
-
+@Entity
 public class OrganizationUnityEntity {
 	
 	@Id

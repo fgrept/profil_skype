@@ -9,7 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
+
+
 
 
 /**
@@ -45,7 +47,7 @@ public class SkypeProfileEntity {
 	
 	
 	@OneToOne(fetch = FetchType.EAGER)
-	private Collaborater collaborater;
+	private CollaboraterEntity collaborater;
 	
 	
 	public Long getIdSkypeProfile() {
@@ -136,11 +138,11 @@ public class SkypeProfileEntity {
 		this.dateExpiration = dateExpiration;
 	}
 
-	public Collaborater getCollaborater() {
+	public CollaboraterEntity getCollaborater() {
 		return collaborater;
 	}
 
-	public void setCollaborater(Collaborater collaborater) {
+	public void setCollaborater(CollaboraterEntity collaborater) {
 		this.collaborater = collaborater;
 	}
 

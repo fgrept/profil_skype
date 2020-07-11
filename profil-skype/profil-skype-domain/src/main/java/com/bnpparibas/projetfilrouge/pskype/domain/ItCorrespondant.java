@@ -12,8 +12,12 @@ import java.util.Set;
  */
 public class ItCorrespondant extends Collaborater {
 
-	private final Set<RoleTypeEnum> roles;
+	private Set<RoleTypeEnum> roles;
 	private Date dateLastUpdate;
+
+	public void setRoles(Set<RoleTypeEnum> roles) {
+		this.roles = roles;
+	}
 
 	public Date getDateLastUpdate() {
 		return dateLastUpdate;

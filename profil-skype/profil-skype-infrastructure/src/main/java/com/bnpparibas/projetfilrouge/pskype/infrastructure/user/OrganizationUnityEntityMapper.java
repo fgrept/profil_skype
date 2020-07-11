@@ -1,10 +1,12 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
+@Component
 public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUnity, OrganizationUnityEntity>{
 	
 	@Autowired

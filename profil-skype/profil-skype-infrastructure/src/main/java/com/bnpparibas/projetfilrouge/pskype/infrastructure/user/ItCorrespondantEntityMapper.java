@@ -26,7 +26,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 	public ItCorrespondant mapToDomain(ItCorrespondantEntity entity) {
 		
 		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress());
-		
+		itCorrespondant.setRoles(entity.getRoles());
 		return itCorrespondant;
 	}
 
@@ -45,6 +45,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 		entity.setDeskPhoneNumber(dto.getDeskPhoneNumber());
 		entity.setMobilePhoneNumber(dto.getMobilePhoneNumber());
 		entity.setMailAdress(dto.getMailAdress());
+		entity.setRoles(dto.getRoles());
 		
 		return entity;
 	}
