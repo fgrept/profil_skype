@@ -90,13 +90,11 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		}
 	}
 
-<<<<<<< HEAD
-=======
+
 	@Override
 	public List<ItCorrespondant> listItCorrespondantFilters(String id, String lastName, String firstName) {
 		// TODO Auto-generated method stub
 		return itCorrespodantDomain.findAllItCorrespondantFilters(id, lastName, firstName);
 	}
->>>>>>> v0-judi
 
 }
