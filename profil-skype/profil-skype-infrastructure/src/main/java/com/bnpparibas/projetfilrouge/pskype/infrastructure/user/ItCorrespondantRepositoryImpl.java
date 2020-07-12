@@ -3,9 +3,13 @@ package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
@@ -55,7 +59,7 @@ private IItCorrespondantRepository itCorrespondantRepository;
 	 */
 	@Override
 	public List<ItCorrespondant> findAllItCorrespondant() {
-		// TODO Auto-generated method stub
+		
 		
 		List<ItCorrespondant> listItCorrespondant = new ArrayList<ItCorrespondant>();
 		for (ItCorrespondantEntity entity : itCorrespondantRepository.findAllItCorrespondantEntities()) {
@@ -63,6 +67,53 @@ private IItCorrespondantRepository itCorrespondantRepository;
 		}
 		return listItCorrespondant;
 	}
+	
+	@Override
+	public List<ItCorrespondant> findAllItCorrespondantFilters(String id, String lastName, String firstName) {
+				
+		List<ItCorrespondantEntity> listItCorrespondantEntity = findAllItCorrespondantEntityFilters(id,lastName,firstName);
+		List<ItCorrespondant> listItCorrespondant = new ArrayList<ItCorrespondant>();
+		for (ItCorrespondantEntity entity :listItCorrespondantEntity) {
+			listItCorrespondant.add(entityMapper.mapToDomain(entity));
+		}
+		
+	//	listItCorrespondantEntity = itCorrespondantRepository.findAll(new Specification<ItCorrespondantEntity>());
+		return listItCorrespondant;
+	}
+	
+	private List<ItCorrespondantEntity> findAllItCorrespondantEntityFilters(String id, String lastName, String firstName) {
+		
+			
+		List<ItCorrespondantEntity> listItCorrespondantEntity = new ArrayList<ItCorrespondantEntity>();
+		listItCorrespondantEntity = itCorrespondantRepository.findAll(new Specification<ItCorrespondantEntity>() {
+
+			@Override
+			public Predicate toPredicate(Root<ItCorrespondantEntity> root, CriteriaQuery<?> query,
+					CriteriaBuilder criteriaBuilder) {
+				List<Predicate> predicates = new ArrayList<>();
+				if (id!= null || id != "") {
+					predicates.add(criteriaBuilder.equal(root.get("collaboraterId"),id));
+				}
+				if (lastName!= null || lastName != "") {
+					predicates.add(criteriaBuilder.equal(root.get("lastName"),lastName));
+				}
+				if (firstName!= null || firstName != "") {
+					predicates.add(criteriaBuilder.equal(root.get("firstName"),firstName));
+				}
+				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+			}
+			
+		});
+		for (ItCorrespondantEntity entity :listItCorrespondantEntity) {
+			System.out.println("nom "+entity.getLastName());
+			System.out.println("prénom "+entity.getFirstName());
+			System.out.println("--------");
+		}
+		return listItCorrespondantEntity;
+
+	}
+	
+
 	
 	/**
 	 * Mise à jour du rôle du CIL
@@ -108,6 +159,9 @@ private IItCorrespondantRepository itCorrespondantRepository;
 		ItCorrespondantEntity entity = entityMapper.mapToEntity(itCorrespondant);
 		itCorrespondantRepository.delete(entity);
 	}
+
+
+
 
 
 }
