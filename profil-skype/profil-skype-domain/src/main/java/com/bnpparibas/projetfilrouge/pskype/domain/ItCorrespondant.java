@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
  * Classe des CIL, des resp CIL et de admin
  * @author Judicael
@@ -45,8 +46,7 @@ public class ItCorrespondant extends Collaborater {
 	 * @param role
 	 */
 	
-	public void addRole(final RoleTypeEnum role) {
-		roles.clear();
+	public void addRole(RoleTypeEnum role) {
 		roles.add(role);
 	}
 

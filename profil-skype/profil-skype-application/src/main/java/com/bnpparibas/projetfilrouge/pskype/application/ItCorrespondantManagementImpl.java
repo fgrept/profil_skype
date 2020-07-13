@@ -1,6 +1,7 @@
 package com.bnpparibas.projetfilrouge.pskype.application;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,15 +64,16 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	 * @param RoleTypeEnum nouveau role du CIL
 	 */
 	@Override
-	public void updateRoleCIL(String idAnnuaire, RoleTypeEnum role) {
+	public void updateRoleCIL(String idAnnuaire, Set<RoleTypeEnum> roles) {
 		
-		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
-		if (itCorrespondant == null) {
-			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
-		}else {
-			itCorrespondant.addRole(role);
-			itCorrespodantDomain.update(itCorrespondant);
-		}
+//		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
+//		if (itCorrespondant == null) {
+//			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
+//		}else {
+//			itCorrespondant.getRoles().clear();
+//			itCorrespondant.addRole(role);
+			itCorrespodantDomain.update(idAnnuaire, roles);
+	//	}
 	}
 
 	/**
@@ -92,9 +94,9 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 
 
 	@Override
-	public List<ItCorrespondant> listItCorrespondantFilters(String id, String lastName, String firstName) {
+	public List<ItCorrespondant> listItCorrespondantFilters(String id, String lastName, String firstName, String deskPhone, String mobilePhone, String mailAddress) {
 		// TODO Auto-generated method stub
-		return itCorrespodantDomain.findAllItCorrespondantFilters(id, lastName, firstName);
+		return itCorrespodantDomain.findAllItCorrespondantFilters(id, lastName, firstName,deskPhone,mobilePhone,mailAddress);
 	}
 
 }

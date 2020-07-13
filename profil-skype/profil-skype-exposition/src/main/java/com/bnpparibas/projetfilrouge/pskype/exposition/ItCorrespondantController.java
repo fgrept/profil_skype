@@ -1,11 +1,15 @@
 package com.bnpparibas.projetfilrouge.pskype.exposition;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +19,8 @@ import org.springframework.http.HttpStatus;
 
 import com.bnpparibas.projetfilrouge.pskype.application.IItCorrespondantManagment;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
+import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
+import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDto;
 
 @RestController
 @RequestMapping("/cil")
@@ -36,9 +42,12 @@ public class ItCorrespondantController {
 	public String CreateAutoCIL() {
 		
 //		ItCorrespondant itCorrespondant = new ItCorrespondant("Grept", "Fabien", "116453", "0140401234", "0640140102", "fabien.toto@gmail.com");
-		correspondantManagement.createCIL("Grept", "Fabien", "000001", "0140401234", "0640140102", "fabien.toto@gmail.com");
-		correspondantManagement.createCIL("ElOuarak", "Mehdi", "000002", "0140402345", "0640140304", "mehdi.titi@gmail.com");
-		correspondantManagement.createCIL("Tige", "Judicael", "000003", "0140403456", "0640140405", "judi.tata@gmail.com");	
+//		correspondantManagement.createCIL("Grept", "Fabien", "000004", "0140401234", "0640140102", "fabien.toto@gmail.com");
+//		correspondantManagement.createCIL("ElOuarak", "Mehdi", "000005", "0140402345", "0640140304", "mehdi.titi@gmail.com");
+//		correspondantManagement.createCIL("Tige", "Judicael", "000006", "0140403456", "0640140405", "judi.tata@gmail.com");	
+		correspondantManagement.createCIL("Tige", "Judi", "000016", "0140403456", "0640140405", "judi.tata@gmail.com");
+		correspondantManagement.createCIL("Tige", "Juju", "000017", "0140403456", "0640140405", "judi.tata@gmail.com");
+		correspondantManagement.createCIL("Tige", "Toto", "000018", "0140403456", "0640140405", "judi.tata@gmail.com");
 		return "creation effectuée";
 	}
 	
@@ -46,6 +55,53 @@ public class ItCorrespondantController {
 	public List<ItCorrespondant> listItCorrespondant(){
 		
 		return correspondantManagement.listItCorrespondant();
+	}
+	
+	@GetMapping("list/{id}/{lastName}/{firstName}")
+	public List<ItCorrespondant> listItCorrespondantByIdAndName(@PathVariable("id") String id, @PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName){
+		
+		System.out.println("id "+id);
+		System.out.println("lastName "+lastName);
+		System.out.println("firstName "+firstName);
+		
+		return correspondantManagement.listItCorrespondantFilters(id, lastName, firstName,"","","");
+	}
+	
+	@GetMapping("listfilter")
+	public List<ItCorrespondant> listItCorrespondantFilters(@RequestBody ItCorrespondantDto itCorrespondant){
+		
+		return correspondantManagement.listItCorrespondantFilters(itCorrespondant.getCollaboraterId(), itCorrespondant.getLastName(), itCorrespondant.getFirstName(),
+				itCorrespondant.getDeskPhoneNumber(),itCorrespondant.getMobilePhoneNumber(),itCorrespondant.getMailAdress());
+		
+	}
+	@GetMapping("uprole/{id}/{role}")
+	public void updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
+		
+		System.out.println("id en entree " + id);
+		System.out.println("role en entree " + role);
+		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
+		
+		if (role.equals("admin")) {
+			correspondantManagement.updateRoleCIL(id, roles);
+			System.out.println("Passage à role ADMIN");
+			roles.add(RoleTypeEnum.ROLE_ADMIN);
+			roles.add(RoleTypeEnum.ROLE_RESP);
+			roles.add(RoleTypeEnum.ROLE_USER);
+		}
+		if (role.equals("resp")) {
+			correspondantManagement.updateRoleCIL(id, roles);
+			System.out.println("Passage à role RESP");
+			roles.add(RoleTypeEnum.ROLE_RESP);
+			roles.add(RoleTypeEnum.ROLE_USER);
+		}
+		if (role.equals("user")) {
+			correspondantManagement.updateRoleCIL(id, roles);
+			System.out.println("Passage à role USER");
+			roles.add(RoleTypeEnum.ROLE_USER);
+		}
+		
+		System.out.println("Mise à jour effectuée");
+//		return correspondantManagement.listItCorrespondantFilters(id, "", "", "", "", "").get(0);
 	}
 	
 }

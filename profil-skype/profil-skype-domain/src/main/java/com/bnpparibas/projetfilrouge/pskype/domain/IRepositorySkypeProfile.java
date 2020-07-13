@@ -19,6 +19,5 @@ public interface IRepositorySkypeProfile {
 	 * 
 	 */
 		SkypeProfile consultSkypeProfile(String sip);
-
 	
 }
