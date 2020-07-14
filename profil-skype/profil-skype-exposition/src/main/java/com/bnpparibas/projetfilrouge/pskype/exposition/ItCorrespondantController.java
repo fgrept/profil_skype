@@ -21,7 +21,11 @@ import com.bnpparibas.projetfilrouge.pskype.application.IItCorrespondantManagmen
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDto;
-
+/**
+ * Classe exposant des API rest dédiées à l'itCorrespondant
+ * @author Judicaël
+ *
+ */
 @RestController
 @RequestMapping("/cil")
 public class ItCorrespondantController {
@@ -56,7 +60,13 @@ public class ItCorrespondantController {
 		
 		return correspondantManagement.listItCorrespondant();
 	}
-	
+	/**
+	 * 1ère version de la recherche du CIL avec filtre limité (requetage non dynamique)
+	 * @param id
+	 * @param lastName
+	 * @param firstName
+	 * @return Liste des IT Correspondant
+	 */
 	@GetMapping("list/{id}/{lastName}/{firstName}")
 	public List<ItCorrespondant> listItCorrespondantByIdAndName(@PathVariable("id") String id, @PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName){
 		
@@ -67,6 +77,11 @@ public class ItCorrespondantController {
 		return correspondantManagement.listItCorrespondantFilters(id, lastName, firstName,"","","");
 	}
 	
+	/**
+	 * Version finale de la recherche d'un CIL (pas de recherche sur l'UO pour le moment)
+	 * @param itCorrespondant
+	 * @return Liste des IT Correspondant
+	 */
 	@GetMapping("listfilter")
 	public List<ItCorrespondant> listItCorrespondantFilters(@RequestBody ItCorrespondantDto itCorrespondant){
 		

@@ -10,7 +10,8 @@ import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
  * Dédié au collaborateur uniquement
  * Elle assure la correspondance entre les méthodes exposées de la couche domaine et celles da la couche infrastructure
  * liste des méthodes :
- * - create
+ * - creation du collaborateur
+ * - récupération du collaborateur à partir de l'id annuaire
  * @author Judicaël
  *
  */
@@ -27,6 +28,12 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 	public void create(Collaborater collaborater) {
 		
 		collaboraterRepository.save(mapperCollab.mapToEntity(collaborater));
+	}
+
+	@Override
+	public Collaborater findByCollaboraterId(String idAnnuaire) {
+		// TODO Auto-generated method stub
+		return mapperCollab.mapToDomain(collaboraterRepository.findByCollaboraterId(idAnnuaire));
 	}
 
 }

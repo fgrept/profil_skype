@@ -24,6 +24,9 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
  * liste des méthodes :
  * - Création d'un CIL (US010)
  * - Récupérer la liste des CIL (US007)
+ * - Mise à jour des roles du CIL (US008)
+ * - Suppression d'un CIL en base (US008)
+ * - Recherche dynamique de CIL en fonction de critères (US011)
  * @author Judicaël
  *
  */
@@ -105,7 +108,7 @@ private IItCorrespondantRepository itCorrespondantRepository;
 	 * @param deskPhone
 	 * @param mobilePhone
 	 * @param mailAddress
-	 * @return List<ItCorrespondantEntity>
+	 * @return List<ItCorrespondant>
 	 */
 	@Override
 	public List<ItCorrespondant> findAllItCorrespondantFilters(String id, String lastName, String firstName, String deskPhone, String mobilePhone, String mailAddress) {
@@ -188,7 +191,6 @@ private IItCorrespondantRepository itCorrespondantRepository;
 	}
 	
 
-	
 
 	/**
 	 * @param String id annuaire du CIL

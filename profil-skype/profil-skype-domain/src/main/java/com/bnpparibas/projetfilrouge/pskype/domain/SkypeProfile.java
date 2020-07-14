@@ -1,6 +1,8 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
 
+import java.util.Date;
+
 //import javax.mail.internet.AddressException;
 //import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.NotNull;
@@ -34,10 +36,39 @@ public class SkypeProfile {
 	
 	//par défaut vaut "user"
 	private String objectClass;
-	private String skypeProfileStatus;
 	
-	@NotNull
+//	@NotNull
 	private Collaborater collaborater;
+	
+	//statut du profil : activé, désactivé, expiré (si date d'expiration supérieure > date du jour)
+	private StatusSkypeProfileEnum statusProfile;
+	
+	private Date expirationDate;
+	
+	public Date getExpirationDate() {
+		return expirationDate;
+	}
+
+	
+	
+	public StatusSkypeProfileEnum getStatusProfile() {
+		return statusProfile;
+	}
+
+
+
+	public void setStatusProfile(StatusSkypeProfileEnum statusProfile) {
+		this.statusProfile = statusProfile;
+	}
+
+
+
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+	public SkypeProfile() {
+		
+	}
 	
 	public SkypeProfile (String SIP, Collaborater collaborater) {
 		this.SIP=SIP;
@@ -56,22 +87,6 @@ public class SkypeProfile {
 	public void setSIP(String sIP) {
 		SIP = sIP;
 	}
-/*
- * cette méthode permet de vérifier la validité d'une adresse mail selon la norme RFC 2822
- * Elle est mis en commentaire car devrait se trouver dans une autre couche et/ou dans une autre classe
- * 
- * 
-	private static boolean isValidEmailAddress(String email) {
-		   boolean result = true;
-		   try {
-		      InternetAddress emailAddr = new InternetAddress(email);
-		      emailAddr.validate();
-		   } catch (AddressException ex) {
-		      result = false;
-		   }
-		   return result;
-	}
-	*/
 	
 	public boolean isEnterpriseVoiceEnabled() {
 		return enterpriseVoiceEnabled;
@@ -127,14 +142,6 @@ public class SkypeProfile {
 
 	public void setObjectClass(String objectClass) {
 		this.objectClass = objectClass;
-	}
-
-	public String getSkypeProfileStatus() {
-		return skypeProfileStatus;
-	}
-
-	public void setSkypeProfileStatus(String skypeProfileStatus) {
-		this.skypeProfileStatus = skypeProfileStatus;
 	}
 
 	public Collaborater getCollaborater() {

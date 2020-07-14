@@ -14,10 +14,9 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
+
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 
 @Entity

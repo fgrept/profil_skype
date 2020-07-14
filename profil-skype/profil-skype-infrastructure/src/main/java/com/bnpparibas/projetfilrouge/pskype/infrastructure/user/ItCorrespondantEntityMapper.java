@@ -1,4 +1,6 @@
 
+
+
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
 import org.springframework.stereotype.Component;
@@ -18,7 +20,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 
 	/**
 	 * Cette méthode récupère le contenu de la couche infra vers la classe ItCorrespondant de la classe Domaine
-	 * @param L'entité ItCorrespondant de la couche de persistance
+	 * @param L'entité ItCorrespondantEntity de la couche de persistance
 	 * @return l'objet ItCorrespondant de la classe de la couche Domain
 	 */
 	
@@ -33,7 +35,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 	/**
 	 * Cette méthode récupère le contenu de la classe ItCorrespondant de la classe Domain vers l'entité persistance de la couche infra  
 	 * @param l'objet ItCorrespondant de la classe de la couche Domain
-	 * @return L'entité ItCorrespondant de la couche de persistance
+	 * @return L'entité ItCorrespondantEntity de la couche de persistance
 	 */
 	@Override
 	public ItCorrespondantEntity mapToEntity(ItCorrespondant dto) {

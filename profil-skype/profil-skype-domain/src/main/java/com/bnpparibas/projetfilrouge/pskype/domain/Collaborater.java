@@ -1,6 +1,12 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.NumberFormat;
+
 import com.bnpparibas.projetfilrouge.pskype.domain.Person;
+import com.bnpparibas.projetfilrouge.pskype.domain.control.EmailControl;
+import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 
 /**
  * Cette classe permet contient la liste des collaborateurs.
@@ -12,9 +18,13 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Person;
  */
 public class Collaborater extends Person {
 	
+	@Size(max = 17)
 	private String collaboraterId;
+	@PhoneControl
 	private String deskPhoneNumber;
+	@PhoneControl
 	private String mobilePhoneNumber;
+	@EmailControl
 	private String mailAdress;
 	
 	public Collaborater() {
