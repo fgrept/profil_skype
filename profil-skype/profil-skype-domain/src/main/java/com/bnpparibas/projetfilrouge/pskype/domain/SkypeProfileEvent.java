@@ -21,8 +21,10 @@ public class SkypeProfileEvent {
 	@NotNull
 	private ItCorrespondant itCorrespondant;
 	
-	public SkypeProfileEvent(Date date,String comment,SkypeProfile profile,ItCorrespondant CIL, TypeEventEnum typeEvent) {
-		this.dateEvent=date;
+	public SkypeProfileEvent() {
+		
+	}
+	public SkypeProfileEvent(String comment,SkypeProfile profile,ItCorrespondant CIL, TypeEventEnum typeEvent) {
 		this.commentEvent=comment;
 		this.skypeProfile=profile;
 		this.itCorrespondant=CIL;
@@ -48,6 +50,21 @@ public class SkypeProfileEvent {
 
 	public ItCorrespondant getItCorrespondant() {
 		return itCorrespondant;
+	}
+	public void setDateEvent(Date dateEvent) {
+		this.dateEvent = dateEvent;
+	}
+	public void setTypeEvent(TypeEventEnum typeEvent) {
+		this.typeEvent = typeEvent;
+	}
+	public void setCommentEvent(String commentEvent) {
+		this.commentEvent = commentEvent;
+	}
+	public void setSkypeProfile(SkypeProfile skypeProfile) {
+		this.skypeProfile = skypeProfile;
+	}
+	public void setItCorrespondant(ItCorrespondant itCorrespondant) {
+		this.itCorrespondant = itCorrespondant;
 	}
 	
 }
