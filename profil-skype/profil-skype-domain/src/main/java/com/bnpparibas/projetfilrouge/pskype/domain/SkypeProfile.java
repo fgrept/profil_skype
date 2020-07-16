@@ -1,11 +1,8 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
 
+import java.util.Calendar;
 import java.util.Date;
-
-//import javax.mail.internet.AddressException;
-//import javax.mail.internet.InternetAddress;
-import javax.validation.constraints.NotNull;
 
 /**
  * Cette classe contient les informations d'un profil Skype.
@@ -67,12 +64,13 @@ public class SkypeProfile {
 		this.expirationDate = expirationDate;
 	}
 	public SkypeProfile() {
-		
+		this.expirationDate = calcDateExpiration();
 	}
 	
 	public SkypeProfile (String SIP, Collaborater collaborater) {
 		this.SIP=SIP;
 		this.collaborater=collaborater;
+	    this.expirationDate = calcDateExpiration();
 	}
 
 	public String getSIP() {
@@ -152,4 +150,11 @@ public class SkypeProfile {
 		this.collaborater = collaborater;
 	}
 	
+	private Date calcDateExpiration () {
+		// La date d'expiration du profil skype est de 2 ans à partir de sa date de création 
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+	    cal.add(Calendar.YEAR,2);
+	    return cal.getTime();
+	}
 }
