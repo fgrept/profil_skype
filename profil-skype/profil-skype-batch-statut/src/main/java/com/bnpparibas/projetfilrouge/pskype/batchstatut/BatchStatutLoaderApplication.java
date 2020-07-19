@@ -1,5 +1,9 @@
 package com.bnpparibas.projetfilrouge.pskype.batchstatut;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -11,6 +15,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,6 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEntity;
 
 /**
@@ -40,6 +46,10 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 	
 	public static void main(String[] args) {
 		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
+		//obtenir la date courante
+		Date date = new Date();
+		System.out.println(format.format(date));
 		SpringApplication.run(BatchStatutLoaderApplication.class,args);
 
 	}
@@ -85,12 +95,7 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 				.get("step1").<SkypeProfileEntity, SkypeProfileEntity>chunk(10)
 				.reader(batchReader())
 				.processor(batchProcessor())
-				.writer(BatchWriter()).build();
-	}
-	
-	@Bean
-	public BatchWriterStatus BatchWriter() {
-		return new BatchWriterStatus();
+				.writer(batchWriter()).build();
 	}
 	
 	@Bean
@@ -105,11 +110,19 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 		//JpaQueryProviderImpl<ItCorrespondantEntity> jpaQueryProvider = new JpaQueryProviderImpl<>();
 	//	jpaQueryProvider.setQuery("User.findAll");
 	//	databaseReader.setQueryProvider();
-		databaseReader.setQueryString("SELECT u FROM SkypeProfileEntity u");
+		databaseReader.setQueryString("SELECT u FROM SkypeProfileEntity u WHERE u.statusProfile=com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum.ENABLED");
 		databaseReader.setPageSize(1000);
 		databaseReader.afterPropertiesSet();
 		return databaseReader;
 	}
 
+	@Bean
+	public JpaItemWriter<SkypeProfileEntity> batchWriter(){
+		
+		JpaItemWriter<SkypeProfileEntity> skypeProfileItemWriter = new JpaItemWriter<SkypeProfileEntity>();
+		skypeProfileItemWriter.setEntityManagerFactory(entityManagerFactory);
+		return skypeProfileItemWriter;
+		
+	}
 
 }
