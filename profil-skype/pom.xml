@@ -19,7 +19,8 @@
   	<module>profil-skype-exposition</module>
   	<module>profil-skype-domain</module>
   	<module>profil-skype-infrastructure</module>
-  </modules>
+  	<module>profil-skype-batch-statut</module>
+    </modules>
   
   
   
