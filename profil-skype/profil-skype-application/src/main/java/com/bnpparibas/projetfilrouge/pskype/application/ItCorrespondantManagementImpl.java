@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
@@ -12,6 +13,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 
 /**
  * Service exposant les méthodes d'interfaction avec le CIL (US007 et US010)
+ * Spring Security : ajout du password
  * @author Judicaël
  * @version V0.1
  *
@@ -23,6 +25,8 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	@Autowired
 	private IItCorrespondantDomain itCorrespodantDomain;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	/**
 	 * Cette méthode permet la création d'un CIL avec le rôle user par défaut (US010)
 	 * @param String nom
@@ -36,9 +40,10 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	 */
 	@Override
 	public void createCIL(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,
-			String mailAdress) {
+			String mailAdress, String password) {
 		ItCorrespondant itCorrespondant = new ItCorrespondant(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress);
 		itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
+		itCorrespondant.setPassword(passwordEncoder.encode(password));
 		System.out.println("id "+itCorrespondant.getCollaboraterId());
 		System.out.println("roles "+itCorrespondant.getRoles());
 		itCorrespodantDomain.create(itCorrespondant);
@@ -98,5 +103,23 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		// TODO Auto-generated method stub
 		return itCorrespodantDomain.findAllItCorrespondantFilters(id, lastName, firstName,deskPhone,mobilePhone,mailAddress);
 	}
-
+/**
+ * Mise à jour du password d'un CIL à partir de son id annuaire
+ * Dédié à Spring Security
+ * @param idAnnuaire
+ * @param password
+ */
+	@Override
+	public void updatePasswordCIL(String idAnnuaire, String oldPassword, String newPassword) {
+		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
+		if (itCorrespondant == null) {
+			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
+		}else {
+			if (passwordEncoder.matches(oldPassword, itCorrespondant.getPassword())) {
+				String newEncryptedPassword = passwordEncoder.encode(newPassword);
+				itCorrespodantDomain.updatePassword(idAnnuaire,newEncryptedPassword);
+			}
+		}
+		
+	}
 }

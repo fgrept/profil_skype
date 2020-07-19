@@ -12,7 +12,7 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
  * 
  * Mapper entre entité et domaine pour la classe ItCorrespondant
  * @author Judicaël
- *
+ * Spring Security : ajout du password
  */
 
 @Component
@@ -29,6 +29,9 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 		
 		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress());
 		itCorrespondant.setRoles(entity.getRoles());
+		// pour spring security
+		itCorrespondant.setPassword(entity.getEncryptedPassword());
+		
 		return itCorrespondant;
 	}
 
@@ -48,6 +51,8 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 		entity.setMobilePhoneNumber(dto.getMobilePhoneNumber());
 		entity.setMailAdress(dto.getMailAdress());
 		entity.setRoles(dto.getRoles());
+		// pour spring security
+		entity.setEncryptedPassword(dto.getPassword());
 		
 		return entity;
 	}

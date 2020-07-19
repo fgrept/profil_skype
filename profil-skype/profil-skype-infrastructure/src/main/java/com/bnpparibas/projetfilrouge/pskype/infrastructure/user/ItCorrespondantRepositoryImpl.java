@@ -221,6 +221,18 @@ private IItCorrespondantRepository itCorrespondantRepository;
 		ItCorrespondantEntity entity = entityMapper.mapToEntity(itCorrespondant);
 		itCorrespondantRepository.delete(entity);
 	}
+	/**
+	 * Spring Security : mise à jour du mot de passe encodé
+	 * @param String idAnnuaire
+	 * @param String newEncryptedPassword
+	 */
+	@Override
+	public void updatePassword(String idAnnuaire, String newEncryptedPassword) {
+		
+		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterId(idAnnuaire);
+		entity.setEncryptedPassword(newEncryptedPassword);
+		itCorrespondantRepository.save(entity);
+	}
 
 }
 
