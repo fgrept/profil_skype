@@ -61,5 +61,11 @@ public class SiteEntity {
 	public void setSiteCity(String siteCity) {
 		this.siteCity = siteCity;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "SiteEntity [siteId=" + siteId + ", siteCode=" + siteCode + ", siteName=" + siteName + ", siteAddress="
+				+ siteAddress + ", sitePostalCode=" + sitePostalCode + ", siteCity=" + siteCity + "]";
+	}
+	
 }

@@ -23,8 +23,14 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 
 	@Override
 	public OrganizationUnityEntity mapToEntity(OrganizationUnity dto) {
-
-		return null;
+		
+		OrganizationUnityEntity uoEntity = new OrganizationUnityEntity();
+		uoEntity.setOrgaShortLabel(dto.getOrgaShortLabel());
+		uoEntity.setOrgaUnityCode(dto.getOrgaUnityCode());
+		uoEntity.setOrgaUnityType(dto.getOrgaUnityType());
+		uoEntity.setOrgaSite(siteMapper.mapToEntity(dto.getOrgaSite()));
+		
+		return uoEntity;
 	}
 
 }
