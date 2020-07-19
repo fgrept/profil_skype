@@ -1,8 +1,10 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
+import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
 
@@ -16,7 +18,10 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
  */
 @Component
 public class CollaboraterEntityMapper extends AbstractMapper<Collaborater, CollaboraterEntity> {
-
+	
+	@Autowired
+	OrganizationUnityEntityMapper orgaMapper;
+	
 	/**
 	 * Cette méthode récupère le contenu de la couche infra vers la classe Collaborater de la classe Domaine
 	 * @param L'entité Collaborateur de la couche de persistance
@@ -25,7 +30,10 @@ public class CollaboraterEntityMapper extends AbstractMapper<Collaborater, Colla
 	@Override
 	public Collaborater mapToDomain(CollaboraterEntity entity) {
 		
-		Collaborater collaborater = new Collaborater(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress());
+		Collaborater collaborater = new Collaborater(entity.getLastName(), 
+				entity.getFirstName(), entity.getCollaboraterId(), 
+				entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), 
+				entity.getMailAdress(), orgaMapper.mapToDomain(entity.getOrgaUnit()));
 		
 		return collaborater;
 	}
@@ -45,7 +53,11 @@ public class CollaboraterEntityMapper extends AbstractMapper<Collaborater, Colla
 		entity.setDeskPhoneNumber(dto.getDeskPhoneNumber());
 		entity.setMobilePhoneNumber(dto.getMobilePhoneNumber());
 		entity.setMailAdress(dto.getMailAdress());
+		entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
+		
+//		System.out.println(entity.toString());
 		
 		return entity;
 	}
+
 }

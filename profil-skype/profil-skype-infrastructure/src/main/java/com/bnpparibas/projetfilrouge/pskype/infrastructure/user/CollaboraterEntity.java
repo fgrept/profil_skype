@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 /**
  * 
  * Entité des collaborateurs
@@ -27,6 +30,7 @@ public class CollaboraterEntity {
 	private String mailAdress;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.ALL)
 	private OrganizationUnityEntity orgaUnit;
 	
 	
@@ -90,5 +94,12 @@ public class CollaboraterEntity {
 	public void setOrgaUnit(OrganizationUnityEntity orgaUnit) {
 		this.orgaUnit = orgaUnit;
 	}
+	@Override
+	public String toString() {
+		return "CollaboraterEntity [idUser=" + idUser + ", collaboraterId=" + collaboraterId + ", lastName=" + lastName
+				+ ", firstName=" + firstName + ", deskPhoneNumber=" + deskPhoneNumber + ", mobilePhoneNumber="
+				+ mobilePhoneNumber + ", mailAdress=" + mailAdress + ", orgaUnit=" + orgaUnit.toString() + "]";
+	}
+	
 	
 }

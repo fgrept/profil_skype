@@ -17,7 +17,7 @@ public class OrganizationUnity {
 	private Site orgaSite;
 	
 	public OrganizationUnity (String code,String type,String label,Site site) {
-		this.orgaSite=site;
+		this.orgaUnityType=type;
 		this.orgaUnityCode=code;
 		this.orgaShortLabel=label;
 		this.orgaSite=site;
