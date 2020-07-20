@@ -18,7 +18,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
-
+/**
+ * Entité CIL, créé par l'administrateur
+ * @author Judicaël
+ * Spring Security : ajout du password
+ */
 @Entity
 @DiscriminatorValue("ItCorrespondant")
 public class ItCorrespondantEntity extends CollaboraterEntity {
@@ -26,10 +30,13 @@ public class ItCorrespondantEntity extends CollaboraterEntity {
 	@ElementCollection
 	@Enumerated(EnumType.STRING)
 	private Set<RoleTypeEnum> roles = new HashSet<>();
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
 	private Date dateLastUpdate;
 
+	private String encryptedPassword;
+	
 	public Set<RoleTypeEnum> getRoles() {
 		return roles;
 	}
@@ -51,5 +58,19 @@ public class ItCorrespondantEntity extends CollaboraterEntity {
 	public void setDateLastUpdate() {
 		dateLastUpdate = new Date();
 	}
+
+	public String getEncryptedPassword() {
+		return encryptedPassword;
+	}
+
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
+	}
+
+	public void setDateLastUpdate(Date dateLastUpdate) {
+		this.dateLastUpdate = dateLastUpdate;
+	}
+
+
 	
 }

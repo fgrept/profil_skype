@@ -1,5 +1,6 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.NumberFormat;
@@ -26,6 +27,8 @@ public class Collaborater extends Person {
 	private String mobilePhoneNumber;
 	@EmailControl
 	private String mailAdress;
+	@NotNull
+	private OrganizationUnity orgaUnit; 
 	
 	public Collaborater() {
 		
@@ -40,6 +43,16 @@ public class Collaborater extends Person {
 	 * @param mobilePhoneNumber
 	 * @param mailAdress
 	 */
+	public Collaborater(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,String mailAdress, OrganizationUnity orgaUnit) {
+		this.collaboraterId=id;
+		this.deskPhoneNumber=deskPhoneNumber;
+		this.mobilePhoneNumber=mobilePhoneNumber;
+		this.mailAdress=mailAdress;
+		this.setFirstNamePerson(prenom);
+		this.setLastNamePerson(nom);
+		this.setOrgaUnit(orgaUnit);
+	}
+	
 	public Collaborater(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,String mailAdress) {
 		this.collaboraterId=id;
 		this.deskPhoneNumber=deskPhoneNumber;
@@ -49,8 +62,15 @@ public class Collaborater extends Person {
 		this.setLastNamePerson(nom);
 	}
 	
+	public Collaborater(@Size(max = 17) String collaboraterId, String deskPhoneNumber, String mobilePhoneNumber,
+			String mailAdress) {
+		super();
+		this.collaboraterId = collaboraterId;
+		this.deskPhoneNumber = deskPhoneNumber;
+		this.mobilePhoneNumber = mobilePhoneNumber;
+		this.mailAdress = mailAdress;
+	}
 
-	
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}
@@ -73,5 +93,57 @@ public class Collaborater extends Person {
 	public void setMailAdress(String mailAdress) {
 		this.mailAdress = mailAdress;
 	}
+
+	public OrganizationUnity getOrgaUnit() {
+		return orgaUnit;
+	}
+	public void setOrgaUnit(OrganizationUnity orgaUnit) {
+		this.orgaUnit = orgaUnit;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((collaboraterId == null) ? 0 : collaboraterId.hashCode());
+		result = prime * result + ((deskPhoneNumber == null) ? 0 : deskPhoneNumber.hashCode());
+		result = prime * result + ((mailAdress == null) ? 0 : mailAdress.hashCode());
+		result = prime * result + ((mobilePhoneNumber == null) ? 0 : mobilePhoneNumber.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Collaborater other = (Collaborater) obj;
+		if (collaboraterId == null) {
+			if (other.collaboraterId != null)
+				return false;
+		} else if (!collaboraterId.equals(other.collaboraterId))
+			return false;
+		if (deskPhoneNumber == null) {
+			if (other.deskPhoneNumber != null)
+				return false;
+		} else if (!deskPhoneNumber.equals(other.deskPhoneNumber))
+			return false;
+		if (mailAdress == null) {
+			if (other.mailAdress != null)
+				return false;
+		} else if (!mailAdress.equals(other.mailAdress))
+			return false;
+		if (mobilePhoneNumber == null) {
+			if (other.mobilePhoneNumber != null)
+				return false;
+		} else if (!mobilePhoneNumber.equals(other.mobilePhoneNumber))
+			return false;
+		return true;
+	}
+
+
 	
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 
 import com.bnpparibas.projetfilrouge.pskype.application.IItCorrespondantManagment;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
@@ -24,22 +25,23 @@ import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDto;
 /**
  * Classe exposant des API rest dédiées à l'itCorrespondant
  * @author Judicaël
- *
+ * Spring security : classe correspondant au module de paramétrage, réservée aux administrateurs
  */
 @RestController
 @RequestMapping("/cil")
+@Secured("ROLE_ADMIN")
 public class ItCorrespondantController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantController.class);
 	
 	@Autowired
 	private IItCorrespondantManagment correspondantManagement;
-
+	
 	@PostMapping("create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void createCIL(@RequestBody ItCorrespondant itCorrespondant) {
 		correspondantManagement.createCIL(itCorrespondant.getLastNamePerson(), itCorrespondant.getLastNamePerson(), itCorrespondant.getCollaboraterId(), 
-				itCorrespondant.getDeskPhoneNumber(), itCorrespondant.getMobilePhoneNumber(), itCorrespondant.getMailAdress());
+				itCorrespondant.getDeskPhoneNumber(), itCorrespondant.getMobilePhoneNumber(), itCorrespondant.getMailAdress(),itCorrespondant.getPassword());
 	}
 	
 	@GetMapping("createauto")
@@ -49,14 +51,19 @@ public class ItCorrespondantController {
 //		correspondantManagement.createCIL("Grept", "Fabien", "000004", "0140401234", "0640140102", "fabien.toto@gmail.com");
 //		correspondantManagement.createCIL("ElOuarak", "Mehdi", "000005", "0140402345", "0640140304", "mehdi.titi@gmail.com");
 //		correspondantManagement.createCIL("Tige", "Judicael", "000006", "0140403456", "0640140405", "judi.tata@gmail.com");	
-		correspondantManagement.createCIL("Tige", "Judi", "000016", "0140403456", "0640140405", "judi.tata@gmail.com");
-		correspondantManagement.createCIL("Tige", "Juju", "000017", "0140403456", "0640140405", "judi.tata@gmail.com");
-		correspondantManagement.createCIL("Tige", "Toto", "000018", "0140403456", "0640140405", "judi.tata@gmail.com");
+		correspondantManagement.createCIL("Tige", "Judi", "000020", "0140403456", "0640140405", "judi.tatatoto@gmail.com","000000");
+		//Password associé : $2a$10$mLw0BcfmsIszyoBvIiqTWOcaBW8vc8.VoOZ2u27xroUi638aeUvLO
+		correspondantManagement.createCIL("Tige", "Juju", "000021", "0140403456", "0640140405", "judi.tatatiti@gmail.com","000000");
+		//Password associé : $2a$10$zjrjQg24MpCtPxu.ekG4yuv3eJ1tbm9PRPiD7S85w.SEGNJqx1fRy
+		correspondantManagement.createCIL("Tige", "Toto", "000022", "0140403456", "0640140405", "judi.tatatutu@gmail.com","000000");
+		//Password associé : $2a$10$3E4JuVZylMiC7uZ9AJSM8uGqYgueyQKrJHjdHYNSw3FrHG.G379y6
+		
 		return "creation effectuée";
 	}
 	
-	@GetMapping("list")
-	public List<ItCorrespondant> listItCorrespondant(){
+
+	@GetMapping("list/{idAnnuaire}")
+	public List<ItCorrespondant> listItCorrespondant(@PathVariable String idAnnuaire){
 		
 		return correspondantManagement.listItCorrespondant();
 	}
@@ -82,6 +89,7 @@ public class ItCorrespondantController {
 	 * @param itCorrespondant
 	 * @return Liste des IT Correspondant
 	 */
+
 	@GetMapping("listfilter")
 	public List<ItCorrespondant> listItCorrespondantFilters(@RequestBody ItCorrespondantDto itCorrespondant){
 		
@@ -97,22 +105,22 @@ public class ItCorrespondantController {
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
 		
 		if (role.equals("admin")) {
-			correspondantManagement.updateRoleCIL(id, roles);
 			System.out.println("Passage à role ADMIN");
 			roles.add(RoleTypeEnum.ROLE_ADMIN);
 			roles.add(RoleTypeEnum.ROLE_RESP);
 			roles.add(RoleTypeEnum.ROLE_USER);
+			correspondantManagement.updateRoleCIL(id, roles);
 		}
 		if (role.equals("resp")) {
-			correspondantManagement.updateRoleCIL(id, roles);
 			System.out.println("Passage à role RESP");
 			roles.add(RoleTypeEnum.ROLE_RESP);
 			roles.add(RoleTypeEnum.ROLE_USER);
+			correspondantManagement.updateRoleCIL(id, roles);
 		}
 		if (role.equals("user")) {
-			correspondantManagement.updateRoleCIL(id, roles);
 			System.out.println("Passage à role USER");
 			roles.add(RoleTypeEnum.ROLE_USER);
+			correspondantManagement.updateRoleCIL(id, roles);
 		}
 		
 		System.out.println("Mise à jour effectuée");

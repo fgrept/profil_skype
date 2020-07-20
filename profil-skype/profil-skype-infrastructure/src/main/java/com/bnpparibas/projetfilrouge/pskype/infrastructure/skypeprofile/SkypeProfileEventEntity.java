@@ -34,7 +34,8 @@ public class SkypeProfileEventEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	
 	private SkypeProfileEntity skypeProfile;
-	@NotNull
+	//Suppression du NotNull
+	//Il est en effet tout à fait possible de supprimer un ItCorrespondantalors que l'event existe toujours.
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ItCorrespondantEntity itCorrespondant;
 	

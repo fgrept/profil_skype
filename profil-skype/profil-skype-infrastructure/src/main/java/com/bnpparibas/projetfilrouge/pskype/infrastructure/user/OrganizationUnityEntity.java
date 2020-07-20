@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 /**
  * 
  * @author 116453
@@ -26,6 +29,7 @@ public class OrganizationUnityEntity {
 	private String orgaShortLabel;
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.ALL)
 	private SiteEntity orgaSite;
 	
 	
@@ -59,5 +63,12 @@ public class OrganizationUnityEntity {
 	public void setOrgaSite(SiteEntity orgaSite) {
 		this.orgaSite = orgaSite;
 	}
-
+	@Override
+	public String toString() {
+		return "OrganizationUnityEntity [orgaUnityId=" + orgaUnityId + ", orgaUnityCode=" + orgaUnityCode
+				+ ", orgaUnityType=" + orgaUnityType + ", orgaShortLabel=" + orgaShortLabel + ", orgaSite=" + orgaSite
+				+ "]";
+	}
+	
+	
 }

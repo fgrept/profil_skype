@@ -10,7 +10,7 @@ import java.util.Set;
  * Nous ne faisons pas de distinction entre ces 3 rôles, en l'absence d'attribut spécifique
  * @author Judicael
  * @version V0.1
- *
+ * Spring Securtiy : ajout du password
  */
 public class ItCorrespondant extends Collaborater {
 
@@ -18,7 +18,15 @@ public class ItCorrespondant extends Collaborater {
 	
 	private Set<RoleTypeEnum> roles;
 	private Date dateLastUpdate;
+	private String encryptedPassword;
 
+	public String getPassword() {
+		return encryptedPassword;
+	}
+
+	public void setPassword(String password) {
+		this.encryptedPassword = password;
+	}
 
 	public Date getDateLastUpdate() {
 		return dateLastUpdate;

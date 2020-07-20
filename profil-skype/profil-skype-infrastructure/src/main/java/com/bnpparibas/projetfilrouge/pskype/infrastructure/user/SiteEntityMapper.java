@@ -18,8 +18,15 @@ public class SiteEntityMapper extends AbstractMapper<Site, SiteEntity>{
 
 	@Override
 	public SiteEntity mapToEntity(Site dto) {
-
-		return null;
+		
+		SiteEntity siteEntity = new SiteEntity();
+		siteEntity.setSiteAddress(dto.getSiteAddress());
+		siteEntity.setSiteCity(dto.getSiteCity());
+		siteEntity.setSiteCode(dto.getSiteCode());
+		siteEntity.setSiteName(dto.getSiteName());
+		siteEntity.setSitePostalCode(dto.getSitePostalCode());
+		
+		return siteEntity;
 	}
 
 }

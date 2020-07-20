@@ -51,4 +51,10 @@ public interface IItCorrespondantDomain {
 	 */
 	List<ItCorrespondant> findAllItCorrespondantFilters(String id, String lastName, String firstName, String deskPhone, String mobilePhone, String mailAddress);
 	ItCorrespondant findItCorrespondantByCollaboraterId(String id);
+/**
+ * 
+ * @param idAnnuaire
+ * @param newPassword
+ */
+	void updatePassword(String idAnnuaire, String newPassword);
 }
