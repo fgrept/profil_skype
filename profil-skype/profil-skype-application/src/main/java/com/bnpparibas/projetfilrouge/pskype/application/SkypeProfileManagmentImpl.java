@@ -97,12 +97,14 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	public void deleteSkypeProfile(String sip) {
 		
 		
-		SkypeProfile SkypeProfile = repositorySkypeProfile.findSkypeProfileBySip(sip);
 		
-		if (SkypeProfile == null) {
+		SkypeProfile skypeProfile = repositorySkypeProfile.findSkypeProfileBySip(sip);
+		
+		if (skypeProfile == null) {
 			throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
 		}else {
-			repositorySkypeProfile.delete(SkypeProfile);
+			repositorySkypeProfile.delete(skypeProfile);
+	
 		}
 		
 	}
