@@ -20,4 +20,5 @@ public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntit
 	
 	SkypeProfileEntity findByCollaborater(CollaboraterEntity collaboraterEntity);
 	
+		
 }

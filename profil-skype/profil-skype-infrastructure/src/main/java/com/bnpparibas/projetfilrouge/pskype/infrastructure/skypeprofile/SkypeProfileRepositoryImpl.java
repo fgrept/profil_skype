@@ -75,7 +75,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 		// TODO Auto-generated method stub
 		return entityMapper.mapToDomain(skypeProfileRepository.findBySIPAndStatusProfile(sip, status));
 	}
-
+	
 	@Override
 	public void update(SkypeProfile SkypeProfile) {
 		// TODO Auto-generated method stub

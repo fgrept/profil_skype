@@ -25,6 +25,7 @@ public class SkypeProfileEvent {
 		
 	}
 	public SkypeProfileEvent(String comment,SkypeProfile profile,ItCorrespondant CIL, TypeEventEnum typeEvent) {
+		
 		this.commentEvent=comment;
 		this.skypeProfile=profile;
 		this.itCorrespondant=CIL;

@@ -61,8 +61,8 @@ public class SkypeProfileDto {
 		this.SIP=SIP;
 		this.enterpriseVoiceEnabled=true;
 		this.voicePolicy="EMEA-VP-FR_BDDF_NationalOnlyAuthorized";
-		this.dialPlan="DP-FR";
-		this.exchUser="Vide";
+		this.dialPlan="DP-EN";
+		this.exchUser="mehdi.el@gmail.com";
 		this.exUmEnabled=false;
 		this.objectClass="user";
 		this.collaboraterId=collaboraterId;

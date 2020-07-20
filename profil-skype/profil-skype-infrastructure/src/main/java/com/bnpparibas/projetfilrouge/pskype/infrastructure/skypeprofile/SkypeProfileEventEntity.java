@@ -32,6 +32,7 @@ public class SkypeProfileEventEntity {
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
+	
 	private SkypeProfileEntity skypeProfile;
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
