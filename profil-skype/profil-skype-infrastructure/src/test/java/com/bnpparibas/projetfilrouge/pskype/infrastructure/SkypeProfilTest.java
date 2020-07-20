@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,9 +95,9 @@ public class SkypeProfilTest {
 		Collaborater collab1 = new Collaborater("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
 		Collaborater collab2 = new Collaborater("John", "McEnroe", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
 		Collaborater collab3 = new Collaborater("Stephen", "King", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
-		SkypeProfile skypeProfil1 = new SkypeProfile("sip:john.doe@gmail.com", collab1);
-		SkypeProfile skypeProfil2 = new SkypeProfile("sip:john.tennis@gmail.com", collab2);
-		SkypeProfile skypeProfil3 = new SkypeProfile("sip:stephen.horror@gmail.com", collab3);
+		SkypeProfile skypeProfil1 = new SkypeProfile("sip.john.doe@gmail.com", collab1);
+		SkypeProfile skypeProfil2 = new SkypeProfile("sip.john.tennis@gmail.com", collab2);
+		SkypeProfile skypeProfil3 = new SkypeProfile("sip.stephen.horror@gmail.com", collab3);
 		skypeProfilDomain.create(skypeProfil1);
 		skypeProfilDomain.create(skypeProfil2);
 		skypeProfilDomain.create(skypeProfil3);
@@ -108,17 +109,6 @@ public class SkypeProfilTest {
 	@Test
 	@DisplayName("Vérifier que le filtrage d'un profil fonctionne pour une UO")
 	public void verifyProfilUOFiltration () {
-		OrganizationUnity uo2 = new OrganizationUnity("SDI2", "I", "Business intelligence", site);
-		OrganizationUnity uo3 = new OrganizationUnity("SDI2", "I", "Business intelligence", site);
-		Collaborater collab1 = new Collaborater("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
-		Collaborater collab2 = new Collaborater("John", "McEnroe", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
-		Collaborater collab3 = new Collaborater("Stephen", "King", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
-		SkypeProfile skypeProfil1 = new SkypeProfile("sip:john.doe@gmail.com", collab1);
-		SkypeProfile skypeProfil2 = new SkypeProfile("sip:john.tennis@gmail.com", collab2);
-		SkypeProfile skypeProfil3 = new SkypeProfile("sip:stephen.horror@gmail.com", collab3);
-		skypeProfilDomain.create(skypeProfil1);
-		skypeProfilDomain.create(skypeProfil2);
-		skypeProfilDomain.create(skypeProfil3);
 		
 		//assertThat(skypeProfilDomain.findSkypeProfileFilters());
 		

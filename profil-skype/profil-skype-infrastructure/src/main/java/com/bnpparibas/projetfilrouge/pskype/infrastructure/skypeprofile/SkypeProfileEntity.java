@@ -11,6 +11,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
 
@@ -54,6 +57,7 @@ public class SkypeProfileEntity {
 	
 
 	@OneToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.PERSIST)
 	private CollaboraterEntity collaborater;
 	
 	public SkypeProfileEntity() {
