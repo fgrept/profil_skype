@@ -5,7 +5,8 @@ import java.util.Set;
 /**
  * Interface CIL pour la couche domaine.
  * Elle expose les méthodes suivantes :
- * - Création d'un CIL
+ * - Création d'un CIL lorsque le collaborateur n'existe pas
+ * - Attribution du rôle CIL à un collaborateur existant
  * - Mise à jour des rôles d'un CIL (annule et remplace les rôles existants)
  * - Suppression d'un CIL (ne supprime pas les informations de niveau collaborateur mais uniquement l'association entre un CIL et un rôle)
  * 
@@ -15,9 +16,19 @@ import java.util.Set;
 public interface IItCorrespondantDomain {
 	/**
 	 * Création d'un CIL avec le rôle user par défaut
+	 * dans le cas ou le collaborateur n'existe pas
 	 * @param itCorrespondant
 	 */
-	void create(ItCorrespondant itCorrespondant);
+	void createFull(ItCorrespondant itCorrespondant);
+
+	/**
+	 * Attribution d'un rôle CIL à un collaborateur existant déjà en base
+	 * (ils sont récupérés depuis un référentiel normalement)
+	 * 
+	 * @param idAnnuaire
+	 * @param roles
+	 */
+	void createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles);
 	
 	/**
 	 * Mise à jour des rôles d'un CIL (annule et remplace les rôles existants)

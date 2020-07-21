@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
@@ -37,7 +38,13 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 private ItCorrespondantEntityMapper entityMapper;
 
 @Autowired
+private CollaboraterEntityMapper collabMapper;
+
+@Autowired
 private IItCorrespondantRepository itCorrespondantRepository;
+
+@Autowired
+private ICollaboraterRepository collaboraterRepository;
 	
 /**
  * US010
@@ -47,7 +54,7 @@ private IItCorrespondantRepository itCorrespondantRepository;
  * 
  */
 	@Override
-	public void create(ItCorrespondant itCorrespondant) {
+	public void createFull(ItCorrespondant itCorrespondant) {
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterId(itCorrespondant.getCollaboraterId());
 		if (entity==null) {
 			entity = entityMapper.mapToEntity(itCorrespondant);
@@ -83,7 +90,7 @@ private IItCorrespondantRepository itCorrespondantRepository;
 
 	/**
 	 * US007
-	 * Récupération de l'ensemble des ItCorrespondant tout rôle confondu 
+	 * Récupération de l'ensemble des ItCorrespondant tous rôles confondus
 	 * @param null
 	 * @return List<ItCorrespondant>
 	 * 
@@ -135,7 +142,7 @@ private IItCorrespondantRepository itCorrespondantRepository;
 	 * @return List<ItCorrespondantEntity>
 	 * @author Judicaël
 	 */
-	private List<ItCorrespondantEntity> findAllItCorrespondantEntityFilters(String id, String lastName, String firstName, String deskPhoneNumber, String mobilePhoneNumber, String mailAddress) {
+	private List<ItCorrespondantEntity> findAllItCorrespondantEntityFilters(String id, String lastName, String firstName, String deskPhoneNumber, String mobilePhoneNumber, String mailAdress) {
 		
 		System.out.println("findAllItCorrespondantEntityFilters :");
 		System.out.println("id "+id);
@@ -170,11 +177,11 @@ private IItCorrespondantRepository itCorrespondantRepository;
 				}
 				if (mobilePhoneNumber!= null && mobilePhoneNumber != "") {
 					System.out.println("recherche par mobilePhone "+ mobilePhoneNumber);
-					predicates.add(criteriaBuilder.equal(root.get("mobilePhone"),mobilePhoneNumber));
+					predicates.add(criteriaBuilder.equal(root.get("mobilePhoneNumber"),mobilePhoneNumber));
 				}
-				if (mailAddress!= null && mailAddress != "") {
-					System.out.println("recherche par mailAddress "+ mailAddress);
-					predicates.add(criteriaBuilder.equal(root.get("mailAddress"),mailAddress));
+				if (mailAdress!= null && mailAdress != "") {
+					System.out.println("recherche par mailAddress "+ mailAdress);
+					predicates.add(criteriaBuilder.equal(root.get("mailAdress"),mailAdress));
 				}
 				
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -232,6 +239,34 @@ private IItCorrespondantRepository itCorrespondantRepository;
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterId(idAnnuaire);
 		entity.setEncryptedPassword(newEncryptedPassword);
 		itCorrespondantRepository.save(entity);
+	}
+
+	@Override
+	public void createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles) {
+
+		CollaboraterEntity collabEntity = collaboraterRepository.findByCollaboraterId(idAnnuaire);
+		if (collabEntity == null) {
+			throw new RuntimeException("Pas de colaborateur trouvé pour id : "+idAnnuaire);
+		}
+		else {
+			ItCorrespondantEntity entityRepo = itCorrespondantRepository.findByCollaboraterId(idAnnuaire);
+			if (entityRepo != null) {
+				throw new RuntimeException("Un rôle CIL existe déjà pour ce collaborateur : " + idAnnuaire);
+			} else {
+				Collaborater collab = collabMapper.mapToDomain(collabEntity);
+				ItCorrespondant itCorresp = new ItCorrespondant();
+				itCorresp.setFirstNamePerson(collab.getFirstNamePerson());
+				itCorresp.setLastNamePerson(collab.getLastNamePerson());
+				itCorresp.setDeskPhoneNumber(collab.getDeskPhoneNumber());
+				itCorresp.setMobilePhoneNumber(collab.getMobilePhoneNumber());
+				itCorresp.setMailAdress(collab.getMailAdress());
+				itCorresp.setOrgaUnit(collab.getOrgaUnit());
+				itCorresp.setCollaboraterId(collab.getCollaboraterId());
+				itCorresp.setRoles(roles);
+				ItCorrespondantEntity itCorrespEntity = entityMapper.mapToEntity(itCorresp);			
+				itCorrespondantRepository.save(itCorrespEntity);
+			}
+		}		
 	}
 
 }

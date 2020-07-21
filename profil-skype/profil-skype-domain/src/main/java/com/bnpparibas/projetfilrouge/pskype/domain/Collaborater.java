@@ -100,6 +100,10 @@ public class Collaborater extends Person {
 	public void setOrgaUnit(OrganizationUnity orgaUnit) {
 		this.orgaUnit = orgaUnit;
 	}
+	
+	public void setCollaboraterId(String collaboraterId) {
+		this.collaboraterId = collaboraterId;
+	}
 
 	@Override
 	public int hashCode() {

@@ -59,12 +59,20 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 			entity.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 //			System.out.println("SkypeProfileRepositoryImpl : avant récupération collaborateur");
 			CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId());
-			if (skypeProfileRepository.findByCollaborater(collaboraterEntity)==null) {
+			if (collaboraterEntity ==null) { 
+				// on cherche a créer un profil skype pour un collaborateur qui n'existe pas encore
+				// par exemple pour les tests
+				skypeProfileRepository.save(entity);
+			}
+			else {
+				if (skypeProfileRepository.findByCollaborater(collaboraterEntity)==null) {
 				entity.setCollaborater(collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
 				System.out.println("SkypeProfileRepositoryImpl : avant sauvegarde");
 				skypeProfileRepository.save(entity);
-			}else {
-				throw new RuntimeException(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
+				}
+				else {
+					throw new RuntimeException(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
+				}
 			}
 
 		}else {
