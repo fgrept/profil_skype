@@ -3,7 +3,13 @@ package com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileDomain;
@@ -83,7 +89,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 
 	@Override
 	public SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status) {
-		// TODO Auto-generated method stub
+		
 		return entityMapper.mapToDomain(skypeProfileRepository.findBySIPAndStatusProfile(sip, status));
 	}
 	
@@ -110,17 +116,13 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 		//Suppression du profil Skype	
 			skypeProfileRepository.delete(skypeProfile);
 	
-		}
-		
-		
-		
-		
+		}	
 	}
 
 
 	@Override
 	public List<SkypeProfile> findAllSkypeProfile() {
-		// TODO Auto-generated method stub
+		
 		List<SkypeProfile> listSkypeProfile = new ArrayList<SkypeProfile>();
 		for (SkypeProfileEntity entity:skypeProfileRepository.findBySIPNotNull()) {
 			listSkypeProfile.add(entityMapper.mapToDomain(entity));
@@ -130,16 +132,87 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 
 
 	@Override
-	public List<SkypeProfile> findSkypeProfileFilters() {
-		// TODO Auto-generated method stub
-		return null;
+	public SkypeProfile findSkypeProfileBySip(String sip) {
+		
+		return entityMapper.mapToDomain(skypeProfileRepository.findBySIP(sip));
 	}
 
 
 	@Override
-	public SkypeProfile findSkypeProfileBySip(String sip) {
-		// TODO Auto-generated method stub
-		return entityMapper.mapToDomain(skypeProfileRepository.findBySIP(sip));
+	public List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
+			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile) {
+		
+		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
+		profilEntity = findAllSkypeProfileEntityFilters(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile);
+		
+		return entityMapper.mapToDomainList(profilEntity);
 	}
+
+	/**
+	 * US004 Méthode privée basée sur les spécifications JPA pour ajouter des critères variable de requêtes
+	 * 
+	 * @param enterpriseVoiceEnabled
+	 * @param voicePolicy
+	 * @param dialPlan
+	 * @param samAccountName
+	 * @param exUmEnabled
+	 * @param exchUser
+	 * @return
+	 */
+	private List<SkypeProfileEntity> findAllSkypeProfileEntityFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
+			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile) {
+		
+		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
+		profilEntity = skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
+			
+			@Override
+			public Predicate toPredicate(Root<SkypeProfileEntity> root, CriteriaQuery<?> query,
+					CriteriaBuilder criteriaBuilder) {
+				
+				List<Predicate> predicates = new ArrayList<>();
+				if (enterpriseVoiceEnabled != null) {
+					System.out.println("recherche par enterpriseVoiceEnabled "+enterpriseVoiceEnabled);
+					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+				}
+				
+				if (voicePolicy != null && voicePolicy != "") {
+					System.out.println("recherche par voicePolicy "+voicePolicy);
+					predicates.add(criteriaBuilder.equal(root.get("voicePolicy"),voicePolicy));
+				}
+				
+				if (dialPlan != null && dialPlan != "") {
+					System.out.println("recherche par dialPlan "+dialPlan);
+					predicates.add(criteriaBuilder.equal(root.get("dialPlan"),dialPlan));
+				}				
+				
+				if (samAccountName != null && samAccountName != "") {
+					System.out.println("recherche par samAccountName "+samAccountName);
+					predicates.add(criteriaBuilder.equal(root.get("samAccountName"),samAccountName));
+				}	
+
+				if (exUmEnabled != null) {
+					System.out.println("recherche par exUmEnabled "+exUmEnabled);
+					predicates.add(criteriaBuilder.equal(root.get("exUmEnabled"),exUmEnabled));
+				}
+				
+				if (exchUser != null && exchUser != "") {
+					System.out.println("recherche par exchUser "+exchUser);
+					predicates.add(criteriaBuilder.equal(root.get("exchUser"),exchUser));
+				}
+				
+				if (statusProfile != null) {
+					System.out.println("recherche par statusProfile "+statusProfile);
+					predicates.add(criteriaBuilder.equal(root.get("statusProfile"),statusProfile));
+				}
+				
+				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+			}
+
+		});
+		
+		return profilEntity;
+	}
+	
+
 
 }

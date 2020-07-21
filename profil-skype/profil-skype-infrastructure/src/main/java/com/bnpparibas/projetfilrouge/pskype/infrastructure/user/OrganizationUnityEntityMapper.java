@@ -28,6 +28,8 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 		
 		OrganizationUnityEntity uoEntityRepo = getOrganizationUnityByCode(dto.getOrgaUnityCode());
 		
+		// on vérifie si l'entité existe en base et on la renvoie tel quel si c'est le cas
+		// (problème de duplication sinon avec le cascade)
 		if (uoEntityRepo == null) {
 			OrganizationUnityEntity uoEntity = new OrganizationUnityEntity();
 			uoEntity.setOrgaShortLabel(dto.getOrgaShortLabel());
