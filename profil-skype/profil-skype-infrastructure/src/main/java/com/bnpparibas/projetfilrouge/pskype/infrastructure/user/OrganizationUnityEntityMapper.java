@@ -11,6 +11,8 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 	
 	@Autowired
 	SiteEntityMapper siteMapper;
+	@Autowired
+	IOrganizationUnityRepository orgaUnityRepo;
 	
 	@Override
 	public OrganizationUnity mapToDomain(OrganizationUnityEntity entity) {
@@ -24,13 +26,21 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 	@Override
 	public OrganizationUnityEntity mapToEntity(OrganizationUnity dto) {
 		
-		OrganizationUnityEntity uoEntity = new OrganizationUnityEntity();
-		uoEntity.setOrgaShortLabel(dto.getOrgaShortLabel());
-		uoEntity.setOrgaUnityCode(dto.getOrgaUnityCode());
-		uoEntity.setOrgaUnityType(dto.getOrgaUnityType());
-		uoEntity.setOrgaSite(siteMapper.mapToEntity(dto.getOrgaSite()));
+		OrganizationUnityEntity uoEntityRepo = getOrganizationUnityByCode(dto.getOrgaUnityCode());
 		
-		return uoEntity;
-	}
+		if (uoEntityRepo == null) {
+			OrganizationUnityEntity uoEntity = new OrganizationUnityEntity();
+			uoEntity.setOrgaShortLabel(dto.getOrgaShortLabel());
+			uoEntity.setOrgaUnityCode(dto.getOrgaUnityCode());
+			uoEntity.setOrgaUnityType(dto.getOrgaUnityType());
+			uoEntity.setOrgaSite(siteMapper.mapToEntity(dto.getOrgaSite()));
+			return uoEntity;
+		} else return uoEntityRepo;
 
+	}
+	
+	private OrganizationUnityEntity getOrganizationUnityByCode (String orgaUnityCode) {
+		return orgaUnityRepo.findByOrgaUnityCode(orgaUnityCode);
+
+	}
 }

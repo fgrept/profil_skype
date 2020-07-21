@@ -33,14 +33,11 @@ public class SkypeProfilTest {
 	@Autowired
 	private ICollaboraterDomain collaboraterDomain;
 	
-	//@Autowired
-	//private TestEntityManager entityManager;
-	
 	@Test
 	//@Rollback(false)
 	@DisplayName("Vérifier la consultation possible d'un profil après sa création")
 	public void verifyProfilAfterCreation () {
-		Collaborater collab = new Collaborater("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
@@ -55,7 +52,7 @@ public class SkypeProfilTest {
 	@DisplayName("Vérifier qu'il n'est pas possible de créer un 2ème profil skype"
 			+ "pour le même collaborateur")
 	public void verifyUnicityProfil () {
-		Collaborater collab = new Collaborater("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
@@ -72,13 +69,13 @@ public class SkypeProfilTest {
 	@DisplayName("Vérifier qu'il n'est pas possible de créer un profil skype"
 			+ "sur une SIP dejà affecté à un autre profil")
 	public void verifyUnicitySIP () {
-		Collaborater collab = new Collaborater("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
 		skypeProfilDomain.create(skypeProfil);
 
-		Collaborater collab2 = new Collaborater("John", "McEnroe", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.tennis@gmail.com",uo);		
+		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.tennis@gmail.com",uo);		
 		SkypeProfile skypeProfilBis = new SkypeProfile("aaa-bbb@gmail.com", collab2);
 		
 		assertThatThrownBy(() -> {
@@ -91,9 +88,9 @@ public class SkypeProfilTest {
 	public void verifyGetAllProfils () {
 		OrganizationUnity uo2 = new OrganizationUnity("SDI2", "I", "Big Data", site);
 		OrganizationUnity uo3 = new OrganizationUnity("SDI3", "I", "Outils interne", site);
-		Collaborater collab1 = new Collaborater("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
-		Collaborater collab2 = new Collaborater("John", "McEnroe", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
-		Collaborater collab3 = new Collaborater("Stephen", "King", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
+		Collaborater collab1 = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
+		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
+		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
 		SkypeProfile skypeProfil1 = new SkypeProfile("sip.john.doe@gmail.com", collab1);
 		SkypeProfile skypeProfil2 = new SkypeProfile("sip.john.tennis@gmail.com", collab2);
 		SkypeProfile skypeProfil3 = new SkypeProfile("sip.stephen.horror@gmail.com", collab3);
@@ -117,28 +114,6 @@ public class SkypeProfilTest {
 	@DisplayName("Vérifier que le filtrage d'un profil fonctionne pour différents attribut")
 	public void verifyProfilPropertiesFiltration () {
 		//use soft assertions
-	}
-	
-	@Test
-	@DisplayName("Vérifier qu'il est possible de cumuler au moins 3 filtres successifs"
-			+ "sur une même recherche")
-	public void verifyProfilCumulativeFiltration () {
-		//use soft assertions
-	}
-	
-	@Test
-	@DisplayName("Vérifier qu'un évènement de création est bien crée lors"
-			+ "de la création d'un profil")
-	public void verifyEventAfterCreation () {
-		
-	}
-	
-	@Test
-	@DisplayName("Vérifier qu'un évènement de mise à jour est bien crée lors"
-			+ "de la mise à jour d'un profil")
-	public void verifyEventAfterMoodification () {
-		
-	}
-	
+	}	
 
 }

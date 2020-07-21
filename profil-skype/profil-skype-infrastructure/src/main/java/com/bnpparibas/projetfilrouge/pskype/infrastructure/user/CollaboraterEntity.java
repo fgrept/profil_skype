@@ -35,7 +35,7 @@ public class CollaboraterEntity {
 	private String mailAdress;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@Cascade(CascadeType.ALL)
+	@Cascade(CascadeType.PERSIST)
 	private OrganizationUnityEntity orgaUnit;
 	
 	

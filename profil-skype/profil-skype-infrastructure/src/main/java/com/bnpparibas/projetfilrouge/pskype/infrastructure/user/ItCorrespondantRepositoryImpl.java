@@ -142,7 +142,7 @@ private ICollaboraterRepository collaboraterRepository;
 	 * @return List<ItCorrespondantEntity>
 	 * @author Judicaël
 	 */
-	private List<ItCorrespondantEntity> findAllItCorrespondantEntityFilters(String id, String lastName, String firstName, String deskPhoneNumber, String mobilePhoneNumber, String mailAddress) {
+	private List<ItCorrespondantEntity> findAllItCorrespondantEntityFilters(String id, String lastName, String firstName, String deskPhoneNumber, String mobilePhoneNumber, String mailAdress) {
 		
 		System.out.println("findAllItCorrespondantEntityFilters :");
 		System.out.println("id "+id);
@@ -177,11 +177,11 @@ private ICollaboraterRepository collaboraterRepository;
 				}
 				if (mobilePhoneNumber!= null && mobilePhoneNumber != "") {
 					System.out.println("recherche par mobilePhone "+ mobilePhoneNumber);
-					predicates.add(criteriaBuilder.equal(root.get("mobilePhone"),mobilePhoneNumber));
+					predicates.add(criteriaBuilder.equal(root.get("mobilePhoneNumber"),mobilePhoneNumber));
 				}
-				if (mailAddress!= null && mailAddress != "") {
-					System.out.println("recherche par mailAddress "+ mailAddress);
-					predicates.add(criteriaBuilder.equal(root.get("mailAddress"),mailAddress));
+				if (mailAdress!= null && mailAdress != "") {
+					System.out.println("recherche par mailAddress "+ mailAdress);
+					predicates.add(criteriaBuilder.equal(root.get("mailAdress"),mailAdress));
 				}
 				
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -249,18 +249,24 @@ private ICollaboraterRepository collaboraterRepository;
 			throw new RuntimeException("Pas de colaborateur trouvé pour id : "+idAnnuaire);
 		}
 		else {
-			Collaborater collab = collabMapper.mapToDomain(collabEntity);
-			ItCorrespondant itCorresp = new ItCorrespondant();
-			itCorresp.setFirstNamePerson(collab.getFirstNamePerson());
-			itCorresp.setLastNamePerson(collab.getLastNamePerson());
-			itCorresp.setDeskPhoneNumber(collab.getDeskPhoneNumber());
-			itCorresp.setMobilePhoneNumber(collab.getMobilePhoneNumber());
-			itCorresp.setOrgaUnit(collab.getOrgaUnit());
-			itCorresp.setRoles(roles);
-			ItCorrespondantEntity itCorrespEntity = entityMapper.mapToEntity(itCorresp);
-			itCorrespondantRepository.save(itCorrespEntity);
-		}
-		
+			ItCorrespondantEntity entityRepo = itCorrespondantRepository.findByCollaboraterId(idAnnuaire);
+			if (entityRepo != null) {
+				throw new RuntimeException("Un rôle CIL existe déjà pour ce collaborateur : " + idAnnuaire);
+			} else {
+				Collaborater collab = collabMapper.mapToDomain(collabEntity);
+				ItCorrespondant itCorresp = new ItCorrespondant();
+				itCorresp.setFirstNamePerson(collab.getFirstNamePerson());
+				itCorresp.setLastNamePerson(collab.getLastNamePerson());
+				itCorresp.setDeskPhoneNumber(collab.getDeskPhoneNumber());
+				itCorresp.setMobilePhoneNumber(collab.getMobilePhoneNumber());
+				itCorresp.setMailAdress(collab.getMailAdress());
+				itCorresp.setOrgaUnit(collab.getOrgaUnit());
+				itCorresp.setCollaboraterId(collab.getCollaboraterId());
+				itCorresp.setRoles(roles);
+				ItCorrespondantEntity itCorrespEntity = entityMapper.mapToEntity(itCorresp);			
+				itCorrespondantRepository.save(itCorrespEntity);
+			}
+		}		
 	}
 
 }
