@@ -36,6 +36,9 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 	private ISkypeProfileRepository skypeProfileRepository;
 	
 	@Autowired
+	private ISkypeProfileEventRepository skypeProfileEventRepository ;
+	
+	@Autowired
 	private ICollaboraterRepository collaboraterRepository;	
 	
 	/**
@@ -81,12 +84,28 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
-	public void delete(SkypeProfile SkypeProfile) {
+	public void delete(String sip) {
 		
-		SkypeProfileEntity entity = entityMapper.mapToEntity(SkypeProfile);
-		skypeProfileRepository.delete(entity);
+		//Récupérer le profil Skype à partir de l'identifiant SIP
+		
+		SkypeProfileEntity skypeProfile = skypeProfileRepository.findBySIP(sip);
+		
+		if (skypeProfile == null) {
+			throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
+		}else {
+			
+		//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.
+			
+			skypeProfileEventRepository.deleteAll(skypeProfileEventRepository.findBySkypeProfile(skypeProfile));
+			
+		//Suppression du profil Skype	
+			skypeProfileRepository.delete(skypeProfile);
+	
+		}
+		
+		
+		
 		
 	}
 

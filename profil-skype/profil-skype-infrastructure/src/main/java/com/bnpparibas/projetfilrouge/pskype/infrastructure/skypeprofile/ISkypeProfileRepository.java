@@ -11,6 +11,7 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEnti
 
 @Repository
 public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntity, Long>, JpaSpecificationExecutor<SkypeProfileEntity> {
+	
 
 	SkypeProfileEntity findBySIP(String sip);
 

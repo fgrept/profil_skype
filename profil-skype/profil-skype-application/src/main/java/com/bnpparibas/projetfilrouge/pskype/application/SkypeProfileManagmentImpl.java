@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
@@ -23,6 +24,7 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
  *
  */
 @Service
+@Transactional
 public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkypeProfileEventManagement  {
 
 	
@@ -69,12 +71,12 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 
 		SkypeProfile skypeProfile = new SkypeProfile();
 		
-		skypeProfile.setSIP(skypeProfileDto.getSIP());
-		skypeProfile.setCollaborater(repositoryCollaborater.findByCollaboraterId(skypeProfileDto.getCollaboraterId()));
+		skypeProfile.setSIP(skypeProfileDto.getSIP());		
+		skypeProfile.setCollaborater(repositoryCollaborater.findByCollaboraterId(skypeProfileDto.getCollaboraterId()));	
 		skypeProfile.setDialPlan(skypeProfileDto.getDialPlan());
 		skypeProfile.setEnterpriseVoiceEnabled(skypeProfileDto.isEnterpriseVoiceEnabled());
 		skypeProfile.setExchUser(skypeProfileDto.getExchUser());
-		skypeProfile.setExpirationDate(skypeProfileDto.getExpirationDate());
+		//skypeProfile.setExpirationDate(skypeProfileDto.getExpirationDate());
 		skypeProfile.setExUmEnabled(skypeProfileDto.isExUmEnabled());
 		skypeProfile.setObjectClass(skypeProfileDto.getObjectClass());
 		skypeProfile.setStatusProfile(skypeProfileDto.getStatusProfile());
@@ -96,17 +98,9 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	@Override
 	public void deleteSkypeProfile(String sip) {
 		
-		
-		
-		SkypeProfile skypeProfile = repositorySkypeProfile.findSkypeProfileBySip(sip);
-		
-		if (skypeProfile == null) {
-			throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
-		}else {
-			repositorySkypeProfile.delete(skypeProfile);
+		repositorySkypeProfile.delete(sip);
 	
-		}
-		
+	
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class SkypeProfileEntityMapper extends AbstractMapper<SkypeProfile, Skype
 		
 		System.out.println("SkypeProfileEntityMapper : mapToEntity");
 		SkypeProfileEntity skypeProfileEntity = new SkypeProfileEntity();
-	//	skypeProfileEntity.setCollaborater();
+		skypeProfileEntity.setCollaborater(colloraterEntityMapper.mapToEntity(dto.getCollaborater()));
 		skypeProfileEntity.setDialPlan(dto.getDialPlan());
 		skypeProfileEntity.setEnterpriseVoiceEnabled(dto.isEnterpriseVoiceEnabled());
 		skypeProfileEntity.setExchUser(dto.getExchUser());

@@ -18,7 +18,7 @@ public interface ISkypeProfileDomain {
 		
 		void update(SkypeProfile SkypeProfile);
 		
-		void delete(SkypeProfile SkypeProfile);
+		void delete(String sip);
 		
 	/**
 	 * Méthode permettant de récupérer un collaborateur avec ses critères d'UO et de site d'affectation
@@ -31,5 +31,6 @@ public interface ISkypeProfileDomain {
 		List<SkypeProfile> findAllSkypeProfile();
 		
 		List<SkypeProfile> findSkypeProfileFilters();
+
 	
 }
