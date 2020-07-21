@@ -5,8 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -18,6 +19,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,7 +28,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEntity;
 
 /**
@@ -44,32 +45,6 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 	@Autowired
 	private JobLauncher jobLauncher;
 	
-	public static void main(String[] args) {
-		
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
-		//obtenir la date courante
-		Date date = new Date();
-		System.out.println(format.format(date));
-		SpringApplication.run(BatchStatutLoaderApplication.class,args);
-
-	}
-	
-	/**
-	 * Le run est exécuté juste après le lancement de l'application
-	 * Il permet d'instancier un nouveau jobid à chaque nouvelle exécution.
-	 */
-	@Override
-	public void run(String... args) throws Exception {
-		
-		JobParameters parameters = new JobParametersBuilder()
-				.addString("JOBID", String.valueOf(System.currentTimeMillis()))
-				.toJobParameters();
-		jobLauncher.run(readUser(),parameters);
-		
-	}
-	@Autowired
-	private DataSource dataSource;
-	
 	@Autowired
 	PlatformTransactionManager transactionManager;
 	
@@ -81,21 +56,71 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 	
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
+
+	@Value("${chunksize}")
+	private int chunkSize;
+	
+	// variables globales dédiées à l'envoi du mail
+	static String message ="";
+	static int nbProfilUpdate = 0;
+	static final int MAX_PROFILES = 20;
+	
+	static Logger log = LoggerFactory.getLogger(BatchStatutLoaderApplication.class);
+	
+	public static void main(String[] args) {
+		
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
+		Date date = new Date();
+		log.info(format.format(date));
+		SpringApplication.run(BatchStatutLoaderApplication.class,args);
+
+	}
+	
+	/**
+	 * Le run est exécuté juste après le lancement de l'application
+	 * Il permet d'instancier un nouveau jobid à chaque nouvelle exécution.
+	 */
+	@Override
+	public void run(String... args) throws Exception {
+		
+		//Permet d'avoir une jobid différent à chaque exécution
+		JobParameters parameters = new JobParametersBuilder()
+				.addString("JOBID", String.valueOf(System.currentTimeMillis()))
+				.toJobParameters();
+		log.debug("chunsize : "+chunkSize);
+		jobLauncher.run(updateStatus(),parameters);
+		
+	}
+
+
+	@Bean
+	public Job updateStatus() throws Exception {
+		return jobBuilderFactory.get("updateStatus").listener(batchJobListener()).flow(step1()).end().build();
+	}
 	
 	@Bean
-	public Job readUser() throws Exception {
-		return jobBuilderFactory.get("readUser").flow(step1()).end().build();
+	public BatchJobListener batchJobListener() {
+		return new BatchJobListener();
 	}
 	
 	@Bean
 	public Step step1() throws Exception {
 		return stepBuilderFactory
-				//Le chunk correspond à un pas de commit => ici tous les 10 items lus
-				//A adapter et à externaliser !!!
-				.get("step1").<SkypeProfileEntity, SkypeProfileEntity>chunk(10)
+
+				.get("step1")
+				.listener(batchStepListener())
+				.<SkypeProfileEntity, SkypeProfileEntity>chunk(chunkSize)
 				.reader(batchReader())
 				.processor(batchProcessor())
-				.writer(batchWriter()).build();
+				.writer(batchWriter())
+				.listener(batchWriteListener())
+				.build();
+	}
+	
+	@Bean
+	public BatchStepListener batchStepListener() {
+		return new BatchStepListener();
 	}
 	
 	@Bean
@@ -103,13 +128,14 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 		return new BatchProcessor();
 	}
 	
+	@Bean 
+	BatchWriteListener batchWriteListener() {
+		return new BatchWriteListener();
+	}
 	@Bean
 	public JpaPagingItemReader<SkypeProfileEntity> batchReader() throws Exception {
 		JpaPagingItemReader<SkypeProfileEntity> databaseReader = new JpaPagingItemReader<>();
 		databaseReader.setEntityManagerFactory(entityManagerFactory);
-		//JpaQueryProviderImpl<ItCorrespondantEntity> jpaQueryProvider = new JpaQueryProviderImpl<>();
-	//	jpaQueryProvider.setQuery("User.findAll");
-	//	databaseReader.setQueryProvider();
 		databaseReader.setQueryString("SELECT u FROM SkypeProfileEntity u WHERE u.statusProfile=com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum.ENABLED");
 		databaseReader.setPageSize(1000);
 		databaseReader.afterPropertiesSet();
