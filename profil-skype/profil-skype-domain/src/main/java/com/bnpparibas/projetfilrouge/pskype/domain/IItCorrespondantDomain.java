@@ -19,7 +19,7 @@ public interface IItCorrespondantDomain {
 	 * dans le cas ou le collaborateur n'existe pas
 	 * @param itCorrespondant
 	 */
-	void createFull(ItCorrespondant itCorrespondant);
+	boolean createFull(ItCorrespondant itCorrespondant);
 
 	/**
 	 * Attribution d'un rôle CIL à un collaborateur existant déjà en base
@@ -28,20 +28,20 @@ public interface IItCorrespondantDomain {
 	 * @param idAnnuaire
 	 * @param roles
 	 */
-	void createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles);
+	boolean createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles);
 	
 	/**
 	 * Mise à jour des rôles d'un CIL (annule et remplace les rôles existants)
 	 * @param idAnnuaire
 	 * @param roles
 	 */
-	void update(String idAnnuaire, Set<RoleTypeEnum> roles);
+	boolean update(String idAnnuaire, Set<RoleTypeEnum> roles);
 	
 	/**
 	 * Supprime physiquement de la base de données, le CIL passé en paramètre
 	 * @param itCorrespondant
 	 */
-	void delete(ItCorrespondant itCorrespondant);
+	boolean delete(ItCorrespondant itCorrespondant);
 	
 	/**
 	 * Méthode qui retourne la liste de tous les CIL
@@ -67,5 +67,5 @@ public interface IItCorrespondantDomain {
  * @param idAnnuaire
  * @param newPassword
  */
-	void updatePassword(String idAnnuaire, String newPassword);
+	boolean updatePassword(String idAnnuaire, String newPassword);
 }

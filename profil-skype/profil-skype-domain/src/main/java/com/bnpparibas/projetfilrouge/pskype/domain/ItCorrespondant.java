@@ -42,8 +42,8 @@ public class ItCorrespondant extends Collaborater {
 	}
 	
 	public ItCorrespondant(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,
-			String mailAdress) {
-		super(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress);
+			String mailAdress, OrganizationUnity orgaUnity) {
+		super(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress, orgaUnity);
 		this.roles =  new HashSet<RoleTypeEnum>();
 		
 

@@ -49,7 +49,7 @@ public class UserTest {
 	@DisplayName("Vérifier la présence d'un CIL après sa création,"
 			+ " lorsque le collaborateur n'existe pas")
 	public void verifyProfilAfterCreationWhenCollabExist () {
-		ItCorrespondant itCorrespondant0 = new ItCorrespondant("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com");
+		ItCorrespondant itCorrespondant0 = new ItCorrespondant("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",null);
 		
 		itCorrespondantDomain.createFull(itCorrespondant0);		
 		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId("112114")).isEqualTo(itCorrespondant0);

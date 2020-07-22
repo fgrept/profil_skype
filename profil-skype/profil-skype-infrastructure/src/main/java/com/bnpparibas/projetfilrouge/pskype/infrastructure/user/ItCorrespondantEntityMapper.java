@@ -31,7 +31,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 	@Override
 	public ItCorrespondant mapToDomain(ItCorrespondantEntity entity) {
 		
-		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress());
+		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress(),orgaMapper.mapToDomain(entity.getOrgaUnit()));
 		itCorrespondant.setRoles(entity.getRoles());
 		// pour spring security
 		itCorrespondant.setPassword(entity.getEncryptedPassword());

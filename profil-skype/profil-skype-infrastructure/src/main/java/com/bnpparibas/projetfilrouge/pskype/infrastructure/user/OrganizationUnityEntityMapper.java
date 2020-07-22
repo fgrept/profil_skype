@@ -16,11 +16,14 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 	
 	@Override
 	public OrganizationUnity mapToDomain(OrganizationUnityEntity entity) {
-
-		OrganizationUnity uo = new OrganizationUnity(entity.getOrgaUnityCode(),
-				entity.getOrgaUnityType(), entity.getOrgaShortLabel(), siteMapper.mapToDomain(entity.getOrgaSite()));
 		
-		return uo;
+		if (entity !=null) {
+			OrganizationUnity uo = new OrganizationUnity(entity.getOrgaUnityCode(),
+			entity.getOrgaUnityType(), entity.getOrgaShortLabel(), siteMapper.mapToDomain(entity.getOrgaSite()));
+			return uo;
+		}else {
+			return null;
+		}
 	}
 
 	@Override

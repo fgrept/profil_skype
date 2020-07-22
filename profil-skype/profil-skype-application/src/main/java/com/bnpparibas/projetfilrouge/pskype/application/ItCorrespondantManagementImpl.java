@@ -3,9 +3,12 @@ package com.bnpparibas.projetfilrouge.pskype.application;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
@@ -20,37 +23,34 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
  */
 
 @Service
+@Transactional
 public class ItCorrespondantManagementImpl implements IItCorrespondantManagment {
 
+	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
 	@Autowired
 	private IItCorrespondantDomain itCorrespodantDomain;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	/**
-	 * Cette méthode permet la création d'un CIL avec le rôle user par défaut (US010)
-	 * @param String nom
-	 * @param String prénom
-	 * @param String id annuaire
-	 * @param String numéro de téléphone fixe
-	 * @param String numéro de téléphone mobile
-	 * @param String adresse mail
+	 * Cette méthode permet la création d'un utilisateur avec le rôle ROLE_USER par défaut (US010)
+	 * @param ItCorrespondant itCorrespondant
+	 * @return boolean
 	 * @author Judicaël
-	 * @version V0.1
+	 * @version V0.2
 	 */
 	@Override
-	public void createCIL(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,
-			String mailAdress, String password) {
-		ItCorrespondant itCorrespondant = new ItCorrespondant(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress);
+	public boolean createItCorrespondant(ItCorrespondant itCorrespondant) {
+
 		itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
+		String password = itCorrespondant.getPassword();
 		itCorrespondant.setPassword(passwordEncoder.encode(password));
-		System.out.println("id "+itCorrespondant.getCollaboraterId());
-		System.out.println("roles "+itCorrespondant.getRoles());
-		itCorrespodantDomain.createFull(itCorrespondant);
+
+		return itCorrespodantDomain.createFull(itCorrespondant);
 	}
 
 	/**
-	 * Cette liste retourne l'ensemble des CIL tout rôle confondu (US007)
+	 * Cette liste retourne l'ensemble des utilisateurs tout rôle confondu (US007)
 	 * @return List<ItCorrespondant>
 	 * @author Judicaël
 	 * @version V0.1
@@ -58,68 +58,72 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	 */
 	@Override
 	public List<ItCorrespondant> listItCorrespondant() {
-		// TODO Auto-generated method stub
+		
 		return itCorrespodantDomain.findAllItCorrespondant();
 	}
 
 	/**
-	 * Mise à jour du rôle du CIL (user, resp ou admin)
+	 * Mise à jour du rôle de l'utilisateur (user, resp ou admin)
 	 * L'ajout d'un rôle annule et remplace le précédent
-	 * @param String id annuaire du CIL
-	 * @param RoleTypeEnum nouveau role du CIL
+	 * @param String id annuaire du l'utilisateur
+	 * @param RoleTypeEnum nouveau role de l'utilisateur
+	 * @return boolean
 	 */
 	@Override
-	public void updateRoleCIL(String idAnnuaire, Set<RoleTypeEnum> roles) {
+	public boolean updateRoleItCorrespondant(String idAnnuaire, Set<RoleTypeEnum> roles) {
 		
-//		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
-//		if (itCorrespondant == null) {
-//			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
-//		}else {
-//			itCorrespondant.getRoles().clear();
-//			itCorrespondant.addRole(role);
-			itCorrespodantDomain.update(idAnnuaire, roles);
-	//	}
+		//Le contrôle de l'existence est réalisé dans la couche de persistence
+		return itCorrespodantDomain.update(idAnnuaire, roles);
 	}
 
 	/**
 	 * Suppression d'un CIL (US008)
 	 * @param String idAnnuaire
-	 * 
+	 * @return boolean
 	 */
 	@Override
-	public void deleteCIL(String idAnnuaire) {
+	public boolean deleteItCorrespondant(String idAnnuaire) {
 		
 		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
 		if (itCorrespondant == null) {
-			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
+			logger.error("Utilisateur non trouvé en base, id "+idAnnuaire);
+//			throw new RuntimeException("Utilisateur non trouvé en base, id "+idAnnuaire);
+			return false;
 		}else {
-			itCorrespodantDomain.delete(itCorrespondant);
+			return itCorrespodantDomain.delete(itCorrespondant);
 		}
 	}
 
 
 	@Override
-	public List<ItCorrespondant> listItCorrespondantFilters(String id, String lastName, String firstName, String deskPhone, String mobilePhone, String mailAddress) {
+	public List<ItCorrespondant> listItCorrespondantFilters(ItCorrespondant itCorrespondant) {
 		// TODO Auto-generated method stub
-		return itCorrespodantDomain.findAllItCorrespondantFilters(id, lastName, firstName,deskPhone,mobilePhone,mailAddress);
+		return itCorrespodantDomain.findAllItCorrespondantFilters(itCorrespondant.getCollaboraterId(),itCorrespondant.getLastNamePerson(), itCorrespondant.getFirstNamePerson(), 
+				itCorrespondant.getDeskPhoneNumber(),itCorrespondant.getMobilePhoneNumber(),itCorrespondant.getMailAdress());
 	}
-/**
- * Mise à jour du password d'un CIL à partir de son id annuaire
- * Dédié à Spring Security
- * @param idAnnuaire
- * @param password
- */
+	/**
+	 * Mise à jour du password d'un CIL à partir de son id annuaire
+	 * Dédié à Spring Security
+	 * @param idAnnuaire
+	 * @param password
+	 * @return boolean
+	 */
 	@Override
-	public void updatePasswordCIL(String idAnnuaire, String oldPassword, String newPassword) {
+	public boolean updatePasswordItCorrespondant(String idAnnuaire, String oldPassword, String newPassword) {
 		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
 		if (itCorrespondant == null) {
-			throw new RuntimeException("CIL non trouvé en base, id "+idAnnuaire);
+//			throw new RuntimeException("Utilisateur non trouvé en base, id "+idAnnuaire);
+			logger.error("Utilisateur non trouvé en base, id "+idAnnuaire);
+			return false;
 		}else {
 			if (passwordEncoder.matches(oldPassword, itCorrespondant.getPassword())) {
 				String newEncryptedPassword = passwordEncoder.encode(newPassword);
-				itCorrespodantDomain.updatePassword(idAnnuaire,newEncryptedPassword);
+				return itCorrespodantDomain.updatePassword(idAnnuaire,newEncryptedPassword);
+			}else {
+				logger.error("ancien mot de passe incorrect : "+oldPassword);
+				return false;	
 			}
-		}
-		
+		}	
 	}
+	
 }
