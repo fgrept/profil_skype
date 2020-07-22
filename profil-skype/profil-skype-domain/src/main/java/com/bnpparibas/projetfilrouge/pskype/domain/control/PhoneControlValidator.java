@@ -5,6 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 /**
  * Classe de contrôle de numéro de téléphone
  * Le numéro de téléphone accepté doit de type national (sur 10 chiffres numériques sans indicatif de région et sans séparateur)
@@ -27,6 +28,8 @@ public class PhoneControlValidator implements ConstraintValidator<PhoneControl, 
 		}
 	       try{
 	            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+	            //PhoneNumber phone = phoneNumberUtil.parse(phoneNumber, "");
+	            //boolean test = phoneNumberUtil.isValidNumberForRegion(phone, "FR");
 	            return phoneNumberUtil.isValidNumberForRegion(phoneNumberUtil.parse(phoneNumber, ""), "FR");
 	        }
 	        catch (NumberParseException e){

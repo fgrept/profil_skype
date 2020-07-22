@@ -3,6 +3,8 @@ package com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -50,6 +52,7 @@ public class SkypeProfileEntity {
 	private String exchUser;
 		 
 	private String objectClass;
+	@Enumerated(EnumType.ORDINAL)
 	private StatusSkypeProfileEnum statusProfile;
 	
 	@Temporal(TemporalType.TIMESTAMP)

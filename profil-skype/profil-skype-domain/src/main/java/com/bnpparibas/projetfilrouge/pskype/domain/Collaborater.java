@@ -21,9 +21,9 @@ public class Collaborater extends Person {
 	
 	@Size(max = 17)
 	private String collaboraterId;
-	@PhoneControl
+	//@PhoneControl
 	private String deskPhoneNumber;
-	@PhoneControl
+	//@PhoneControl
 	private String mobilePhoneNumber;
 	@EmailControl
 	private String mailAdress;

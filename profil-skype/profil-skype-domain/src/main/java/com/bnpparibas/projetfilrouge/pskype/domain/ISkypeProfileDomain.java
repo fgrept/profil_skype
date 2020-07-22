@@ -20,17 +20,27 @@ public interface ISkypeProfileDomain {
 		
 		void delete(String sip);
 		
-	/**
-	 * Méthode permettant de récupérer un collaborateur avec ses critères d'UO et de site d'affectation
-	 * 
-	 */
+
 		SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status);
 		
 		SkypeProfile findSkypeProfileBySip(String sip);
 
 		List<SkypeProfile> findAllSkypeProfile();
 		
-		List<SkypeProfile> findSkypeProfileFilters();
+		/**
+		 * Méthode permettant de récupérer des profils Skype selon une liste de critères fournis en entrée
+		 * 
+		 * @param enterpriseVoiceEnabled
+		 * @param voicePolicy
+		 * @param dialPlan
+		 * @param samAccountName
+		 * @param exUmEnabled
+		 * @param exchUser
+		 * @return
+		 */
+		List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
+				String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser,
+				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode);
 
 	
 }
