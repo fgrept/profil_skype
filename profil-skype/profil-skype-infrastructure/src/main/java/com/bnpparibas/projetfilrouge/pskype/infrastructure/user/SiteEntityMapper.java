@@ -24,6 +24,9 @@ public class SiteEntityMapper extends AbstractMapper<Site, SiteEntity>{
 	public SiteEntity mapToEntity(Site dto) {
 		
 		SiteEntity entityRepo = getSiteEntityByCode(dto.getSiteCode());
+		
+		// on vérifie si l'entité existe en base et on la renvoie tel quel si c'est le cas
+		// (problème de duplication sinon avec le cascade)
 		if (entityRepo == null) {
 			SiteEntity siteEntity = new SiteEntity();
 			siteEntity.setSiteAddress(dto.getSiteAddress());
