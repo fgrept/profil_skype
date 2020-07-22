@@ -21,7 +21,7 @@ import org.springframework.security.access.annotation.Secured;
 import com.bnpparibas.projetfilrouge.pskype.application.IItCorrespondantManagment;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
-import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDto;
+import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 /**
  * Classe exposant des API rest dédiées à l'itCorrespondant
  * @author Judicaël
@@ -91,7 +91,7 @@ public class ItCorrespondantController {
 	 */
 
 	@GetMapping("listfilter")
-	public List<ItCorrespondant> listItCorrespondantFilters(@RequestBody ItCorrespondantDto itCorrespondant){
+	public List<ItCorrespondant> listItCorrespondantFilters(@RequestBody CollaboraterDto itCorrespondant){
 		
 		return correspondantManagement.listItCorrespondantFilters(itCorrespondant.getCollaboraterId(), itCorrespondant.getLastName(), itCorrespondant.getFirstName(),
 				itCorrespondant.getDeskPhoneNumber(),itCorrespondant.getMobilePhoneNumber(),itCorrespondant.getMailAdress());

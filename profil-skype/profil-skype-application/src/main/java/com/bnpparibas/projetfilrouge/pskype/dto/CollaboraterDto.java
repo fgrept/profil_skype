@@ -1,3 +1,4 @@
+
 package com.bnpparibas.projetfilrouge.pskype.dto;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
@@ -8,7 +9,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
  * @author Judicaël
  *
  */
-public class ItCorrespondantDto {
+public class CollaboraterDto {
 	
 	private String collaboraterId;
 	private String lastName;
@@ -16,7 +17,14 @@ public class ItCorrespondantDto {
 	private String deskPhoneNumber;
 	private String mobilePhoneNumber;
 	private String mailAdress;
-	private RoleTypeEnum role;
+	private String orgaUnitCode;
+	
+	public String getOrgaUnitCode() {
+		return orgaUnitCode;
+	}
+	public void setOrgaUnitCode(String orgaUnitCode) {
+		this.orgaUnitCode = orgaUnitCode;
+	}
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}
@@ -52,12 +60,6 @@ public class ItCorrespondantDto {
 	}
 	public void setMailAdress(String mailAdress) {
 		this.mailAdress = mailAdress;
-	}
-	public RoleTypeEnum getRole() {
-		return role;
-	}
-	public void setRole(RoleTypeEnum role) {
-		this.role = role;
 	}
 	
 }
