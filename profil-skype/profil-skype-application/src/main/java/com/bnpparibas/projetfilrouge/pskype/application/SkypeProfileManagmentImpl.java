@@ -127,7 +127,18 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	}
 
 
+	@Override
+	public List<SkypeProfileEvent> getAllEventFromSkypeProfil(String SIP) {
+		
+		SkypeProfile profil = repositorySkypeProfile.findSkypeProfileBySip(SIP);
+		if (profil == null) {
+			throw new RuntimeException("Skype profil : " + SIP + "non trouvé en base");
+		} 
+		else {
+			return repositorySkypeProfileEvent.findAllEventBySkypeProfile(profil);
+		}
 
+	}
 
 
 }

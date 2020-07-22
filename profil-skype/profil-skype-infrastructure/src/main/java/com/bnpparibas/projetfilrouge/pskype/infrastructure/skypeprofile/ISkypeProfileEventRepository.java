@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ISkypeProfileEventRepository extends JpaRepository<SkypeProfileEventEntity, Long>, JpaSpecificationExecutor<SkypeProfileEventEntity> {
 	List<SkypeProfileEventEntity> findBySkypeProfile(SkypeProfileEntity skypeProfile);
+	List<SkypeProfileEventEntity> findBySIP(String SIP);
 }
