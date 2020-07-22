@@ -40,7 +40,7 @@ public interface ISkypeProfileDomain {
 		 */
 		List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
 				String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser,
-				StatusSkypeProfileEnum statusProfile);
+				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode);
 
 	
 }

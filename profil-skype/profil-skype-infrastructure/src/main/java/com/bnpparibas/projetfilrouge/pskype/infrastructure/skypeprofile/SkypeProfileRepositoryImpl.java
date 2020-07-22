@@ -140,10 +140,12 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 
 	@Override
 	public List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
-			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile) {
+			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
+			String orgaUnityCode, String siteCode) {
 		
 		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
-		profilEntity = findAllSkypeProfileEntityFilters(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile);
+		profilEntity = findAllSkypeProfileEntityFilters(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile,
+				orgaUnityCode, siteCode);
 		
 		return entityMapper.mapToDomainList(profilEntity);
 	}
@@ -160,7 +162,8 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 	 * @return
 	 */
 	private List<SkypeProfileEntity> findAllSkypeProfileEntityFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
-			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile) {
+			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
+			String orgaUnityCode, String siteCode) {
 		
 		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
 		profilEntity = skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
@@ -205,6 +208,15 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 					predicates.add(criteriaBuilder.equal(root.get("statusProfile"),statusProfile));
 				}
 				
+				if (orgaUnityCode != null) {
+					System.out.println("recherche par orgaUnityCode "+orgaUnityCode);
+					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaUnityCode"),orgaUnityCode));
+				}
+				
+				if (siteCode != null) {
+					System.out.println("recherche par siteCode "+siteCode);
+					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaSite").get("siteCode"),siteCode));
+				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}
 

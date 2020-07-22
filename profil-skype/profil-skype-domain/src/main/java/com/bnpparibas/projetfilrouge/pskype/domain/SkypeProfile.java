@@ -74,8 +74,7 @@ public class SkypeProfile {
 	}
 
 	public SkypeProfile(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
-			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass, Collaborater collaborater,
-			StatusSkypeProfileEnum statusProfile) {
+			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass, Collaborater collaborater) {
 		super();
 		SIP = sIP;
 		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
@@ -86,7 +85,7 @@ public class SkypeProfile {
 		this.exchUser = exchUser;
 		this.objectClass = objectClass;
 		this.collaborater = collaborater;
-		this.statusProfile = statusProfile;
+		this.expirationDate = calcDateExpiration();
 	}
 
 	public String getSIP() {
