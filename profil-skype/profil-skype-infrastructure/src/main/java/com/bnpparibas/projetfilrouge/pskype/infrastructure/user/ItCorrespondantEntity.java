@@ -37,6 +37,14 @@ public class ItCorrespondantEntity extends CollaboraterEntity {
 
 	private String encryptedPassword;
 	
+	public ItCorrespondantEntity() {
+		
+	}
+	public ItCorrespondantEntity(CollaboraterEntity coll, String encryptedPassword) {
+		super(coll.getLastName(),coll.getFirstName(),coll.getCollaboraterId(),coll.getDeskPhoneNumber(),coll.getMobilePhoneNumber(),coll.getMailAdress(),coll.getOrgaUnit());
+		this.encryptedPassword=encryptedPassword;
+	}
+	
 	public Set<RoleTypeEnum> getRoles() {
 		return roles;
 	}

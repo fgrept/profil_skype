@@ -14,7 +14,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ICollaboraterRepository extends JpaRepository<CollaboraterEntity, Long>{
-//	S save (Collaborater collaborater);
+
 	List<CollaboraterEntity> findByLastNameAndFirstName(String lastName,String firstName);
 	CollaboraterEntity findByCollaboraterId(String id);
+	List<CollaboraterEntity> findByCollaboraterIdNotNull();
 }

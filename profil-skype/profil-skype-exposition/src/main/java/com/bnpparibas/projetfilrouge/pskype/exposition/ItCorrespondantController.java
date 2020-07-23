@@ -1,5 +1,6 @@
 package com.bnpparibas.projetfilrouge.pskype.exposition;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,13 +22,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 
+import com.bnpparibas.projetfilrouge.pskype.application.ICollaboraterManagment;
 import com.bnpparibas.projetfilrouge.pskype.application.IItCorrespondantManagment;
+import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoCreate;
+import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoResult;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoSearch;
 /**
  * Classe exposant des API rest dédiées à l'itCorrespondant
@@ -42,7 +46,10 @@ public class ItCorrespondantController {
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantController.class);
 	
 	@Autowired
-	private IItCorrespondantManagment correspondantManagement;
+	private IItCorrespondantManagment userManagment;
+	
+	@Autowired 
+	ICollaboraterManagment collaboraterManagment;
 	
 	/**
 	 * Création d'un it correspondant
@@ -50,19 +57,36 @@ public class ItCorrespondantController {
 	 * @return
 	 */
 	@PostMapping("create")
-	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Boolean> createItCorrespondant(@RequestBody ItCorrespondantDtoCreate dto) {
 		
 		//La création d'un utilisateur requiert toutes les données nécessaires à la création d'un it correspondant donc aussi
 		//collaborateur, personn, uo et site s'ils n'existent pas déjà
+		if (dto.getCollaboraterId() == null) {
+			return new ResponseEntity<Boolean>(false,HttpStatus.NO_CONTENT);
+		}
+		Collaborater collaborater = collaboraterManagment.findCollaboraterbyIdAnnuaire(dto.getCollaboraterId());
 		ItCorrespondant itCorrespondant=mapperDtoToDomain(dto);
 		itCorrespondant.setPassword(dto.getPassword());
-		boolean isCreated = correspondantManagement.createItCorrespondant(itCorrespondant);
-		if (isCreated) {
-			logger.info("Création it correspondant");
-			return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
+		if (collaborater == null) {		
+			//création complète
+			logger.debug("Demande de création complète");
+			boolean isCreated = userManagment.createFullItCorrespondant(itCorrespondant);
+			if (isCreated) {
+				logger.info("Création it correspondant");
+				return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
+			}else {
+				return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
+			}
 		}else {
-			return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
+			//création de l'utilisateur à partir des données de la table
+			logger.debug("Demande de création partielle");
+			boolean isCreated = userManagment.createItCorrespondant(itCorrespondant);
+			if (isCreated) {
+				logger.info("Création it correspondant");
+				return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
+			}else {
+				return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
+			}
 		}
 	}
 	
@@ -92,9 +116,13 @@ public class ItCorrespondantController {
 	 * @return Liste des IT Correspondant
 	 */
 	@GetMapping("/list")
-	public ResponseEntity<List<ItCorrespondant>> listItCorrespondant(){
+	public ResponseEntity<List<ItCorrespondantDtoResult>> listItCorrespondant(){
 		
-		return new ResponseEntity<List<ItCorrespondant>>(correspondantManagement.listItCorrespondant(),HttpStatus.OK);
+		List<ItCorrespondantDtoResult> listDto = new ArrayList<ItCorrespondantDtoResult>();
+		for(ItCorrespondant itCorrespondant:userManagment.listItCorrespondant()) {
+			listDto.add(mapperDomainToDto(itCorrespondant));
+		}
+		return new ResponseEntity<List<ItCorrespondantDtoResult>>(listDto,HttpStatus.OK);
 	}
 
 	
@@ -105,11 +133,15 @@ public class ItCorrespondantController {
 	 */
 
 	@GetMapping("/search")
-	public ResponseEntity<List<ItCorrespondant>> listItCorrespondantFilters(@RequestBody ItCorrespondantDtoSearch dto){
+	public ResponseEntity<List<ItCorrespondantDtoResult>> listItCorrespondantFilters(@RequestBody ItCorrespondantDtoSearch dtoSearch){
 		
-		ItCorrespondant itCorrespondant=mapperDtoToDomain(dto);
-		itCorrespondant.addRole(dto.getRole());
-		return new ResponseEntity<List<ItCorrespondant>>(correspondantManagement.listItCorrespondantFilters(itCorrespondant),HttpStatus.OK);
+		ItCorrespondant itCorrespondant=mapperDtoToDomain(dtoSearch);
+		itCorrespondant.addRole(dtoSearch.getRole());
+		List<ItCorrespondantDtoResult> listDto = new ArrayList<ItCorrespondantDtoResult>();
+		for(ItCorrespondant itCorrespondantResult:userManagment.listItCorrespondantFilters(itCorrespondant)) {
+			listDto.add(mapperDomainToDto(itCorrespondantResult));
+		}
+		return new ResponseEntity<List<ItCorrespondantDtoResult>>(listDto,HttpStatus.OK);
 		
 	}
 
@@ -140,7 +172,7 @@ public class ItCorrespondantController {
 			default:
 				return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
 		}
-		boolean isUpdate = correspondantManagement.updateRoleItCorrespondant(id, roles);
+		boolean isUpdate = userManagment.updateRoleItCorrespondant(id, roles);
 		if (isUpdate) {
 			logger.debug("Mise à jour effectuée");
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
@@ -156,13 +188,13 @@ public class ItCorrespondantController {
 	 * @return
 	 */
 	
-	@PutMapping("/updatepassword/{oldpass}/{newpass}")
-	public ResponseEntity<Boolean> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("oldpass") String oldPassword, @PathVariable("oldpass") String newPassword) {
+	@PutMapping("/updatepassword/{id}/{oldpass}/{newpass}")
+	public ResponseEntity<Boolean> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("oldpass") String oldPassword, @PathVariable("newpass") String newPassword) {
 		
 		if (oldPassword ==newPassword) {
 			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
 		}
-		boolean isUpdate = correspondantManagement.updatePasswordItCorrespondant(id, oldPassword, newPassword);
+		boolean isUpdate = userManagment.updatePasswordItCorrespondant(id, oldPassword, newPassword);
 		if(isUpdate) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}else {
@@ -173,7 +205,7 @@ public class ItCorrespondantController {
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Boolean> deleteItCorrespondant(@PathVariable("id") String id){
 		
-		boolean isDeleted = correspondantManagement.deleteItCorrespondant(id);
+		boolean isDeleted = userManagment.deleteItCorrespondant(id);
 		if (isDeleted) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}else {
@@ -195,4 +227,34 @@ public class ItCorrespondantController {
 		ItCorrespondant itCorrespondant = new ItCorrespondant(dto.getLastName(),dto.getFirstName(),dto.getCollaboraterId(),dto.getDeskPhoneNumber(),dto.getMobilePhoneNumber(),dto.getMailAdress(), orgaUnit);
 		return itCorrespondant;
 		}
+	/**
+	 * Mapper de type It Correspondant vers collaborater(données de niveau collaborateur)
+	 * A voir si dans un second, ce mapper n'est pas externalisé dans une classe dédiée afin de ne pas exposer les objets de niveau domaine
+	 * @param itCorrespondant
+	 * @return dto ItCorrespondantDtoResult
+	 */
+	private ItCorrespondantDtoResult mapperDomainToDto(ItCorrespondant itCorrespondant) {
+		
+		ItCorrespondantDtoResult dto = new ItCorrespondantDtoResult();
+		dto.setCollaboraterId(itCorrespondant.getCollaboraterId());
+		dto.setDeskPhoneNumber(itCorrespondant.getDeskPhoneNumber());
+		dto.setFirstName(itCorrespondant.getFirstNamePerson());
+		dto.setLastName(itCorrespondant.getLastNamePerson());
+		dto.setMailAdress(itCorrespondant.getMailAdress());
+		dto.setMobilePhoneNumber(itCorrespondant.getMobilePhoneNumber());
+		if (itCorrespondant.getOrgaUnit() !=null) {
+			dto.setOrgaShortLabel(itCorrespondant.getOrgaUnit().getOrgaShortLabel());
+			dto.setOrgaUnitCode(itCorrespondant.getOrgaUnit().getOrgaUnityCode());
+			dto.setOrgaUnityType(itCorrespondant.getOrgaUnit().getOrgaUnityType());
+			if (itCorrespondant.getOrgaUnit().getOrgaSite()!=null) {
+				dto.setSiteAddress(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteAddress());
+				dto.setSiteCity(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteCity());
+				dto.setSiteCode(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteCode());
+				dto.setSiteName(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteName());
+				dto.setSitePostalCode(itCorrespondant.getOrgaUnit().getOrgaSite().getSitePostalCode());
+			}
+		}
+		dto.setRoles(itCorrespondant.getRoles());
+		return dto;
 	}
+}

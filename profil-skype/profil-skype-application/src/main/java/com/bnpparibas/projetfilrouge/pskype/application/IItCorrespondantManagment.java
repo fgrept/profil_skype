@@ -40,6 +40,13 @@ public interface IItCorrespondantManagment {
  * @return boolean
  */
 	boolean createItCorrespondant(ItCorrespondant itCorrespondant);
+	
+	/**
+	 *  Cette méthode permet la création complète d'un utilisateur (avec informations de niveau collaborater, uo et site)
+	 * @param itCorrespondant
+	 * @return boolean
+	 */
+		boolean createFullItCorrespondant(ItCorrespondant itCorrespondant);
 /**
  * 	Mise à jour du password
  * @param idAnnuaire
