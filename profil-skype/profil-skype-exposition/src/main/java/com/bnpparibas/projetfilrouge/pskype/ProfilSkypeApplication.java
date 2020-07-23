@@ -9,8 +9,10 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
-//@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+import com.bnpparibas.projetfilrouge.pskype.security.SecurityConfiguration;
+
+//@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @ComponentScan(basePackages = {"com.bnpparibas.projetfilrouge.pskype"})
 @EnableJpaRepositories(basePackages = {"com.bnpparibas.projetfilrouge.pskype"})
 @EntityScan("com.bnpparibas.projetfilrouge.pskype")

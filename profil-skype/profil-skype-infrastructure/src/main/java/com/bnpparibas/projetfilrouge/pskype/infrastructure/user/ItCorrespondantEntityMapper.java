@@ -55,7 +55,9 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 		entity.setMobilePhoneNumber(dto.getMobilePhoneNumber());
 		entity.setMailAdress(dto.getMailAdress());
 		entity.setRoles(dto.getRoles());
-		entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
+		if (dto.getOrgaUnit()!=null) {
+			entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
+		}
 		// pour spring security
 		entity.setEncryptedPassword(dto.getPassword());
 		

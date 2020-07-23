@@ -38,7 +38,9 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 			uoEntity.setOrgaShortLabel(dto.getOrgaShortLabel());
 			uoEntity.setOrgaUnityCode(dto.getOrgaUnityCode());
 			uoEntity.setOrgaUnityType(dto.getOrgaUnityType());
-			uoEntity.setOrgaSite(siteMapper.mapToEntity(dto.getOrgaSite()));
+			if (dto.getOrgaSite()!=null) {
+				uoEntity.setOrgaSite(siteMapper.mapToEntity(dto.getOrgaSite()));
+			}
 			return uoEntity;
 		} else return uoEntityRepo;
 

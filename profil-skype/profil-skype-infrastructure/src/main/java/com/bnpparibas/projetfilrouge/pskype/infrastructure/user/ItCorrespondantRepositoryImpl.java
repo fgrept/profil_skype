@@ -52,13 +52,14 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 		
 	/**
 	 * US010
-	 * Création en base d'un ItCorrespondant 
+	 * Création complète en base d'un ItCorrespondant 
 	 * @param ItCorrespondant
-	 * @return null
+	 * @return booléen
 	 * 
 	 */
 	@Override
 	public boolean createFull(ItCorrespondant itCorrespondant) {
+		logger.debug("create full repository, id annuaire : "+itCorrespondant.getCollaboraterId());
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterId(itCorrespondant.getCollaboraterId());
 		if (entity==null) {
 			entity = entityMapper.mapToEntity(itCorrespondant);
@@ -69,6 +70,26 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 //			throw new RuntimeException("It correspondant "+itCorrespondant.getCollaboraterId()+" existe déjà");
 			return false;
 		}
+	}
+	
+	/**
+	 * US021
+	 * Création de l'it correspondant à partif du collaborater
+	 * @param ItCorrespondant
+	 * @return booléen
+	 */
+	@Override
+	public boolean create(ItCorrespondant itCorrespondant) {
+		
+		CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(itCorrespondant.getCollaboraterId());
+		if (collaboraterEntity ==null) {
+			logger.error("Collaborater "+itCorrespondant.getCollaboraterId()+" non trouvé");
+			return false;
+		}
+		ItCorrespondantEntity entity = new ItCorrespondantEntity(collaboraterEntity, itCorrespondant.getPassword());
+		entity.setRoles(itCorrespondant.getRoles());
+		itCorrespondantRepository.save(entity);
+		return true;
 	}
 	
 	/**
@@ -229,7 +250,9 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 	@Override
 	public boolean delete(ItCorrespondant itCorrespondant) {
 		
-		ItCorrespondantEntity entity = entityMapper.mapToEntity(itCorrespondant);
+		logger.debug("Suppression it correspondant, id annuaire "+itCorrespondant.getCollaboraterId());
+		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterId(itCorrespondant.getCollaboraterId());
+		logger.debug("Suppression  entity it correspondant, id "+entity.getIdUser());
 		itCorrespondantRepository.delete(entity);
 		return true;
 	}
@@ -279,6 +302,5 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 			}
 		}		
 	}
-
 }
 

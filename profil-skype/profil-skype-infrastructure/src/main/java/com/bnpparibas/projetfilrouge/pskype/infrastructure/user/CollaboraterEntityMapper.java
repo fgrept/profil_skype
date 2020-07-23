@@ -53,7 +53,9 @@ public class CollaboraterEntityMapper extends AbstractMapper<Collaborater, Colla
 		entity.setDeskPhoneNumber(dto.getDeskPhoneNumber());
 		entity.setMobilePhoneNumber(dto.getMobilePhoneNumber());
 		entity.setMailAdress(dto.getMailAdress());
-		entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
+		if (dto.getOrgaUnit()!=null) {
+			entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
+		}
 		
 //		System.out.println(entity.toString());
 		

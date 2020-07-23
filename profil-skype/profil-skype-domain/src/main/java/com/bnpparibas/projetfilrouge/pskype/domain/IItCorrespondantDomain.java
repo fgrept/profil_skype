@@ -20,7 +20,12 @@ public interface IItCorrespondantDomain {
 	 * @param itCorrespondant
 	 */
 	boolean createFull(ItCorrespondant itCorrespondant);
-
+	/**
+	 * Création d'un ItCorrespondant à partir d'un collaborateur existant
+	 * @param itCorrespondant
+	 * @return booléen
+	 */
+	boolean create(ItCorrespondant itCorrespondant);
 	/**
 	 * Attribution d'un rôle CIL à un collaborateur existant déjà en base
 	 * (ils sont récupérés depuis un référentiel normalement)

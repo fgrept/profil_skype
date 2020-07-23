@@ -46,6 +46,20 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		String password = itCorrespondant.getPassword();
 		itCorrespondant.setPassword(passwordEncoder.encode(password));
 
+		return itCorrespodantDomain.create(itCorrespondant);
+	}
+	/**
+	 *  Cette méthode permet la création complète d'un utilisateur (avec informations de niveau collaborater, uo et site)
+	 * @param itCorrespondant
+	 * @return boolean
+	 */
+	@Override
+	public boolean createFullItCorrespondant(ItCorrespondant itCorrespondant) {
+		logger.debug("Création full it Correspondant "+itCorrespondant.getCollaboraterId());
+		itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
+		String password = itCorrespondant.getPassword();
+		itCorrespondant.setPassword(passwordEncoder.encode(password));
+
 		return itCorrespodantDomain.createFull(itCorrespondant);
 	}
 
@@ -125,5 +139,4 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 			}
 		}	
 	}
-	
 }
