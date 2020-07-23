@@ -16,7 +16,7 @@ public interface ISkypeProfileDomain {
 	 */
 		void create(SkypeProfile SkypeProfile);
 		
-		void update(SkypeProfile SkypeProfile);
+		void update(String sip,SkypeProfile SkypeProfile);
 		
 		void delete(String sip);
 		

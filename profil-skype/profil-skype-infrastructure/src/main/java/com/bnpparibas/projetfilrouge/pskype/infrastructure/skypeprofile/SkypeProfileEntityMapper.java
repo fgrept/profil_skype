@@ -34,7 +34,7 @@ public class SkypeProfileEntityMapper extends AbstractMapper<SkypeProfile, Skype
 		skypeProfile.setDialPlan(entity.getDialPlan());
 		skypeProfile.setEnterpriseVoiceEnabled(entity.isEnterpriseVoiceEnabled());
 		skypeProfile.setExchUser(entity.getExchUser());
-		skypeProfile.setExpirationDate(entity.getExpirationDate());
+	//	skypeProfile.setExpirationDate(entity.getExpirationDate());
 		skypeProfile.setExUmEnabled(entity.isExUmEnabled());
 		skypeProfile.setObjectClass(entity.getObjectClass());
 		skypeProfile.setSamAccountName(entity.getSamAccountName());

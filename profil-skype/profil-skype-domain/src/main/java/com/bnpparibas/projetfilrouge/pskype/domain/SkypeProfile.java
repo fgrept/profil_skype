@@ -59,9 +59,8 @@ public class SkypeProfile {
 	}
 
 
-
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
+	public void setExpirationDate() {
+		this.expirationDate = calcDateExpiration();
 	}
 	public SkypeProfile() {
 		this.expirationDate = calcDateExpiration();
