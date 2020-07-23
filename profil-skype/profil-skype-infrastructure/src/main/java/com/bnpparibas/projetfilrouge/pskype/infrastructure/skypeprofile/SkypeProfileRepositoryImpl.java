@@ -52,9 +52,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 	 * - Le SIP (adresse mail skype) n'existe pas déjà.
 	 * - Le collaborateur associé au profil skype n'a pas encore de profil.
 	 * @param SkypeProfile skypeProfile
+	 * @return 
 	 */
 	@Override
-	public void create(SkypeProfile skypeProfile) {
+	public boolean create(SkypeProfile skypeProfile) {
 		
 		System.out.println("SkypeProfileRepositoryImpl : create");
 //		System.out.println("SkypeProfileRepositoryImpl : "+ skypeProfile.getCollaborater().getCollaboraterId());
@@ -69,20 +70,24 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 				// on cherche a créer un profil skype pour un collaborateur qui n'existe pas encore
 				// par exemple pour les tests
 				skypeProfileRepository.save(entity);
+				return true;
 			}
 			else {
 				if (skypeProfileRepository.findByCollaborater(collaboraterEntity)==null) {
 				entity.setCollaborater(collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
 				System.out.println("SkypeProfileRepositoryImpl : avant sauvegarde");
 				skypeProfileRepository.save(entity);
+				return true;
 				}
 				else {
-					throw new RuntimeException(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
+					//throw new RuntimeException(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
+					return false;
 				}
 			}
 
 		}else {
-			throw new RuntimeException("Profil Skype "+skypeProfile.getSIP()+" existe déjà");
+			//throw new RuntimeException("Profil Skype "+skypeProfile.getSIP()+" existe déjà");
+			return false;
 		}
 	}
 
@@ -94,28 +99,26 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 	}
 	
 	@Override
-	public void update(SkypeProfile SkypeProfile) {
+	public boolean update(SkypeProfile SkypeProfile) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 	@Override
-	public void delete(String sip) {
+	public boolean delete(String sip) {
 		
-		//Récupérer le profil Skype à partir de l'identifiant SIP
-		
+		//Récupérer le profil Skype à partir de l'identifiant SIP		
 		SkypeProfileEntity skypeProfile = skypeProfileRepository.findBySIP(sip);
 		
 		if (skypeProfile == null) {
-			throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
+			//throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
+			return false;
+		
 		}else {
-			
-		//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.
-			
+			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
 			skypeProfileEventRepository.deleteAll(skypeProfileEventRepository.findBySkypeProfile(skypeProfile));
-			
-		//Suppression du profil Skype	
 			skypeProfileRepository.delete(skypeProfile);
-	
+			return true;
+
 		}	
 	}
 
@@ -137,6 +140,11 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 		return entityMapper.mapToDomain(skypeProfileRepository.findBySIP(sip));
 	}
 
+	@Override
+	public SkypeProfile findSkypeProfileByIdCollab(String idAnnuaire) {
+		
+		return entityMapper.mapToDomain(skypeProfileRepository.getSkypeProfilByIdCollab(idAnnuaire));
+	}
 
 	@Override
 	public List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
@@ -224,7 +232,5 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 		
 		return profilEntity;
 	}
-	
-
 
 }

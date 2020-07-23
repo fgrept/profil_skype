@@ -31,4 +31,10 @@ private ICollaboraterDomain collaboraterDomain;
 		return null;
 	}
 
+	@Override
+	public Collaborater getAllAttributes(String idAnnuaire) {
+		
+		return collaboraterDomain.findByCollaboraterId(idAnnuaire);
+	}
+
 }

@@ -16,6 +16,10 @@ public class OrganizationUnity {
 	@NotNull
 	private Site orgaSite;
 	
+	public OrganizationUnity() {
+		super();
+	}
+
 	public OrganizationUnity (String code,String type,String label,Site site) {
 		this.orgaUnityType=type;
 		this.orgaUnityCode=code;
@@ -38,5 +42,21 @@ public class OrganizationUnity {
 	public Site getOrgaSite() {
 		return orgaSite;
 	}
-	
+
+	public void setOrgaUnityCode(String orgaUnityCode) {
+		this.orgaUnityCode = orgaUnityCode;
+	}
+
+	public void setOrgaUnityType(String orgaUnityType) {
+		this.orgaUnityType = orgaUnityType;
+	}
+
+	public void setOrgaShortLabel(String orgaShortLabel) {
+		this.orgaShortLabel = orgaShortLabel;
+	}
+
+	public void setOrgaSite(Site orgaSite) {
+		this.orgaSite = orgaSite;
+	}
+
 }

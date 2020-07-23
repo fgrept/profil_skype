@@ -12,5 +12,9 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;;
 public interface ICollaboraterManagment {
 	void createCollaborater(String nom, String prenom, String id, String deskPhoneNumber2, String mobilePhoneNumber,
 			String mailAdress);
+	
 	List<Collaborater> listCollaborater();
+	
+	Collaborater getAllAttributes (String idAnnuaire);
+	
 }
