@@ -15,6 +15,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 
@@ -32,14 +33,17 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	private ISkypeProfileDomain repositorySkypeProfile;
 	
 	@Autowired 
-	ICollaboraterDomain repositoryCollaborater;
+	private ICollaboraterDomain repositoryCollaborater;
+	
+	@Autowired
+	private IItCorrespondantDomain repositoryItCorrep;
 	
 	@Autowired
 	private ISkypeProfileEventDomain repositorySkypeProfileEvent;
 	
 	@Autowired 
-	IItCorrespondantDomain repositoryItCorrespondant;
-
+	private IItCorrespondantDomain repositoryItCorrespondant;
+	
 	@Override
 	public SkypeProfile consultActiveSkypeProfile(String sip) {
 		// TODO Auto-generated method stub
@@ -49,23 +53,26 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 
 	
 	@Override
-	public void addNewSkypeProfile(SkypeProfileDto skypeProfileDto) {
+	public boolean addNewSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL) {
 		
-		SkypeProfile skypeProfile = new SkypeProfile();
-		skypeProfile.setSIP(skypeProfileDto.getSIP());
-		skypeProfile.setCollaborater(repositoryCollaborater.findByCollaboraterId(skypeProfileDto.getCollaboraterId()));
-		skypeProfile.setDialPlan(skypeProfileDto.getDialPlan());
-		skypeProfile.setEnterpriseVoiceEnabled(skypeProfileDto.isEnterpriseVoiceEnabled());
-		skypeProfile.setExchUser(skypeProfileDto.getExchUser());
-		skypeProfile.setExpirationDate(skypeProfileDto.getExpirationDate());
-		skypeProfile.setExUmEnabled(skypeProfileDto.isExUmEnabled());
-		skypeProfile.setObjectClass(skypeProfileDto.getObjectClass());
-		skypeProfile.setStatusProfile(skypeProfileDto.getStatusProfile());
-		repositorySkypeProfile.create(skypeProfile);
+		 if (repositorySkypeProfile.create(skypeProfile) == true) {
+			 ItCorrespondant itCorrespondant = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);
+			 
+			 // création de l'évènement associé
+			 if (itCorrespondant != null) {
+				 SkypeProfileEvent event = new SkypeProfileEvent("création du profil", skypeProfile, itCorrespondant, TypeEventEnum.CREATION);
+				 repositorySkypeProfileEvent.create(event);
+				 return true;
+			}
+		} 
+		 return false;
 	}
 	
 	
+
 	@Override
+	@Deprecated
+	// à merger une fois les modifications de Mehdi faites
 	public void addNewSkypeProfileWithEvent(SkypeProfileDto skypeProfileDto,SkypeProfileEventDto skypeProfileEventDto ) {
 		
 
@@ -94,16 +101,23 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 		
 		return repositorySkypeProfile.findAllSkypeProfile();
 	}
-
-	@Override
-	public void deleteSkypeProfile(String sip) {
-		
-		repositorySkypeProfile.delete(sip);
 	
+	/**
+	 * Cette méthode accède directement au REPO
+	 * C'est le REPO qui fera la vérification avant suppression pour récupérer l'id entity
+	 * et éviter un double appel
+	 * 
+	 */
+	@Override
+	public boolean deleteSkypeProfile(String sip) {
+		
+		return repositorySkypeProfile.delete(sip);
 	
 	}
 
 	@Override
+	@Deprecated
+	// à merger une fois les modifications de Mehdi faites
 	public void addNewSkypeProfileEvent(SkypeProfileEventDto skypeProfileEventDto, SkypeProfile skypeProfile) {
 
 	
@@ -140,5 +154,47 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 
 	}
 
+
+	@Override
+	public List<SkypeProfile> findSkypeProfileWithCriteria(SkypeProfile profil) {
+		
+		
+		return repositorySkypeProfile.findAllSkypeProfileFilters(profil.isEnterpriseVoiceEnabled(), profil.getVoicePolicy(),
+				profil.getDialPlan(), profil.getSamAccountName(), profil.isExUmEnabled(),
+				profil.getExchUser(), profil.getStatusProfile(), profil.getCollaborater().getOrgaUnit().getOrgaUnityCode(),
+				profil.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode());
+	}
+
+
+	@Override
+	public boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL) {
+		
+		// Lors de la mise à jour d'un profil : tous les champs peuvent être modifiés
+		// On récupère donc le profil existant associé au collaborateur
+		// La date d'expiration doit aussi être récupérée car non modifiable par les users
+		SkypeProfile profilExisting = findSkypeProfilFromCollab(skypeProfile.getCollaborater().getCollaboraterId());
+		
+		// RG à coder sur les statut, date, ...
+		// entre profil existant et profil reçu à modifier
+		
+		boolean isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+		
+		// Récupération du CIL demandant la modif
+		ItCorrespondant cilRequester = repositoryItCorrep.findItCorrespondantByCollaboraterId(idAnnuaireCIL);
+		
+		if (cilRequester != null && isUpdatedProfil) {
+			SkypeProfileEvent event = new SkypeProfileEvent("mise à jour", skypeProfile, cilRequester, TypeEventEnum.MODIFICATION);
+			return true;
+		}	
+		
+		return false;
+	}
+
+
+	@Override
+	public SkypeProfile findSkypeProfilFromCollab(String idAnnuaire) {
+		
+		return repositorySkypeProfile.findSkypeProfileByIdCollab(idAnnuaire);
+	}
 
 }

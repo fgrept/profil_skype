@@ -71,6 +71,7 @@ public class Collaborater extends Person {
 		this.mailAdress = mailAdress;
 	}
 
+	
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}

@@ -7,12 +7,15 @@ import javax.validation.constraints.Size;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 
 /**
- * Classe exposée à l'utilisateur sur le profil Skype
- * @author Judicaël
+ * Classe de résultats sur les Profils
+ * renvoyés à l'utilisateur lors d'action de recherche
+ * 
+ * @author La Fabrique
  *
  */
-public class SkypeProfileDto {
+public class SkypeProfileDtoSearch {
 	
+	// données du profilSkype
 	private String SIP;
 	private boolean enterpriseVoiceEnabled;	
 	private String voicePolicy;
@@ -21,52 +24,22 @@ public class SkypeProfileDto {
 	private boolean exUmEnabled;
 	private String exchUser;
 	private String objectClass;
-	
-	@Size(max = 17)
-	private String collaboraterId;
-	
-	//toute action sur un profil skype est réalisée par un CIL et sera tracée en base évènement
-	@Size(max = 17)
-	private String itCorrespondantId;
-	
-	//statut du profil : activé, désactivé, expiré (si date d'expiration supérieure > date du jour)
 	private StatusSkypeProfileEnum statusProfile;	
 	private Date expirationDate;
-
 	
-	public StatusSkypeProfileEnum getStatusProfile() {
-		return statusProfile;
-	}
-
-	public void setStatusProfile(StatusSkypeProfileEnum statusProfile) {
-		this.statusProfile = statusProfile;
-	}
-
-	public Date getExpirationDate() {
-		return expirationDate;
-	}
-
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
-	}
-
-	public SkypeProfileDto(String SIP, String collaboraterId, String itCorrespondantId) {
-		this.SIP=SIP;
-		this.enterpriseVoiceEnabled=true;
-		this.voicePolicy="EMEA-VP-FR_BDDF_NationalOnlyAuthorized";
-		this.dialPlan="DP-EN";
-		this.exchUser="mehdi.el@gmail.com";
-		this.exUmEnabled=false;
-		this.objectClass="user";
-		this.collaboraterId=collaboraterId;
-		this.itCorrespondantId=itCorrespondantId;
-		this.statusProfile=StatusSkypeProfileEnum.ENABLED;
-	}
+	// données du collaborateur attaché
+	// elles sont pour l'instant calées sur les possiblités de filte
+	// à voir si on ramène plus de données au front (uo, site, ...)
+	private String collaboraterId;
+	private String firstName;
+	private String lastName;
+	private String orgaUnityCode;
+	private String siteCode;
 	
-	public SkypeProfileDto(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
+	public SkypeProfileDtoSearch(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
 			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass,
-			@Size(max = 17) String collaboraterId, @Size(max = 17) String itCorrespondantId,
-			StatusSkypeProfileEnum statusProfile, Date expirationDate) {
+			StatusSkypeProfileEnum statusProfile, Date expirationDate, String collaboraterId, String firstName,
+			String lastName, String orgaUnityCode, String siteCode) {
 		super();
 		SIP = sIP;
 		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
@@ -76,12 +49,20 @@ public class SkypeProfileDto {
 		this.exUmEnabled = exUmEnabled;
 		this.exchUser = exchUser;
 		this.objectClass = objectClass;
-		this.collaboraterId = collaboraterId;
-		this.itCorrespondantId = itCorrespondantId;
 		this.statusProfile = statusProfile;
 		this.expirationDate = expirationDate;
+		this.collaboraterId = collaboraterId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.orgaUnityCode = orgaUnityCode;
+		this.siteCode = siteCode;
 	}
-
+	public String getSIP() {
+		return SIP;
+	}
+	public void setSIP(String sIP) {
+		SIP = sIP;
+	}
 	public boolean isEnterpriseVoiceEnabled() {
 		return enterpriseVoiceEnabled;
 	}
@@ -124,25 +105,47 @@ public class SkypeProfileDto {
 	public void setObjectClass(String objectClass) {
 		this.objectClass = objectClass;
 	}
-	public String getSIP() {
-		return SIP;
+	public StatusSkypeProfileEnum getStatusProfile() {
+		return statusProfile;
 	}
-	public void setSIP(String sIP) {
-		SIP = sIP;
+	public void setStatusProfile(StatusSkypeProfileEnum statusProfile) {
+		this.statusProfile = statusProfile;
 	}
-	
-
+	public Date getExpirationDate() {
+		return expirationDate;
+	}
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = expirationDate;
+	}
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}
 	public void setCollaboraterId(String collaboraterId) {
 		this.collaboraterId = collaboraterId;
 	}
-	public String getItCorrespondantId() {
-		return itCorrespondantId;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setItCorrespondantId(String itCorrespondantId) {
-		this.itCorrespondantId = itCorrespondantId;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public String getOrgaUnityCode() {
+		return orgaUnityCode;
+	}
+	public void setOrgaUnityCode(String orgaUnityCode) {
+		this.orgaUnityCode = orgaUnityCode;
+	}
+	public String getSiteCode() {
+		return siteCode;
+	}
+	public void setSiteCode(String siteCode) {
+		this.siteCode = siteCode;
 	}
 	
 }

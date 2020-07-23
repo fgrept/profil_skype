@@ -31,13 +31,13 @@ private ICollaboraterDomain collaboraterDomain;
 	}
 	@Override
 	public List<Collaborater> listCollaborater() {
-		// TODO Auto-generated method stub
+		
 		return collaboraterDomain.findAllCollaborater();
 	}
 
 	@Override
 	public Collaborater findCollaboraterbyIdAnnuaire(String idAnnuaire) {
-		// TODO Auto-generated method stub
+		
 		if (idAnnuaire != null) {
 			return collaboraterDomain.findByCollaboraterId(idAnnuaire);
 		}else {
@@ -46,7 +46,6 @@ private ICollaboraterDomain collaboraterDomain;
 		}
 		
 	}
-
 
 
 }

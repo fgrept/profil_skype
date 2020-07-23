@@ -10,20 +10,28 @@ import java.util.List;
  */
 public interface ISkypeProfileDomain {
 
-	/**
-	 * Méthode permettant d'ajouter un nouveau profil Skype pour un collaborateur
-	 * 
-	 */
-		void create(SkypeProfile SkypeProfile);
+		/**
+		 * Méthode permettant d'ajouter un nouveau profil Skype pour un collaborateur
+		 * 
+		 */
+		boolean create(SkypeProfile SkypeProfile);
 		
-		void update(SkypeProfile SkypeProfile);
+		/**
+		 * Méthode permettant de mettre à jour un profil Skype
+		 * 
+		 * @param SkypeProfile
+		 * @return boolean
+		 */
+		boolean update(SkypeProfile SkypeProfile);
 		
-		void delete(String sip);
+		boolean delete(String sip);
 		
 
 		SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status);
 		
 		SkypeProfile findSkypeProfileBySip(String sip);
+		
+		SkypeProfile findSkypeProfileByIdCollab(String idAnnuaire);
 
 		List<SkypeProfile> findAllSkypeProfile();
 		

@@ -10,7 +10,9 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;;
  */
 
 public interface ICollaboraterManagment {
+
 	boolean createCollaborater(Collaborater collaborater);
 	Collaborater findCollaboraterbyIdAnnuaire(String idAnnuaire);
 	List<Collaborater> listCollaborater();
+	
 }
