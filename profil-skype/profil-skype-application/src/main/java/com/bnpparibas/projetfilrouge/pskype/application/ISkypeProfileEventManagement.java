@@ -20,6 +20,7 @@ public interface ISkypeProfileEventManagement {
 	
 	/**
 	 * Méthode permettant de récupérer tous les évènements associés à un profil Skype
+	 * 
 	 * @param SIP
 	 * @return List<SkypeProfileEvent>
 	 */

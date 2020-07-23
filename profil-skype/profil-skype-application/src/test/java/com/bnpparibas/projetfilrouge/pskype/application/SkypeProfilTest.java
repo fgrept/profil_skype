@@ -46,7 +46,7 @@ public class SkypeProfilTest {
 		collaboraterDomain.create(collab);
 		
 		//en attente de suppression des DTO pour faire le test
-		
+
 		assertThat(true).isFalse();
 
 	}
