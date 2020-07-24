@@ -58,11 +58,6 @@ public interface ISkypeProfileManagement {
 	boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment);
 	
 	
-	//à merger avec méthode ci-dessus pour inclure les RDG de Mehdi
-	@Deprecated
-	void addNewSkypeProfileWithEvent(SkypeProfileDto skypeProfile, SkypeProfileEventDto skypeProfileEventDto);
-	
-	
 	/**
 	 * Méthode récupérant tous les profils skype de la base
 	 * (page d'accueil sans critère de recherche)

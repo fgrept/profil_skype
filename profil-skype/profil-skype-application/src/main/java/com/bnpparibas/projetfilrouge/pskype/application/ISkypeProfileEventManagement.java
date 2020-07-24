@@ -16,8 +16,6 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDto;
  */
 public interface ISkypeProfileEventManagement {
 	
-	void addNewSkypeProfileEvent(SkypeProfileEventDto skypeProfileEvent,SkypeProfile skypeProfile);
-	
 	/**
 	 * Méthode permettant de récupérer tous les évènements associés à un profil Skype
 	 * 
