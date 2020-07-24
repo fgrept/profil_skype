@@ -1,5 +1,7 @@
 package com.bnpparibas.projetfilrouge.pskype.application;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,6 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	
 	@Autowired 
 	private ICollaboraterDomain repositoryCollaborater;
-	
-	@Autowired
-	private IItCorrespondantDomain repositoryItCorrep;
 	
 	@Autowired
 	private ISkypeProfileEventDomain repositorySkypeProfileEvent;
@@ -169,25 +168,90 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	@Override
 	public boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL) {
 		
+		boolean isUpdatedProfil = false;
+		List<String> changedFields = new ArrayList<String>();
+		String comment = "Champs modifiés : ";
+		
 		// Lors de la mise à jour d'un profil : tous les champs peuvent être modifiés
 		// On récupère donc le profil existant associé au collaborateur
-		// La date d'expiration doit aussi être récupérée car non modifiable par les users
-		SkypeProfile profilExisting = findSkypeProfilFromCollab(skypeProfile.getCollaborater().getCollaboraterId());
-		
-		// RG à coder sur les statut, date, ...
-		// entre profil existant et profil reçu à modifier
-		
-		boolean isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+		SkypeProfile profilExisting = findSkypeProfilFromCollab(skypeProfile.getCollaborater().getCollaboraterId());		
+		if (profilExisting == null) {
+			return false;
+		}
 		
 		// Récupération du CIL demandant la modif
-		ItCorrespondant cilRequester = repositoryItCorrep.findItCorrespondantByCollaboraterId(idAnnuaireCIL);
+		ItCorrespondant cilRequester = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);		
+		if (cilRequester == null) {
+			return false;
+		}
 		
-		if (cilRequester != null && isUpdatedProfil) {
-			SkypeProfileEvent event = new SkypeProfileEvent("mise à jour", skypeProfile, cilRequester, TypeEventEnum.MODIFICATION);
-			return true;
-		}	
+		// 1) Cas de la modification d'adresse SIP => création d'un nouveau profil
+		if (skypeProfile.getSIP() != profilExisting.getSIP()) {
+			skypeProfile.setExpirationDateWhenReCreated();
+			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+			if (!isUpdatedProfil) {
+				return false;
+			} else {
+				SkypeProfileEvent event = new SkypeProfileEvent("création du profil, nouveau sip : " + skypeProfile.getSIP(), skypeProfile,
+						cilRequester, TypeEventEnum.CREATION);
+				repositorySkypeProfileEvent.create(event);
+			}
+		}
+
+		// 2) Cas de la désactivation du profil => mise de la date d'expiration à la date du jour		
+		if ((skypeProfile.getStatusProfile() == StatusSkypeProfileEnum.DISABLED)
+				&& (profilExisting.getStatusProfile() == StatusSkypeProfileEnum.ENABLED)) {
+			skypeProfile.setExpirationDate(new Date());
+			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+			if (!isUpdatedProfil) {
+				return false;
+			} else {
+				SkypeProfileEvent event = new SkypeProfileEvent("désactivation du profil", skypeProfile,
+						cilRequester, TypeEventEnum.DESACTIVATION);
+				repositorySkypeProfileEvent.create(event);
+			}			
+		}
+
+		// 3) Cas de la réactivation du profil => recalcul de la d'expiration + 2 ans		
+		if ((skypeProfile.getStatusProfile() == StatusSkypeProfileEnum.ENABLED)
+				&& (profilExisting.getStatusProfile() == StatusSkypeProfileEnum.DISABLED)) {
+			skypeProfile.setExpirationDateWhenReCreated();
+			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+			if (!isUpdatedProfil) {
+				return false;
+			} else {
+				SkypeProfileEvent event = new SkypeProfileEvent("activation du profil", skypeProfile,
+						cilRequester, TypeEventEnum.ACTIVATION);
+				repositorySkypeProfileEvent.create(event);
+			}			
+		}		
 		
-		return false;
+		// 4) Autres cas de mises à jour : on trace les champs qui ont été modifiés
+		if (!isUpdatedProfil) {
+			// on récupère la date d'expiration existante car elle est non modifiable de l'ext.
+			skypeProfile.setExpirationDate(profilExisting.getExpirationDate());
+			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+			if (!isUpdatedProfil) {
+				return false;
+			} else {
+				try {
+					changedFields = SkypeProfile.difference(profilExisting, skypeProfile);				
+				} catch (IllegalAccessException e) {
+					// TODO Mettre une log erreur
+					e.printStackTrace();
+					return false;
+				}
+				for (String field : changedFields) {
+					comment += field;
+				}
+				
+				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
+						cilRequester, TypeEventEnum.MODIFICATION);
+				repositorySkypeProfileEvent.create(event);
+			}			
+		}
+		
+		return true;
 	}
 
 

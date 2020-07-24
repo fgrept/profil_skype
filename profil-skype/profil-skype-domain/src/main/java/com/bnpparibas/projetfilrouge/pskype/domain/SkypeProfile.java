@@ -1,8 +1,14 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.context.annotation.Profile;
 
 /**
  * Cette classe contient les informations d'un profil Skype.
@@ -44,25 +50,24 @@ public class SkypeProfile {
 	
 	public Date getExpirationDate() {
 		return expirationDate;
-	}
-
-	
+	}	
 	
 	public StatusSkypeProfileEnum getStatusProfile() {
 		return statusProfile;
 	}
 
-
-
 	public void setStatusProfile(StatusSkypeProfileEnum statusProfile) {
 		this.statusProfile = statusProfile;
 	}
 
-
-
 	public void setExpirationDate(Date expirationDate) {
 		this.expirationDate = expirationDate;
 	}
+	
+	public void setExpirationDateWhenReCreated() {
+		this.expirationDate = calcDateExpiration();
+	}
+	
 	public SkypeProfile() {
 		this.expirationDate = calcDateExpiration();
 	}
@@ -172,4 +177,34 @@ public class SkypeProfile {
 	    cal.add(Calendar.YEAR,2);
 	    return cal.getTime();
 	}
+	
+	/**
+	 * Méthode permettant de détecter les différences entre deux profils skype
+	 * sur tous les champs de classe
+	 * @param avant
+	 * @param après
+	 * @return
+	 * @throws IllegalAccessException
+	 */
+	
+	public static List<String> difference(SkypeProfile avant, SkypeProfile après) throws IllegalAccessException {
+	     List<String> changedProperties = new ArrayList<>();
+	     for (Field field : avant.getClass().getDeclaredFields()) {
+	        // You might want to set modifier to public first (if it is not public yet)
+	        field.setAccessible(true);
+	        Object value1 = field.get(avant);
+	        Object value2 = field.get(après); 
+	        if ( (value1 != null && value2 != null) 
+	        		&& (field.getName() != "SIP")
+	        		&& (field.getName() != "collaborater")) {
+	            System.out.println(field.getName() + "=" + value1);
+	            System.out.println(field.getName() + "=" + value2);
+	            if (!Objects.equals(value1, value2)) {
+	                changedProperties.add(field.getName()+ " : " + value2);
+	            }
+	        }
+	    }
+	    return changedProperties;
+	}
+	
 }
