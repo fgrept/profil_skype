@@ -17,8 +17,6 @@ public interface ISkypeProfileManagement {
 	void addNewSkypeProfile(SkypeProfile skypeProfile, String itcorrespondantId);
 	
 	
-	void addNewSkypeProfileWithEvent(SkypeProfileDto skypeProfile, SkypeProfileEventDto skypeProfileEventDto);
-	
 	
 	List<SkypeProfile> findAllSkypeProfile();
 	
@@ -27,7 +25,7 @@ public interface ISkypeProfileManagement {
 	
 
 
-	void updateSkypeProfile(String sip, SkypeProfile skypeProfile, String itCorrespondantId);
+	void updateSkypeProfile(SkypeProfile skypeProfile, String itCorrespondantId);
 
 	
 	

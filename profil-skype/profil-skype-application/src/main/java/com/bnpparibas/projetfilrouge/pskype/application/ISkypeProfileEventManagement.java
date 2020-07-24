@@ -11,7 +11,6 @@ public interface ISkypeProfileEventManagement {
 	
 	
 
-	void addNewSkypeProfileEvent(SkypeProfileEventDto skypeProfileEvent,SkypeProfile skypeProfile);
 	void addNewSkypeProfileEventForCreation(SkypeProfile skypeProfile, String itCollaboraterId);	
 	void addNewSkypeProfileEventForUpdate(SkypeProfile skypeProfile, SkypeProfile skypeProfileDB,String itCorrespondantId);
 

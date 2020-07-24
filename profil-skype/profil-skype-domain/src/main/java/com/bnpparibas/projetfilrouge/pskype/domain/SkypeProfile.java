@@ -62,6 +62,11 @@ public class SkypeProfile {
 	public void setExpirationDate() {
 		this.expirationDate = calcDateExpiration();
 	}
+	
+	public void setExpirationDateToToday() {
+		this.expirationDate = calcDate();
+	}
+	
 	public SkypeProfile() {
 		this.expirationDate = calcDateExpiration();
 	}
@@ -154,6 +159,13 @@ public class SkypeProfile {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 	    cal.add(Calendar.YEAR,2);
+	    return cal.getTime();
+	}
+	
+	private Date calcDate () {
+		// La date d'expiration du profil skype est de 2 ans à partir de sa date de création 
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
 	    return cal.getTime();
 	}
 }

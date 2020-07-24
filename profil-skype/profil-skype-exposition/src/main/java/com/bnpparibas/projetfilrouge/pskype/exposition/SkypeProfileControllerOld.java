@@ -60,7 +60,7 @@ public class SkypeProfileControllerOld {
 		SkypeProfileEventDto skypeProfileEvent =new SkypeProfileEventDto (skypeProfile, TypeEventEnum.CREATION,"CREATION DU PROFIL SKYPE","000016");
 						
 	
-		skypeProfileManagement.addNewSkypeProfileWithEvent(skypeProfile,skypeProfileEvent);
+		//skypeProfileManagement.addNewSkypeProfileWithEvent(skypeProfile,skypeProfileEvent);
 		
 		System.out.println("Exposition : création effectuée avec Event");
 		
@@ -86,14 +86,14 @@ public class SkypeProfileControllerOld {
 	
 	
 	@PostMapping("/update")
-	public void updateSkypeProfil(@RequestBody String sip, SkypeProfile skypeProfile,String itcorrespondantId) {
+	public void updateSkypeProfil(@RequestBody SkypeProfile skypeProfile,String itcorrespondantId) {
 		
 		skypeProfile.setSIP("mido.82@live.com");
 		skypeProfile.setDialPlan("DP-MA");
 		skypeProfile.setExchUser("mehdi.el@gmail.com");
 		itcorrespondantId="000016" ;
 		
-		skypeProfileManagement.updateSkypeProfile(sip,skypeProfile,itcorrespondantId);	
+		skypeProfileManagement.updateSkypeProfile(skypeProfile,itcorrespondantId);	
 		
 		System.out.println("Exposition : Mise à jour effectuée");
 	

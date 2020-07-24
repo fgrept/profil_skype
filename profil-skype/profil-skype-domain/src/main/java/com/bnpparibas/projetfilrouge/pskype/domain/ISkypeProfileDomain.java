@@ -2,6 +2,7 @@ package com.bnpparibas.projetfilrouge.pskype.domain;
 
 import java.util.List;
 
+
 /**
  * 
  * @author 479680
@@ -27,10 +28,14 @@ public interface ISkypeProfileDomain {
 		SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status);
 		
 		SkypeProfile findSkypeProfileBySip(String sip);
-
+		
+		SkypeProfile findSkypeProfileByCollaborater(Collaborater collaborater);
+		
 		List<SkypeProfile> findAllSkypeProfile();
 		
 		List<SkypeProfile> findSkypeProfileFilters();
+
+		
 
 	
 }
