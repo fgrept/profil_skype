@@ -56,8 +56,10 @@ public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain
 
 	@Override
 	public List<SkypeProfileEvent> findAllEventBySkypeProfile(SkypeProfile skypeProfile) {		
-
-		List<SkypeProfileEventEntity> Entitys = skypeProfileEventRepository.findBySIP(skypeProfile.getSIP());		
+		
+		SkypeProfileEntity entity = entityMapperSkypeProfile.mapToEntity(skypeProfile);
+		
+		List<SkypeProfileEventEntity> Entitys = skypeProfileEventRepository.findBySkypeProfile(entity);		
 		return entityMapper.mapToDomainList(Entitys);	
 		
 	}

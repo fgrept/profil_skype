@@ -26,7 +26,7 @@ public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntit
 	// ne doit pas fonctionner : ne respecte pas JPA
 	SkypeProfileEntity findByCollaborater(CollaboraterEntity collaboraterEntity);
 	
-	@Query("select p from SkypeProfileEntity where p.collaborater.collaboraterId := id")
+	@Query(value = "select p from SkypeProfileEntity where p.collaborater.collaboraterId := id", nativeQuery = true)
 	SkypeProfileEntity getSkypeProfilByIdCollab (@Param("id") String idAnnuaire);
 		
 }

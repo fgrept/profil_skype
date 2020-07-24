@@ -19,8 +19,8 @@ import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
 @Transactional
 public class CollaboraterManagementImpl implements ICollaboraterManagment {
 
-@Autowired
-private ICollaboraterDomain collaboraterDomain;
+	@Autowired
+	private ICollaboraterDomain collaboraterDomain;
 	
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
 
