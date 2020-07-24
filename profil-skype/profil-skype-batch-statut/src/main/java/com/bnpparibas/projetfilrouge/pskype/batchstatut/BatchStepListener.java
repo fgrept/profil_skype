@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class BatchStepListener implements StepExecutionListener {
 
-	Logger log = LoggerFactory.getLogger(BatchWriteListener.class);
+	Logger log = LoggerFactory.getLogger(BatchStepListener.class);
 	
 	@Value("${mailreceiver}")
 	private String mailReceiver;
