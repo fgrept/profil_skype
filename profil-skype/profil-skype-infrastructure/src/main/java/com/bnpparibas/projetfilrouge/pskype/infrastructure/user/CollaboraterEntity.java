@@ -1,10 +1,13 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Cascade;
@@ -16,6 +19,8 @@ import org.hibernate.annotations.CascadeType;
  *
  */
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorValue("Collaborater")
 public class CollaboraterEntity {
 	
 	@Id
@@ -30,7 +35,7 @@ public class CollaboraterEntity {
 	private String mailAdress;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@Cascade(CascadeType.ALL)
+	@Cascade(CascadeType.PERSIST)
 	private OrganizationUnityEntity orgaUnit;
 	
 	
@@ -45,6 +50,16 @@ public class CollaboraterEntity {
 		this.deskPhoneNumber=deskPhoneNumber2;
 		this.mobilePhoneNumber=mobilePhoneNumber2;
 		this.mailAdress=mailAdress2;
+	}
+	public CollaboraterEntity(String nom, String prenom, String id, String deskPhoneNumber2, String mobilePhoneNumber2,
+			String mailAdress2, OrganizationUnityEntity orgaUnit) {
+		this.collaboraterId = id;
+		this.firstName=prenom;
+		this.lastName=nom;
+		this.deskPhoneNumber=deskPhoneNumber2;
+		this.mobilePhoneNumber=mobilePhoneNumber2;
+		this.mailAdress=mailAdress2;
+		this.orgaUnit=orgaUnit;
 	}
 	public String getLastName() {
 		return lastName;

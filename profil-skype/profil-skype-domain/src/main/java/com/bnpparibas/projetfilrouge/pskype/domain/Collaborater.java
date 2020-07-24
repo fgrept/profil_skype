@@ -21,9 +21,9 @@ public class Collaborater extends Person {
 	
 	@Size(max = 17)
 	private String collaboraterId;
-	@PhoneControl
+	//@PhoneControl
 	private String deskPhoneNumber;
-	@PhoneControl
+	//@PhoneControl
 	private String mobilePhoneNumber;
 	@EmailControl
 	private String mailAdress;
@@ -71,6 +71,7 @@ public class Collaborater extends Person {
 		this.mailAdress = mailAdress;
 	}
 
+	
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}
@@ -99,6 +100,10 @@ public class Collaborater extends Person {
 	}
 	public void setOrgaUnit(OrganizationUnity orgaUnit) {
 		this.orgaUnit = orgaUnit;
+	}
+	
+	public void setCollaboraterId(String collaboraterId) {
+		this.collaboraterId = collaboraterId;
 	}
 
 	@Override

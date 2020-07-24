@@ -11,29 +11,41 @@ import java.util.List;
  */
 public interface ISkypeProfileDomain {
 
-	/**
-	 * Méthode permettant d'ajouter un nouveau profil Skype pour un collaborateur
-	 * 
-	 */
-		void create(SkypeProfile SkypeProfile);
+		/**
+		 * Méthode permettant d'ajouter un nouveau profil Skype pour un collaborateur
+		 * 
+		 */
+		boolean create(SkypeProfile SkypeProfile);
 		
-		void update(String sip,SkypeProfile SkypeProfile);
+		boolean update(SkypeProfile SkypeProfile);
 		
-		void delete(String sip);
+		boolean delete(String sip);
 		
-	/**
-	 * Méthode permettant de récupérer un collaborateur avec ses critères d'UO et de site d'affectation
-	 * 
-	 */
+
 		SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status);
 		
 		SkypeProfile findSkypeProfileBySip(String sip);
+		
+		SkypeProfile findSkypeProfileByIdCollab(String idAnnuaire);
 		
 		SkypeProfile findSkypeProfileByCollaborater(Collaborater collaborater);
 		
 		List<SkypeProfile> findAllSkypeProfile();
 		
-		List<SkypeProfile> findSkypeProfileFilters();
+		/**
+		 * Méthode permettant de récupérer des profils Skype selon une liste de critères fournis en entrée
+		 * 
+		 * @param enterpriseVoiceEnabled
+		 * @param voicePolicy
+		 * @param dialPlan
+		 * @param samAccountName
+		 * @param exUmEnabled
+		 * @param exchUser
+		 * @return
+		 */
+		List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
+				String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser,
+				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode);
 
 		
 

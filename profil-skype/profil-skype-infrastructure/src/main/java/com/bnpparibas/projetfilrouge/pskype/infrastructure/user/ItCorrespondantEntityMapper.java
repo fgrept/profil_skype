@@ -3,6 +3,7 @@
 
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
@@ -17,7 +18,10 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
 @Component
 public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant, ItCorrespondantEntity> {
-
+	
+	@Autowired
+	OrganizationUnityEntityMapper orgaMapper;
+	
 	/**
 	 * Cette méthode récupère le contenu de la couche infra vers la classe ItCorrespondant de la classe Domaine
 	 * @param L'entité ItCorrespondantEntity de la couche de persistance
@@ -27,7 +31,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 	@Override
 	public ItCorrespondant mapToDomain(ItCorrespondantEntity entity) {
 		
-		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress());
+		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress(),orgaMapper.mapToDomain(entity.getOrgaUnit()));
 		itCorrespondant.setRoles(entity.getRoles());
 		// pour spring security
 		itCorrespondant.setPassword(entity.getEncryptedPassword());
@@ -51,6 +55,9 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 		entity.setMobilePhoneNumber(dto.getMobilePhoneNumber());
 		entity.setMailAdress(dto.getMailAdress());
 		entity.setRoles(dto.getRoles());
+		if (dto.getOrgaUnit()!=null) {
+			entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
+		}
 		// pour spring security
 		entity.setEncryptedPassword(dto.getPassword());
 		

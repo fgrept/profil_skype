@@ -3,7 +3,13 @@ package com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
@@ -50,68 +56,81 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	 * de profil.
 	 * 
 	 * @param SkypeProfile skypeProfile
+	 * @return 
 	 */
 	@Override
-	public void create(SkypeProfile skypeProfile) {
 
+	public boolean create(SkypeProfile skypeProfile) {
+	
 		System.out.println("SkypeProfileRepositoryImpl : create");
 //		System.out.println("SkypeProfileRepositoryImpl : "+ skypeProfile.getCollaborater().getCollaboraterId());
 		SkypeProfileEntity entity = skypeProfileRepository.findBySIP(skypeProfile.getSIP());
-		if (entity == null) {
+		if (entity==null) {
 			entity = entityMapperSkypeProfile.mapToEntity(skypeProfile);
 //			System.out.println("SkypeProfileRepositoryImpl : après mapping");
 			entity.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 //			System.out.println("SkypeProfileRepositoryImpl : avant récupération collaborateur");
-			CollaboraterEntity collaboraterEntity = collaboraterRepository
-					.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId());
-			if (skypeProfileRepository.findByCollaborater(collaboraterEntity) == null) {
-				entity.setCollaborater(collaboraterRepository
-						.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
+			CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId());
+			if (collaboraterEntity ==null) { 
+				// on cherche a créer un profil skype pour un collaborateur qui n'existe pas encore
+				// par exemple pour les tests
+				skypeProfileRepository.save(entity);
+				return true;
+			}
+			else {
+				if (skypeProfileRepository.findByCollaborater(collaboraterEntity)==null) {
+				entity.setCollaborater(collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
 				System.out.println("SkypeProfileRepositoryImpl : avant sauvegarde");
 				skypeProfileRepository.save(entity);
-			} else {
-				throw new RuntimeException(
-						skypeProfile.getCollaborater().getCollaboraterId() + " a déjà un profil skype");
+				return true;
+				}
+				else {
+					//throw new RuntimeException(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
+					return false;
+				}
 			}
 
-		} else {
-			throw new RuntimeException("Profil Skype " + skypeProfile.getSIP() + " existe déjà");
+		}else {
+			//throw new RuntimeException("Profil Skype "+skypeProfile.getSIP()+" existe déjà");
+			return false;
 		}
 	}
+	
 
 	@Override
 	public SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status) {
 		// TODO Auto-generated method stub
 		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findBySIPAndStatusProfile(sip, status));
+		
 	}
+	
 
-	// US006
+	// US006 Supprimer un profil Skype
 	@Override
-	public void delete(String sip) {
 
-		// Récupérer le profil Skype à partir de l'identifiant SIP
-
+	public boolean delete(String sip) {
+		
+		//Récupérer le profil Skype à partir de l'identifiant SIP		
 		SkypeProfileEntity skypeProfile = skypeProfileRepository.findBySIP(sip);
 
 		if (skypeProfile == null) {
-			throw new RuntimeException("Profil skype non trouvé , SIP : " + sip);
+			//throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
+			return false;
 		} else {
 
-			// Avant la suppresion du profil Skype, on supprime d'abord les événements
-			// correspondant.
-
+			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
 			skypeProfileEventRepository.deleteAll(skypeProfileEventRepository.findBySkypeProfile(skypeProfile));
-
-			// Suppression du profil Skype
 			skypeProfileRepository.delete(skypeProfile);
+			return true;
 
 		}
+	
 
 	}
 
 	@Override
 	public List<SkypeProfile> findAllSkypeProfile() {
-		// TODO Auto-generated method stub
+		
 		List<SkypeProfile> listSkypeProfile = new ArrayList<SkypeProfile>();
 		for (SkypeProfileEntity entity : skypeProfileRepository.findBySIPNotNull()) {
 			listSkypeProfile.add(entityMapperSkypeProfile.mapToDomain(entity));
@@ -120,27 +139,29 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	}
 
 	@Override
-	public List<SkypeProfile> findSkypeProfileFilters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public SkypeProfile findSkypeProfileBySip(String sip) {
-		// TODO Auto-generated method stub
+		
 		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findBySIP(sip));
 	}
 
+
 //US005 Mise à jour d'un profil skype
 	@Override
-	public void update(String sip, SkypeProfile skypeProfileUpdated) {
-
-		// Récupérer le profil Skype à partir de l'identifiant SIP
-
-		SkypeProfileEntity skypeProfileEntityDB = skypeProfileRepository.findBySIP(sip);
+	public boolean update(SkypeProfile skypeProfileUpdated) {
+		
+		// Récupérer le SIP à partir de l'Id collaborater
+		
+		SkypeProfileEntity sp = skypeProfileRepository
+				                .getSkypeProfilByIdCollab(skypeProfileUpdated.getCollaborater().getCollaboraterId()) ;
+				
+		// Récupérer le profil Skype en base de données à partir de l'identifiant SIP
+		
+		SkypeProfileEntity skypeProfileEntityDB = skypeProfileRepository.findBySIP(sp.getSIP());
 
 		if (skypeProfileEntityDB == null) {
-			throw new RuntimeException("Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP());
+			//throw new RuntimeException("Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP());
+			return false;
+			
 		} else {
 
 			// Mapper le skypeProfil Domaine
@@ -157,7 +178,9 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 
 			skypeProfileRepository.save(skypeProfileEntity);
 
+			return true;
 		}
+		
 
 	}
 
@@ -165,8 +188,100 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	public SkypeProfile findSkypeProfileByCollaborater(Collaborater collaborater) {
 		// TODO Auto-generated method stub
 		CollaboraterEntity collaboraterEntity = entityMapperCollaborater.mapToEntity(collaborater);
-		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findByCollaborater(collaboraterEntity));
+		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findByCollaborater(collaboraterEntity)) ;
+	}
+ 
+	@Override
+	public SkypeProfile findSkypeProfileByIdCollab(String idAnnuaire) {
+		
+		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.getSkypeProfilByIdCollab(idAnnuaire));
+	}
 
+	@Override
+	public List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
+			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
+			String orgaUnityCode, String siteCode) {
+		
+		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
+		profilEntity = findAllSkypeProfileEntityFilters(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile,
+				orgaUnityCode, siteCode);
+		
+		return entityMapperSkypeProfile.mapToDomainList(profilEntity);
+	}
+
+	/**
+	 * US004 Méthode privée basée sur les spécifications JPA pour ajouter des critères variable de requêtes
+	 * 
+	 * @param enterpriseVoiceEnabled
+	 * @param voicePolicy
+	 * @param dialPlan
+	 * @param samAccountName
+	 * @param exUmEnabled
+	 * @param exchUser
+	 * @return
+	 */
+	private List<SkypeProfileEntity> findAllSkypeProfileEntityFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
+			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
+			String orgaUnityCode, String siteCode) {
+		
+		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
+		profilEntity = skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
+			
+			@Override
+			public Predicate toPredicate(Root<SkypeProfileEntity> root, CriteriaQuery<?> query,
+					CriteriaBuilder criteriaBuilder) {
+				
+				List<Predicate> predicates = new ArrayList<>();
+				if (enterpriseVoiceEnabled != null) {
+					System.out.println("recherche par enterpriseVoiceEnabled "+enterpriseVoiceEnabled);
+					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+				}
+				
+				if (voicePolicy != null && voicePolicy != "") {
+					System.out.println("recherche par voicePolicy "+voicePolicy);
+					predicates.add(criteriaBuilder.equal(root.get("voicePolicy"),voicePolicy));
+				}
+				
+				if (dialPlan != null && dialPlan != "") {
+					System.out.println("recherche par dialPlan "+dialPlan);
+					predicates.add(criteriaBuilder.equal(root.get("dialPlan"),dialPlan));
+				}				
+				
+				if (samAccountName != null && samAccountName != "") {
+					System.out.println("recherche par samAccountName "+samAccountName);
+					predicates.add(criteriaBuilder.equal(root.get("samAccountName"),samAccountName));
+				}	
+
+				if (exUmEnabled != null) {
+					System.out.println("recherche par exUmEnabled "+exUmEnabled);
+					predicates.add(criteriaBuilder.equal(root.get("exUmEnabled"),exUmEnabled));
+				}
+				
+				if (exchUser != null && exchUser != "") {
+					System.out.println("recherche par exchUser "+exchUser);
+					predicates.add(criteriaBuilder.equal(root.get("exchUser"),exchUser));
+				}
+				
+				if (statusProfile != null) {
+					System.out.println("recherche par statusProfile "+statusProfile);
+					predicates.add(criteriaBuilder.equal(root.get("statusProfile"),statusProfile));
+				}
+				
+				if (orgaUnityCode != null) {
+					System.out.println("recherche par orgaUnityCode "+orgaUnityCode);
+					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaUnityCode"),orgaUnityCode));
+				}
+				
+				if (siteCode != null) {
+					System.out.println("recherche par siteCode "+siteCode);
+					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaSite").get("siteCode"),siteCode));
+				}
+				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+			}
+
+		});
+		
+		return profilEntity;
 	}
 
 }

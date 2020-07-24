@@ -2,8 +2,11 @@ package com.bnpparibas.projetfilrouge.pskype.application;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
@@ -13,22 +16,36 @@ import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
  *
  */
 @Service
+@Transactional
 public class CollaboraterManagementImpl implements ICollaboraterManagment {
 
 @Autowired
 private ICollaboraterDomain collaboraterDomain;
 	
+	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
+
+
 	@Override
-	public void createCollaborater(String nom, String prenom, String id, String deskPhoneNumber,
-			String mobilePhoneNumber, String mailAdress) {
-		Collaborater collaborater = new Collaborater(nom, prenom, id, deskPhoneNumber, mobilePhoneNumber, mailAdress);
-		collaboraterDomain.create(collaborater);
+	public boolean createCollaborater(Collaborater collaborater) {
+		return collaboraterDomain.create(collaborater);
+	}
+	@Override
+	public List<Collaborater> listCollaborater() {
+		
+		return collaboraterDomain.findAllCollaborater();
 	}
 
 	@Override
-	public List<Collaborater> listCollaborater() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collaborater findCollaboraterbyIdAnnuaire(String idAnnuaire) {
+		
+		if (idAnnuaire != null) {
+			return collaboraterDomain.findByCollaboraterId(idAnnuaire);
+		}else {
+			logger.error("findCollaboraterbyIdAnnuaire : id annuaire non renseigné en entrée");
+			return null;
+		}
+		
 	}
+
 
 }

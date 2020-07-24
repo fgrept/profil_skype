@@ -3,6 +3,8 @@ package com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
@@ -47,6 +52,7 @@ public class SkypeProfileEntity {
 	private String exchUser;
 		 
 	private String objectClass;
+	@Enumerated(EnumType.ORDINAL)
 	private StatusSkypeProfileEnum statusProfile;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -54,6 +60,7 @@ public class SkypeProfileEntity {
 	
 
 	@OneToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.PERSIST)
 	private CollaboraterEntity collaborater;
 	
 	public SkypeProfileEntity() {

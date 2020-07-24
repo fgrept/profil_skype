@@ -77,6 +77,21 @@ public class SkypeProfile {
 	    this.expirationDate = calcDateExpiration();
 	}
 
+	public SkypeProfile(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
+			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass, Collaborater collaborater) {
+		super();
+		SIP = sIP;
+		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
+		this.voicePolicy = voicePolicy;
+		this.dialPlan = dialPlan;
+		this.samAccountName = samAccountName;
+		this.exUmEnabled = exUmEnabled;
+		this.exchUser = exchUser;
+		this.objectClass = objectClass;
+		this.collaborater = collaborater;
+		this.expirationDate = calcDateExpiration();
+	}
+
 	public String getSIP() {
 		return SIP;
 	}
