@@ -52,14 +52,14 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 
 	
 	@Override
-	public boolean addNewSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL) {
+	public boolean addNewSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment) {
 		
 		 if (repositorySkypeProfile.create(skypeProfile) == true) {
 			 ItCorrespondant itCorrespondant = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);
 			 
 			 // création de l'évènement associé
 			 if (itCorrespondant != null) {
-				 SkypeProfileEvent event = new SkypeProfileEvent("création du profil", skypeProfile, itCorrespondant, TypeEventEnum.CREATION);
+				 SkypeProfileEvent event = new SkypeProfileEvent(eventComment, skypeProfile, itCorrespondant, TypeEventEnum.CREATION);
 				 repositorySkypeProfileEvent.create(event);
 				 return true;
 			}
@@ -166,11 +166,11 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 
 
 	@Override
-	public boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL) {
+	public boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment) {
 		
 		boolean isUpdatedProfil = false;
 		List<String> changedFields = new ArrayList<String>();
-		String comment = "Champs modifiés : ";
+		String comment = "Commentaire utilisateur : <<" + eventComment + ">>";
 		
 		// Lors de la mise à jour d'un profil : tous les champs peuvent être modifiés
 		// On récupère donc le profil existant associé au collaborateur
@@ -192,7 +192,8 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 			if (!isUpdatedProfil) {
 				return false;
 			} else {
-				SkypeProfileEvent event = new SkypeProfileEvent("création du profil, nouveau sip : " + skypeProfile.getSIP(), skypeProfile,
+				SkypeProfileEvent event = new SkypeProfileEvent(comment + 
+						"" + skypeProfile.getSIP(), skypeProfile,
 						cilRequester, TypeEventEnum.CREATION);
 				repositorySkypeProfileEvent.create(event);
 			}
@@ -206,7 +207,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 			if (!isUpdatedProfil) {
 				return false;
 			} else {
-				SkypeProfileEvent event = new SkypeProfileEvent("désactivation du profil", skypeProfile,
+				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
 						cilRequester, TypeEventEnum.DESACTIVATION);
 				repositorySkypeProfileEvent.create(event);
 			}			
@@ -220,12 +221,12 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 			if (!isUpdatedProfil) {
 				return false;
 			} else {
-				SkypeProfileEvent event = new SkypeProfileEvent("activation du profil", skypeProfile,
+				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
 						cilRequester, TypeEventEnum.ACTIVATION);
 				repositorySkypeProfileEvent.create(event);
 			}			
 		}		
-		
+		// - Champs modifiés : 
 		// 4) Autres cas de mises à jour : on trace les champs qui ont été modifiés
 		if (!isUpdatedProfil) {
 			// on récupère la date d'expiration existante car elle est non modifiable de l'ext.
@@ -241,10 +242,12 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 					e.printStackTrace();
 					return false;
 				}
-				for (String field : changedFields) {
-					comment += field;
+				for (int i = 0; i <= changedFields.size(); i++) {
+					if (i==0) comment += " - Champs modifiés : ";
+					comment += changedFields.get(i);
+					if (i == changedFields.size()) comment += ", ";
 				}
-				
+			
 				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
 						cilRequester, TypeEventEnum.MODIFICATION);
 				repositorySkypeProfileEvent.create(event);

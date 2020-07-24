@@ -40,9 +40,10 @@ public interface ISkypeProfileManagement {
 	 * 
 	 * @param skypeProfile
 	 * @param idAnnuaireCIL
+	 * @param eventComment
 	 * @return boolean
 	 */
-	boolean addNewSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL);
+	boolean addNewSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment);
 	
 	
 	/**
@@ -51,9 +52,10 @@ public interface ISkypeProfileManagement {
 	 * 
 	 * @param skypeProfile
 	 * @param idAnnuaireCIL
+	 * @param eventComment
 	 * @return boolean
 	 */
-	boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL);
+	boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment);
 	
 	
 	//à merger avec méthode ci-dessus pour inclure les RDG de Mehdi

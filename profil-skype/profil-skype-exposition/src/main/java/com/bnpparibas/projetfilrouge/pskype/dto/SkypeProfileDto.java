@@ -7,12 +7,13 @@ import javax.validation.constraints.Size;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 
 /**
- * Classe exposée à l'utilisateur sur le profil Skype
- * @author Judicaël
+ * Classe exposée à l'utilisateur sur le profil Skype pour toute action de création, mise à jour
+ * @author La Fabrique
  *
  */
 public class SkypeProfileDto {
 	
+	// données du profil
 	private String SIP;
 	private boolean enterpriseVoiceEnabled;	
 	private String voicePolicy;
@@ -21,18 +22,18 @@ public class SkypeProfileDto {
 	private boolean exUmEnabled;
 	private String exchUser;
 	private String objectClass;
+	//statut du profil : activé, désactivé, expiré
+	private StatusSkypeProfileEnum statusProfile;	
 	
+	// données du collaborateur possédant ce profil skype
 	@Size(max = 17)
 	private String collaboraterId;
 	
 	//toute action sur un profil skype est réalisée par un CIL et sera tracée en base évènement
 	@Size(max = 17)
 	private String itCorrespondantId;
+	private String eventComment;
 	
-	//statut du profil : activé, désactivé, expiré (si date d'expiration supérieure > date du jour)
-	private StatusSkypeProfileEnum statusProfile;	
-	private Date expirationDate;
-
 	
 	public StatusSkypeProfileEnum getStatusProfile() {
 		return statusProfile;
@@ -40,14 +41,6 @@ public class SkypeProfileDto {
 
 	public void setStatusProfile(StatusSkypeProfileEnum statusProfile) {
 		this.statusProfile = statusProfile;
-	}
-
-	public Date getExpirationDate() {
-		return expirationDate;
-	}
-
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
 	}
 
 	public SkypeProfileDto(String SIP, String collaboraterId, String itCorrespondantId) {
@@ -66,7 +59,7 @@ public class SkypeProfileDto {
 	public SkypeProfileDto(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
 			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass,
 			@Size(max = 17) String collaboraterId, @Size(max = 17) String itCorrespondantId,
-			StatusSkypeProfileEnum statusProfile, Date expirationDate) {
+			StatusSkypeProfileEnum statusProfile, String eventComment) {
 		super();
 		SIP = sIP;
 		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
@@ -79,7 +72,7 @@ public class SkypeProfileDto {
 		this.collaboraterId = collaboraterId;
 		this.itCorrespondantId = itCorrespondantId;
 		this.statusProfile = statusProfile;
-		this.expirationDate = expirationDate;
+		this.eventComment = eventComment;
 	}
 
 	public boolean isEnterpriseVoiceEnabled() {
@@ -131,7 +124,6 @@ public class SkypeProfileDto {
 		SIP = sIP;
 	}
 	
-
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}
@@ -143,6 +135,14 @@ public class SkypeProfileDto {
 	}
 	public void setItCorrespondantId(String itCorrespondantId) {
 		this.itCorrespondantId = itCorrespondantId;
+	}
+
+	public String getEventComment() {
+		return eventComment;
+	}
+
+	public void setEventComment(String eventComment) {
+		this.eventComment = eventComment;
 	}
 	
 }

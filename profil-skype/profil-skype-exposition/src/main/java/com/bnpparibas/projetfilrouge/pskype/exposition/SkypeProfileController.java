@@ -51,12 +51,13 @@ public class SkypeProfileController {
 		// au service applicatif.
 		Collaborater collab = collabManagement.findCollaboraterbyIdAnnuaire(skypeProfile.getCollaboraterId());
 		String idAnnuaireCIL = skypeProfile.getItCorrespondantId();
+		String comment = skypeProfile.getEventComment();
 		
 		if (collab == null || idAnnuaireCIL == null) {
 			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
 		} else {
 			SkypeProfile profilWithCollab = mapDtoToDomain(skypeProfile, collab);
-			boolean isCreated = skypeProfileManagement.addNewSkypeProfile (profilWithCollab,idAnnuaireCIL);
+			boolean isCreated = skypeProfileManagement.addNewSkypeProfile (profilWithCollab,idAnnuaireCIL,comment);
 			
 			if (isCreated) {
 				return new ResponseEntity<Boolean>(true, HttpStatus.CREATED);
@@ -115,16 +116,19 @@ public class SkypeProfileController {
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/update")
 	public ResponseEntity<Boolean> updateSkypeProfil(@RequestBody SkypeProfileDto skypeProfile) {
-		
+
+		// on récupère le collaborateur dans sa totalité avant de le passer
+		// au service applicatif.
 		Collaborater collab = collabManagement.findCollaboraterbyIdAnnuaire(skypeProfile.getCollaboraterId());
 		String idAnnuaireCIL = skypeProfile.getItCorrespondantId();
+		String comment = skypeProfile.getEventComment();
 		
 		if (collab == null || idAnnuaireCIL == null) {
 			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
 		} else {
 			SkypeProfile profilToChange = mapDtoToDomain(skypeProfile, collab);
 			
-			boolean isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL);
+			boolean isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL,comment);
 			
 			if (isModified) {
 				return new ResponseEntity<Boolean>(true, HttpStatus.OK);
