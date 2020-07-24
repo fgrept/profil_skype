@@ -20,6 +20,7 @@
   	<module>profil-skype-domain</module>
   	<module>profil-skype-infrastructure</module>
   	<module>profil-skype-batch-statut</module>
+  	<module>profil-skype-batch-referentiel</module>
     </modules>
   
   
