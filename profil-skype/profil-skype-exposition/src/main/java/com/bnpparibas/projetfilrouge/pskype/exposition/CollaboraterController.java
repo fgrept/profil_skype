@@ -54,7 +54,7 @@ public class CollaboraterController {
 	@PostMapping("/create")
 	public ResponseEntity<Boolean> createCollaborater(@RequestBody CollaboraterDto dto) {
 		
-		if (dto.getCollaboraterId() == null) {
+		if ((dto.getCollaboraterId() == null)|| (dto.getCollaboraterId()=="")) {
 			return new ResponseEntity<Boolean>(false,HttpStatus.NO_CONTENT);
 		}
 		Collaborater collaborater = collaboraterManagment.findCollaboraterbyIdAnnuaire(dto.getCollaboraterId());
