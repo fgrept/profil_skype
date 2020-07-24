@@ -7,6 +7,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 
+
 /**
  * Classe exposant les services relatifs aux profils Skype
  * 
@@ -15,6 +16,7 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
  */
 public interface ISkypeProfileManagement {
 	
+
 	/**
 	 * Méthode permettant de récupérer le profil Skype actif en fonction d'un SIP donné
 	 * 
@@ -22,8 +24,8 @@ public interface ISkypeProfileManagement {
 	 * @return SkypeProfile
 	 */
 	SkypeProfile consultActiveSkypeProfile(String sip);
-	
-	
+
+		
 	/**
 	 * Méthode permettant de récupérer le profilSkype d'un collaborateur quelque soit son statut
 	 * Utilisé pour tous les cas de mise à jour du profil qui peuvent concerner tous les champs, même le SIP
@@ -67,6 +69,7 @@ public interface ISkypeProfileManagement {
 	List<SkypeProfile> findAllSkypeProfile();
 	
 	
+	
 	/**
 	 * Méthode permettant de récupérer les profils Skype correspondant
 	 * à certains critères : profil, uo, site.
@@ -78,4 +81,8 @@ public interface ISkypeProfileManagement {
 	
 	
 	boolean deleteSkypeProfile(String sip);
+	
+
+	
+	
 }

@@ -12,56 +12,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntityMapper;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ICollaboraterRepository;
 
 /**
- * Dédiée au profil Skype
- * Elle assure la correspondance entre les méthodes exposées de la couche domaine et celles da la couche infrastructure
- * liste des méthodes :
- * - Création d'un profil skype (US012)
- * - Mise à jour d'un profil skype (US005)
- * - Suppression d'un CIL en base (US006)
- * - Afficher la liste des profils skype - mode Full (US001)
- * - Afficher la liste des profils skype - selon critères (US001)
+ * Dédiée au profil Skype Elle assure la correspondance entre les méthodes
+ * exposées de la couche domaine et celles da la couche infrastructure liste des
+ * méthodes : - Création d'un profil skype (US012) - Mise à jour d'un profil
+ * skype (US005) - Suppression d'un profil Skype en base (US006) - Afficher la
+ * liste des profils skype - mode Full (US001) - Afficher la liste des profils
+ * skype - selon critères (US001)
+ * 
  * @author Judicaël
  *
  */
 
 @Repository
-public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
+public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 
-	
 	@Autowired
-	private SkypeProfileEntityMapper entityMapper;
+	private SkypeProfileEntityMapper entityMapperSkypeProfile;
+
+	@Autowired
+	private CollaboraterEntityMapper entityMapperCollaborater;
 
 	@Autowired
 	private ISkypeProfileRepository skypeProfileRepository;
-	
+
 	@Autowired
-	private ISkypeProfileEventRepository skypeProfileEventRepository ;
-	
+	private ISkypeProfileEventRepository skypeProfileEventRepository;
+
 	@Autowired
-	private ICollaboraterRepository collaboraterRepository;	
-	
+	private ICollaboraterRepository collaboraterRepository;
+
 	/**
-	 * La création est possible uniquement si :
-	 * - Le SIP (adresse mail skype) n'existe pas déjà.
-	 * - Le collaborateur associé au profil skype n'a pas encore de profil.
+	 * La création est possible uniquement si : - Le SIP (adresse mail skype)
+	 * n'existe pas déjà. - Le collaborateur associé au profil skype n'a pas encore
+	 * de profil.
+	 * 
 	 * @param SkypeProfile skypeProfile
 	 * @return 
 	 */
 	@Override
+
 	public boolean create(SkypeProfile skypeProfile) {
-		
+	
 		System.out.println("SkypeProfileRepositoryImpl : create");
 //		System.out.println("SkypeProfileRepositoryImpl : "+ skypeProfile.getCollaborater().getCollaboraterId());
 		SkypeProfileEntity entity = skypeProfileRepository.findBySIP(skypeProfile.getSIP());
 		if (entity==null) {
-			entity = entityMapper.mapToEntity(skypeProfile);
+			entity = entityMapperSkypeProfile.mapToEntity(skypeProfile);
 //			System.out.println("SkypeProfileRepositoryImpl : après mapping");
 			entity.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 //			System.out.println("SkypeProfileRepositoryImpl : avant récupération collaborateur");
@@ -90,60 +95,106 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 			return false;
 		}
 	}
-
+	
 
 	@Override
 	public SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status) {
+		// TODO Auto-generated method stub
+		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findBySIPAndStatusProfile(sip, status));
 		
-		return entityMapper.mapToDomain(skypeProfileRepository.findBySIPAndStatusProfile(sip, status));
 	}
 	
+
+	// US006 Supprimer un profil Skype
 	@Override
-	public boolean update(SkypeProfile SkypeProfile) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
+
 	public boolean delete(String sip) {
 		
 		//Récupérer le profil Skype à partir de l'identifiant SIP		
 		SkypeProfileEntity skypeProfile = skypeProfileRepository.findBySIP(sip);
-		
+
 		if (skypeProfile == null) {
 			//throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
 			return false;
-		
-		}else {
+		} else {
+
 			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
 			skypeProfileEventRepository.deleteAll(skypeProfileEventRepository.findBySkypeProfile(skypeProfile));
 			skypeProfileRepository.delete(skypeProfile);
 			return true;
 
-		}	
-	}
+		}
+	
 
+	}
 
 	@Override
 	public List<SkypeProfile> findAllSkypeProfile() {
 		
 		List<SkypeProfile> listSkypeProfile = new ArrayList<SkypeProfile>();
-		for (SkypeProfileEntity entity:skypeProfileRepository.findBySIPNotNull()) {
-			listSkypeProfile.add(entityMapper.mapToDomain(entity));
+		for (SkypeProfileEntity entity : skypeProfileRepository.findBySIPNotNull()) {
+			listSkypeProfile.add(entityMapperSkypeProfile.mapToDomain(entity));
 		}
 		return listSkypeProfile;
 	}
 
-
 	@Override
 	public SkypeProfile findSkypeProfileBySip(String sip) {
 		
-		return entityMapper.mapToDomain(skypeProfileRepository.findBySIP(sip));
+		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findBySIP(sip));
+	}
+
+
+//US005 Mise à jour d'un profil skype
+	@Override
+	public boolean update(SkypeProfile skypeProfileUpdated) {
+		
+		// Récupérer le SIP à partir de l'Id collaborater
+		
+		SkypeProfileEntity sp = skypeProfileRepository
+				                .getSkypeProfilByIdCollab(skypeProfileUpdated.getCollaborater().getCollaboraterId()) ;
+				
+		// Récupérer le profil Skype en base de données à partir de l'identifiant SIP
+		
+		SkypeProfileEntity skypeProfileEntityDB = skypeProfileRepository.findBySIP(sp.getSIP());
+
+		if (skypeProfileEntityDB == null) {
+			//throw new RuntimeException("Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP());
+			return false;
+			
+		} else {
+
+			// Mapper le skypeProfil Domaine
+
+			SkypeProfileEntity skypeProfileEntity = entityMapperSkypeProfile.mapToEntity(skypeProfileUpdated);
+
+			// Compléter l'Entity avec l'IdSkypeProfile et l'objet Collaborater
+
+			skypeProfileEntity.setIdSkypeProfile(skypeProfileEntityDB.getIdSkypeProfile());
+
+			skypeProfileEntity.setCollaborater(skypeProfileEntityDB.getCollaborater());
+
+			// Mise à jour du profil Skype
+
+			skypeProfileRepository.save(skypeProfileEntity);
+
+			return true;
+		}
+		
+
 	}
 
 	@Override
+	public SkypeProfile findSkypeProfileByCollaborater(Collaborater collaborater) {
+		// TODO Auto-generated method stub
+		CollaboraterEntity collaboraterEntity = entityMapperCollaborater.mapToEntity(collaborater);
+		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findByCollaborater(collaboraterEntity)) ;
+	}
+ 
+	@Override
 	public SkypeProfile findSkypeProfileByIdCollab(String idAnnuaire) {
 		
-		return entityMapper.mapToDomain(skypeProfileRepository.getSkypeProfilByIdCollab(idAnnuaire));
+		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.getSkypeProfilByIdCollab(idAnnuaire));
 	}
 
 	@Override
@@ -155,7 +206,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain{
 		profilEntity = findAllSkypeProfileEntityFilters(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile,
 				orgaUnityCode, siteCode);
 		
-		return entityMapper.mapToDomainList(profilEntity);
+		return entityMapperSkypeProfile.mapToDomainList(profilEntity);
 	}
 
 	/**

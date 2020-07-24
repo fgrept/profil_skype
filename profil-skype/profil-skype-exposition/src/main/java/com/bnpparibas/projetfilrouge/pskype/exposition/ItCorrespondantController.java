@@ -61,7 +61,7 @@ public class ItCorrespondantController {
 		
 		//La création d'un utilisateur requiert toutes les données nécessaires à la création d'un it correspondant donc aussi
 		//collaborateur, personn, uo et site s'ils n'existent pas déjà
-		if (dto.getCollaboraterId() == null) {
+		if (dto.getCollaboraterId() == null||dto.getCollaboraterId() == "") {
 			return new ResponseEntity<Boolean>(false,HttpStatus.NO_CONTENT);
 		}
 		Collaborater collaborater = collaboraterManagment.findCollaboraterbyIdAnnuaire(dto.getCollaboraterId());

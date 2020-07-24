@@ -23,34 +23,35 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 
 /**
  * Services dédiées au profil skype
- * @author Judicaël.
+ * 
+ * @author 479680.
  *
  */
 @Service
 @Transactional
-public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkypeProfileEventManagement  {
+public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkypeProfileEventManagement {
 
-	
 	@Autowired
 	private ISkypeProfileDomain repositorySkypeProfile;
-	
-	@Autowired 
-	private ICollaboraterDomain repositoryCollaborater;
-	
+
+
 	@Autowired
 	private ISkypeProfileEventDomain repositorySkypeProfileEvent;
+
+	@Autowired
+	ICollaboraterDomain repositoryCollaborater;
 	
 	@Autowired 
 	private IItCorrespondantDomain repositoryItCorrespondant;
 	
+
 	@Override
 	public SkypeProfile consultActiveSkypeProfile(String sip) {
 		// TODO Auto-generated method stub
-		
+
 		return repositorySkypeProfile.consultSkypeProfile(sip, StatusSkypeProfileEnum.ENABLED);
 	}
 
-	
 	@Override
 	public boolean addNewSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment) {
 		
@@ -68,11 +69,45 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	}
 	
 
+/* Méthode conservée si détection dynamique des champs ne fonctionne pas
 	@Override
-	public List<SkypeProfile> findAllSkypeProfile() {
+	public void addNewSkypeProfileEventForUpdate(SkypeProfile skypeProfileUpdated, SkypeProfile skypeProfileExisting,
+			String itCorrespondantId) {
+
+		String commentForDataUpdated = "Mise à jour des champs : \n ";
+
+		SkypeProfileEvent skypeProfileEvent = new SkypeProfileEvent();
+
+		skypeProfileEvent.setTypeEvent(TypeEventEnum.MODIFICATION);
+
+		skypeProfileEvent.setSkypeProfile(skypeProfileUpdated);
+
+		skypeProfileEvent
+				.setItCorrespondant(repositoryItCorrespondant.findItCorrespondantByCollaboraterId(itCorrespondantId));
+
+		// Creation d'un commentaire dynamique contenant les différents modification
+		// apportées au profil Skype
+
+		// A faire! : alimentation dynamique via une boucle (à vérifier).
+
+		if (!skypeProfileExisting.getDialPlan().equals(skypeProfileUpdated.getDialPlan())) {
+			commentForDataUpdated += "-DialPlan \n";
+		}
+
+		if (!skypeProfileExisting.getExchUser().equals(skypeProfileUpdated.getExchUser())) {
+			commentForDataUpdated += "-ExchUser \n";
+		}
 		
-		return repositorySkypeProfile.findAllSkypeProfile();
-	}
+		if (!skypeProfileExisting.getSIP().equals(skypeProfileUpdated.getSIP())) {
+			commentForDataUpdated += "-SIP \n";
+		}
+
+		skypeProfileEvent.setCommentEvent(commentForDataUpdated);
+
+		repositorySkypeProfileEvent.create(skypeProfileEvent);
+
+	}*/
+
 	
 	/**
 	 * Cette méthode accède directement au REPO
@@ -84,8 +119,16 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 	public boolean deleteSkypeProfile(String sip) {
 		
 		return repositorySkypeProfile.delete(sip);
-	
+		
 	}
+	
+	@Override
+	public List<SkypeProfile> findAllSkypeProfile() {
+
+		return repositorySkypeProfile.findAllSkypeProfile();
+		
+	}
+
 
 	@Override
 	public List<SkypeProfileEvent> getAllEventFromSkypeProfil(String SIP) {
@@ -110,7 +153,6 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 				profil.getExchUser(), profil.getStatusProfile(), profil.getCollaborater().getOrgaUnit().getOrgaUnityCode(),
 				profil.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode());
 	}
-
 
 	@Override
 	public boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment) {
@@ -210,5 +252,6 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement,ISkype
 		
 		return repositorySkypeProfile.findSkypeProfileByIdCollab(idAnnuaire);
 	}
+
 
 }

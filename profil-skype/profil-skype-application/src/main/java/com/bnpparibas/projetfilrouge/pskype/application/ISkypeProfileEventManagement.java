@@ -10,7 +10,6 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDto;
 /**
  * 
  * Liste des méthodes disponibles sur la couche exposition concernant les évènements
- * - ajouter un évènement à un profil skype
  * - US003 : consulter la liste des évènements d'un profil skype
  *
  */
@@ -23,5 +22,5 @@ public interface ISkypeProfileEventManagement {
 	 * @return List<SkypeProfileEvent>
 	 */
 	public List<SkypeProfileEvent> getAllEventFromSkypeProfil (String SIP);
-	
+
 }

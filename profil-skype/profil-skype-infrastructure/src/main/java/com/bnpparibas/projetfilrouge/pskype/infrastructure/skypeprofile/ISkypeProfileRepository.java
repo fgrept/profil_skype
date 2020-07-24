@@ -17,12 +17,12 @@ public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntit
 	
 
 	SkypeProfileEntity findBySIP(String sip);
-
+	
 	List<SkypeProfileEntity> findBySIPNotNull();
 	
 	SkypeProfileEntity findBySIPAndStatusProfile(String SIP, StatusSkypeProfileEnum status);
 	
-	@Deprecated
+	//@Deprecated
 	// ne doit pas fonctionner : ne respecte pas JPA
 	SkypeProfileEntity findByCollaborater(CollaboraterEntity collaboraterEntity);
 	

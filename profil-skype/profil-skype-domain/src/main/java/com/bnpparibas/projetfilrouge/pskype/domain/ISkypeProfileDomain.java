@@ -2,6 +2,7 @@ package com.bnpparibas.projetfilrouge.pskype.domain;
 
 import java.util.List;
 
+
 /**
  * 
  * @author 479680
@@ -16,12 +17,6 @@ public interface ISkypeProfileDomain {
 		 */
 		boolean create(SkypeProfile SkypeProfile);
 		
-		/**
-		 * Méthode permettant de mettre à jour un profil Skype
-		 * 
-		 * @param SkypeProfile
-		 * @return boolean
-		 */
 		boolean update(SkypeProfile SkypeProfile);
 		
 		boolean delete(String sip);
@@ -32,7 +27,9 @@ public interface ISkypeProfileDomain {
 		SkypeProfile findSkypeProfileBySip(String sip);
 		
 		SkypeProfile findSkypeProfileByIdCollab(String idAnnuaire);
-
+		
+		SkypeProfile findSkypeProfileByCollaborater(Collaborater collaborater);
+		
 		List<SkypeProfile> findAllSkypeProfile();
 		
 		/**
@@ -49,6 +46,8 @@ public interface ISkypeProfileDomain {
 		List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
 				String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser,
 				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode);
+
+		
 
 	
 }
