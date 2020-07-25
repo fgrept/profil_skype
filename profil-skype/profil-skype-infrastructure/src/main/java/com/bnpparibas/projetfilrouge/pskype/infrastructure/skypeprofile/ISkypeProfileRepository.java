@@ -22,11 +22,9 @@ public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntit
 	
 	SkypeProfileEntity findBySIPAndStatusProfile(String SIP, StatusSkypeProfileEnum status);
 	
-	//@Deprecated
-	// ne doit pas fonctionner : ne respecte pas JPA
 	SkypeProfileEntity findByCollaborater(CollaboraterEntity collaboraterEntity);
 	
-	@Query(value = "select p from SkypeProfileEntity where p.collaborater.collaboraterId := id", nativeQuery = true)
+	@Query(value = "select p from SkypeProfileEntity p where p.collaborater.collaboraterId = :id", nativeQuery = false)
 	SkypeProfileEntity getSkypeProfilByIdCollab (@Param("id") String idAnnuaire);
 		
 }

@@ -81,9 +81,7 @@ public class UserTest {
 		roles.add(RoleTypeEnum.ROLE_RESP);
 		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
 		
-		assertThatThrownBy(() -> {
-			itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
-		}).isInstanceOf(RuntimeException.class).hasMessageContaining("Un rôle CIL existe déjà pour ce collaborateur");
+		assertThat(itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles)).isFalse();
 	}
 	
 		@Test

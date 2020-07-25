@@ -62,9 +62,7 @@ public class SkypeProfilTest {
 		
 		SkypeProfile skypeProfilBis = new SkypeProfile("aaa-bbb@gmail.com", collab);
 		
-		assertThatThrownBy(() -> {
-			skypeProfilDomain.create(skypeProfilBis);
-		}).isInstanceOf(RuntimeException.class);
+		assertThat(skypeProfilDomain.create(skypeProfilBis)).isFalse();
 	}
 
 	@Test
@@ -80,9 +78,7 @@ public class SkypeProfilTest {
 		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.tennis@gmail.com",uo);		
 		SkypeProfile skypeProfilBis = new SkypeProfile("aaa-bbb@gmail.com", collab2);
 		
-		assertThatThrownBy(() -> {
-			skypeProfilDomain.create(skypeProfilBis);
-		}).isInstanceOf(RuntimeException.class);
+		assertThat(skypeProfilDomain.create(skypeProfilBis)).isFalse();
 	}
 
 	@Test
@@ -207,17 +203,18 @@ public class SkypeProfilTest {
 		SkypeProfile skypeProfil2 = new SkypeProfile("sip:paulo.radelle@live.bnpparibas.com", true, "InternationalAuthorized", "DP-IT", "M002117015", false, "Linked Google", null, collab2);
 		SkypeProfile skypeProfil3 = new SkypeProfile("sip:fabian.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-IT", "M002117016", true, null, null, collab3);
 		SkypeProfile skypeProfil4 = new SkypeProfile("sip:anabella.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-US", "M002117016", false, "Linked Mailbox", null, collab4);
-
+		
 		skypeProfilDomain.create(skypeProfil1);
 		skypeProfilDomain.create(skypeProfil2);
 		skypeProfilDomain.create(skypeProfil3);
-		skypeProfilDomain.create(skypeProfil4);		
+		skypeProfilDomain.create(skypeProfil4);
 		
-		//TODO : en attente de update
+		skypeProfil1.setStatusProfile(StatusSkypeProfileEnum.DISABLED);
+		skypeProfilDomain.update(skypeProfil1);
 		
 		assertAll(						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Mailbox", StatusSkypeProfileEnum.EXPIRED,null,null))
+						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Mailbox", StatusSkypeProfileEnum.DISABLED,null,null))
 						.hasSize(1)
 						.allMatch(s -> s.getSIP() == "sip:stefan.radelle@live.bnpparibas.com")
 				);
