@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,12 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 	
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
+import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
+import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
@@ -34,6 +40,9 @@ public class SkypeProfilTest {
 	
 	@Autowired
 	private ICollaboraterDomain collaboraterDomain;
+	
+	@Autowired
+	private IItCorrespondantDomain itCorrespondantDomain;
 	
 	@Test
 	//@Rollback(false)
@@ -63,6 +72,23 @@ public class SkypeProfilTest {
 		SkypeProfile skypeProfilBis = new SkypeProfile("aaa-bbb@gmail.com", collab);
 		
 		assertThat(skypeProfilDomain.create(skypeProfilBis)).isFalse();
+	}
+
+	@Test
+	@Rollback(false)
+	@DisplayName("Vérifier qu'un cil peut avoit un profil skype")
+	public void verifyCilCanHaveProfil () {
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		collaboraterDomain.create(collab);
+		
+		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
+		roles.add(RoleTypeEnum.ROLE_USER);
+		roles.add(RoleTypeEnum.ROLE_RESP);
+		itCorrespondantDomain.createRoleCILtoCollab(collab.getCollaboraterId(), roles);
+		
+		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
+			
+		assertThat(skypeProfilDomain.create(skypeProfil)).isTrue();
 	}
 
 	@Test
