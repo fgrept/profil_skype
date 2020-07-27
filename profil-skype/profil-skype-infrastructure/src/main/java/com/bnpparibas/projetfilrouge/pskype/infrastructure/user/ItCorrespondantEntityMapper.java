@@ -31,7 +31,9 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 	@Override
 	public ItCorrespondant mapToDomain(ItCorrespondantEntity entity) {
 		
-		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getLastName(), entity.getFirstName(), entity.getCollaboraterId(), entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), entity.getMailAdress(),orgaMapper.mapToDomain(entity.getOrgaUnit()));
+		ItCorrespondant itCorrespondant = new ItCorrespondant(entity.getCollaborater().getLastName(), 
+				entity.getCollaborater().getFirstName(), entity.getCollaborater().getCollaboraterId(), entity.getCollaborater().getDeskPhoneNumber(), 
+				entity.getCollaborater().getMobilePhoneNumber(), entity.getCollaborater().getMailAdress(),orgaMapper.mapToDomain(entity.getCollaborater().getOrgaUnit()));
 		itCorrespondant.setRoles(entity.getRoles());
 		// pour spring security
 		itCorrespondant.setPassword(entity.getEncryptedPassword());
@@ -47,19 +49,15 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 	@Override
 	public ItCorrespondantEntity mapToEntity(ItCorrespondant dto) {
 		
-		ItCorrespondantEntity entity = new ItCorrespondantEntity();
-		entity.setCollaboraterId(dto.getCollaboraterId());
-		entity.setFirstName(dto.getFirstNamePerson());
-		entity.setLastName(dto.getLastNamePerson());
-		entity.setDeskPhoneNumber(dto.getDeskPhoneNumber());
-		entity.setMobilePhoneNumber(dto.getMobilePhoneNumber());
-		entity.setMailAdress(dto.getMailAdress());
+		CollaboraterEntity entityColl = new CollaboraterEntity(dto.getLastNamePerson(), dto.getFirstNamePerson(), dto.getCollaboraterId(), dto.getDeskPhoneNumber(), dto.getMobilePhoneNumber(), dto.getMailAdress());
+		ItCorrespondantEntity entity = new ItCorrespondantEntity(entityColl,dto.getCollaboraterId(),dto.getPassword());
 		entity.setRoles(dto.getRoles());
+
+		
 		if (dto.getOrgaUnit()!=null) {
-			entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
+			entity.getCollaborater().setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
 		}
-		// pour spring security
-		entity.setEncryptedPassword(dto.getPassword());
+
 		
 		return entity;
 	}

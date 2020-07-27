@@ -70,7 +70,7 @@ public class SkypeProfileEventEntityMapper extends AbstractMapper<SkypeProfileEv
 		//skypeProfileEventEntity.setItCorrespondant(itCorrespondantMapper.mapToEntity(dto.getItCorrespondant()));
 
 		skypeProfileEventEntity.setSkypeProfile(repositorySkypeProfile.findBySIP(dto.getSkypeProfile().getSIP()));
-		skypeProfileEventEntity.setItCorrespondant(repositoryItCorrespondant.findByCollaboraterId(dto.getItCorrespondant().getCollaboraterId())) ;
+		skypeProfileEventEntity.setItCorrespondant(repositoryItCorrespondant.findByCollaboraterCollaboraterId(dto.getItCorrespondant().getCollaboraterId())) ;
 		
 		skypeProfileEventEntity.setTypeEvent(dto.getTypeEvent());
 		
