@@ -16,6 +16,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
@@ -35,11 +36,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.CollaboraterDtoBatch;
+import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.ItCorrespondantDto;
 import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.OrganizationUnityDtoBatch;
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.OrganizationUnityEntity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.SiteEntity;
 /**
@@ -104,9 +107,24 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 				.start(stepSite())
 				.next(stepUo())
 				.next(stepCollaborater())
+				.next(stepItCorrespondant())
 //				.end()
 				.build();
 	}
+	
+	@Bean
+	public Step stepItCorrespondant() {
+		return stepBuilderFactory
+
+				.get("stepItCorrespondant")
+				.listener(batchStepListener())
+				.<ItCorrespondantDto, ItCorrespondantEntity>chunk(chunkSize)
+				.reader(batchItCorrespondantReader())
+				.processor(batchItCorrespondantProcessor())
+				.writer(batchItCorrespondantWriter())
+				.build();
+	}
+
 	@Bean
 	public Step stepSite() {
 		
@@ -133,6 +151,12 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 		// TODO Auto-generated method stub
 		return new BatchSiteProcessor();
 	}
+	
+	@Bean
+	public BatchItCorrespondantProcessor batchItCorrespondantProcessor() {
+		// TODO Auto-generated method stub
+		return new BatchItCorrespondantProcessor();
+	}
 
 	@Bean
 	public FlatFileItemReader<Site> batchSiteReader() {
@@ -147,6 +171,24 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 		.fieldSetMapper(new BeanWrapperFieldSetMapper<Site>() {
 			{
 				setTargetType(Site.class);
+			}
+		});
+		return fileReaderBuilder.build();
+	}
+	
+	@Bean
+	public FlatFileItemReader<ItCorrespondantDto> batchItCorrespondantReader() {
+		// TODO Auto-generated method stub
+		FlatFileItemReaderBuilder<ItCorrespondantDto> fileReaderBuilder = new FlatFileItemReaderBuilder<ItCorrespondantDto>();
+		fileReaderBuilder.name("siteItCorrespondantReader")
+		.resource(new FileSystemResource("src/main/resources/input/itcorrespondant.csv"))
+		.delimited()
+		.delimiter(";")
+		.names(new String[] {"idAnnuaire","password","role"})
+		.linesToSkip(1)
+		.fieldSetMapper(new BeanWrapperFieldSetMapper<ItCorrespondantDto>() {
+			{
+				setTargetType(ItCorrespondantDto.class);
 			}
 		});
 		return fileReaderBuilder.build();
@@ -243,6 +285,14 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 	public JpaItemWriter<CollaboraterEntity> batchCollaboraterWriter() {
 		
 		JpaItemWriter<CollaboraterEntity> collaboraterEntity = new JpaItemWriter<CollaboraterEntity>();
+		collaboraterEntity.setEntityManagerFactory(entityManagerFactory);
+		return collaboraterEntity;
+	}
+	
+	@Bean
+	public JpaItemWriter<ItCorrespondantEntity> batchItCorrespondantWriter() {
+		
+		JpaItemWriter<ItCorrespondantEntity> collaboraterEntity = new JpaItemWriter<ItCorrespondantEntity>();
 		collaboraterEntity.setEntityManagerFactory(entityManagerFactory);
 		return collaboraterEntity;
 	}

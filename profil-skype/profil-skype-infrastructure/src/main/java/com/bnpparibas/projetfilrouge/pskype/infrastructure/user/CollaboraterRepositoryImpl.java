@@ -47,6 +47,8 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 	@Override
 	public Collaborater findByCollaboraterId(String idAnnuaire) {
 		// TODO Auto-generated method stub
+//		CollaboraterEntity entity = collaboraterRepository.findByCollaboraterId(idAnnuaire);
+//		CollaboraterEntity entity = collaboraterRepository.findDistinctByCollaboraterId(idAnnuaire);
 		CollaboraterEntity entity = collaboraterRepository.findByCollaboraterId(idAnnuaire);
 		if (entity == null) {
 			logger.info("Pas de collaborateur pour id :"+logger);

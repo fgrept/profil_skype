@@ -8,6 +8,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
@@ -34,6 +36,8 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ICollaboraterRep
 
 @Repository
 public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
+	
+	private static Logger logger = LoggerFactory.getLogger(SkypeProfileRepositoryImpl.class);
 
 	@Autowired
 	private SkypeProfileEntityMapper entityMapperSkypeProfile;
@@ -62,14 +66,14 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 
 	public boolean create(SkypeProfile skypeProfile) {
 	
-		System.out.println("SkypeProfileRepositoryImpl : create");
-//		System.out.println("SkypeProfileRepositoryImpl : "+ skypeProfile.getCollaborater().getCollaboraterId());
+		logger.trace("SkypeProfileRepositoryImpl : create");
 		SkypeProfileEntity entity = skypeProfileRepository.findBySIP(skypeProfile.getSIP());
 		if (entity==null) {
 			entity = entityMapperSkypeProfile.mapToEntity(skypeProfile);
 //			System.out.println("SkypeProfileRepositoryImpl : après mapping");
 			entity.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 //			System.out.println("SkypeProfileRepositoryImpl : avant récupération collaborateur");
+//			CollaboraterEntity collaboraterEntity = collaboraterRepository.findDistinctByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId());
 			CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId());
 			if (collaboraterEntity ==null) { 
 				// on cherche a créer un profil skype pour un collaborateur qui n'existe pas encore
@@ -79,19 +83,20 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 			}
 			else {
 				if (skypeProfileRepository.findByCollaborater(collaboraterEntity)==null) {
-				entity.setCollaborater(collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
-				System.out.println("SkypeProfileRepositoryImpl : avant sauvegarde");
-				skypeProfileRepository.save(entity);
-				return true;
+//				entity.setCollaborater(collaboraterRepository.findDistinctByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
+					entity.setCollaborater(collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
+					System.out.println("SkypeProfileRepositoryImpl : avant sauvegarde");
+					skypeProfileRepository.save(entity);
+					return true;
 				}
 				else {
-					//throw new RuntimeException(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
+					logger.error(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
 					return false;
 				}
 			}
 
 		}else {
-			//throw new RuntimeException("Profil Skype "+skypeProfile.getSIP()+" existe déjà");
+			logger.error("Profil Skype "+skypeProfile.getSIP()+" existe déjà");
 			return false;
 		}
 	}
@@ -114,7 +119,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		SkypeProfileEntity skypeProfile = skypeProfileRepository.findBySIP(sip);
 
 		if (skypeProfile == null) {
-			//throw new RuntimeException("Profil skype non trouvé , SIP : "+sip);
+			logger.error("Profil skype non trouvé , SIP : "+sip);
 			return false;
 		} else {
 
@@ -159,7 +164,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		SkypeProfileEntity skypeProfileEntityDB = skypeProfileRepository.findBySIP(sp.getSIP());
 
 		if (skypeProfileEntityDB == null) {
-			//throw new RuntimeException("Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP());
+			logger.error("Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP());
 			return false;
 			
 		} else {

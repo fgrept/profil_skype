@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileDomain;
@@ -18,8 +19,6 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
-import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDto;
-import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 
 /**
  * Services dédiées au profil skype
@@ -31,6 +30,9 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 @Transactional
 public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkypeProfileEventManagement {
 
+	
+	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
+	
 	@Autowired
 	private ISkypeProfileDomain repositorySkypeProfile;
 
@@ -55,17 +57,23 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 	@Override
 	public boolean addNewSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment) {
 		
-		 if (repositorySkypeProfile.create(skypeProfile) == true) {
-			 ItCorrespondant itCorrespondant = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);
+		
+		ItCorrespondant itCorrespondant = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);
 			 
-			 // création de l'évènement associé
-			 if (itCorrespondant != null) {
+		if (itCorrespondant != null) {
+			// création de l'évènement associé
+			if (repositorySkypeProfile.create(skypeProfile) == true) {
 				 SkypeProfileEvent event = new SkypeProfileEvent(eventComment, skypeProfile, itCorrespondant, TypeEventEnum.CREATION);
 				 repositorySkypeProfileEvent.create(event);
 				 return true;
+			}else {
+				logger.error("Profil skype non créé :"+skypeProfile.getSIP());
+				return false;
 			}
-		} 
-		 return false;
+		}else {
+			logger.error("Pas d'it correspondant trouvé pour id annuaire :"+idAnnuaireCIL);
+			return false;
+		}
 	}
 	
 
@@ -147,7 +155,6 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 	@Override
 	public List<SkypeProfile> findSkypeProfileWithCriteria(SkypeProfile profil) {
 		
-		
 		return repositorySkypeProfile.findAllSkypeProfileFilters(profil.isEnterpriseVoiceEnabled(), profil.getVoicePolicy(),
 				profil.getDialPlan(), profil.getSamAccountName(), profil.isExUmEnabled(),
 				profil.getExchUser(), profil.getStatusProfile(), profil.getCollaborater().getOrgaUnit().getOrgaUnityCode(),
@@ -165,12 +172,14 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		// On récupère donc le profil existant associé au collaborateur
 		SkypeProfile profilExisting = findSkypeProfilFromCollab(skypeProfile.getCollaborater().getCollaboraterId());		
 		if (profilExisting == null) {
+			logger.error("mise à jour sur profil inexistant");
 			return false;
 		}
 		
 		// Récupération du CIL demandant la modif
 		ItCorrespondant cilRequester = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);		
 		if (cilRequester == null) {
+			logger.error("cil non trouvé, id annuaire: "+idAnnuaireCIL);
 			return false;
 		}
 		
@@ -179,12 +188,14 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 			skypeProfile.setExpirationDateWhenReCreated();
 			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
 			if (!isUpdatedProfil) {
+				logger.error("profil non mis à jour : "+skypeProfile.getSIP());
 				return false;
 			} else {
 				SkypeProfileEvent event = new SkypeProfileEvent(comment + 
 						"" + skypeProfile.getSIP(), skypeProfile,
 						cilRequester, TypeEventEnum.CREATION);
 				repositorySkypeProfileEvent.create(event);
+				return true;
 			}
 		}
 
@@ -199,6 +210,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
 						cilRequester, TypeEventEnum.DESACTIVATION);
 				repositorySkypeProfileEvent.create(event);
+				return true;
 			}			
 		}
 
@@ -213,6 +225,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
 						cilRequester, TypeEventEnum.ACTIVATION);
 				repositorySkypeProfileEvent.create(event);
+				return true;
 			}			
 		}		
 		// - Champs modifiés : 
@@ -240,6 +253,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
 						cilRequester, TypeEventEnum.MODIFICATION);
 				repositorySkypeProfileEvent.create(event);
+				return true;
 			}			
 		}
 		

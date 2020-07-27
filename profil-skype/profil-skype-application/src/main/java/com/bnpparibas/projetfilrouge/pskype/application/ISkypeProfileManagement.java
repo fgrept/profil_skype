@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
-import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDto;
-import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
+
 
 
 /**
