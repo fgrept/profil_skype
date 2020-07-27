@@ -39,10 +39,10 @@ public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespond
 		if (collaboraterEntity == null) {
 			return null;
 		}
-		ItCorrespondantEntity entity = itcorrespondantRepository.findByCollaboraterId(item.getIdAnnuaire());
+		ItCorrespondantEntity entity = itcorrespondantRepository.findByCollaboraterCollaboraterId(item.getIdAnnuaire());
 		if (entity==null) {
 			
-			entity = new ItCorrespondantEntity(collaboraterEntity, passwordEncoder().encode(item.getPassword()));
+			entity = new ItCorrespondantEntity(collaboraterEntity, item.getIdAnnuaire(),passwordEncoder().encode(item.getPassword()));
 		}
 		switch (item.getRole())
 		{
@@ -63,5 +63,4 @@ public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespond
 		}
 		return entity;
 	}
-
 }

@@ -9,11 +9,18 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 
@@ -25,7 +32,13 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
  */
 @Entity
 @DiscriminatorValue("ItCorrespondant")
-public class ItCorrespondantEntity extends CollaboraterEntity {
+public class ItCorrespondantEntity  {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long idUser;
+
+	private String itCorrespondantId;
+	private String encryptedPassword;
 	
 	@ElementCollection
 	@Enumerated(EnumType.STRING)
@@ -35,16 +48,36 @@ public class ItCorrespondantEntity extends CollaboraterEntity {
 	@UpdateTimestamp
 	private Date dateLastUpdate;
 
-	private String encryptedPassword;
+	@OneToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.PERSIST)
+	private CollaboraterEntity collaborater;
 	
 	public ItCorrespondantEntity() {
 		
 	}
-	public ItCorrespondantEntity(CollaboraterEntity coll, String encryptedPassword) {
-		super(coll.getLastName(),coll.getFirstName(),coll.getCollaboraterId(),coll.getDeskPhoneNumber(),coll.getMobilePhoneNumber(),coll.getMailAdress(),coll.getOrgaUnit());
-		this.encryptedPassword=encryptedPassword;
+	
+	public ItCorrespondantEntity(CollaboraterEntity collaborater, String user, String password) {
+		this.collaborater=collaborater;
+		this.itCorrespondantId=user;
+		this.encryptedPassword=password;
 	}
 	
+	public Long getIdUser() {
+		return idUser;
+	}
+
+	public void setIdUser(Long idUser) {
+		this.idUser = idUser;
+	}
+	
+	public String getItCorrespondantId() {
+		return itCorrespondantId;
+	}
+
+	public void setItCorrespondantId(String itCorrespondantId) {
+		this.itCorrespondantId = itCorrespondantId;
+	}
+
 	public Set<RoleTypeEnum> getRoles() {
 		return roles;
 	}
@@ -79,6 +112,12 @@ public class ItCorrespondantEntity extends CollaboraterEntity {
 		this.dateLastUpdate = dateLastUpdate;
 	}
 
+	public CollaboraterEntity getCollaborater() {
+		return collaborater;
+	}
 
+	public void setCollaborater(CollaboraterEntity collaborater) {
+		this.collaborater = collaborater;
+	}
 	
 }

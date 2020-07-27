@@ -1,13 +1,11 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.user;
 
-import javax.persistence.DiscriminatorValue;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Cascade;
@@ -19,8 +17,6 @@ import org.hibernate.annotations.CascadeType;
  *
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorValue("Collaborater")
 public class CollaboraterEntity {
 	
 	@Id
