@@ -81,12 +81,10 @@ public class UserTest {
 		roles.add(RoleTypeEnum.ROLE_RESP);
 		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
 		
-		assertThatThrownBy(() -> {
-			itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
-		}).isInstanceOf(RuntimeException.class).hasMessageContaining("Un rôle CIL existe déjà pour ce collaborateur");
+		assertThat(itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles)).isFalse();
 	}
 	
-		@Test
+	@Test
 	@DisplayName("Vérifier que la totalité des CIL peut être ramenée")
 	public void verifyGetAllITCorresp () {
 		collaboraterDomain.create(collab1);
@@ -103,54 +101,54 @@ public class UserTest {
 		assertThat(itCorrespondantDomain.findAllItCorrespondant().size()).isEqualTo(3);
 	}
 	
-		@Test
-		@DisplayName("Vérifier que le filtrage d'un profil fonctionne pour différents attribut")
-		public void verifyCILPropertiesFiltration () {
-			collaboraterDomain.create(collab1);
-			collaboraterDomain.create(collab2);
-			collaboraterDomain.create(collab3);
-			collaboraterDomain.create(collab4);
-			
-			Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
-			roles.add(RoleTypeEnum.ROLE_USER);
-			roles.add(RoleTypeEnum.ROLE_RESP);		
-			itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
-			itCorrespondantDomain.createRoleCILtoCollab(collab2.getCollaboraterId(), roles);
-			itCorrespondantDomain.createRoleCILtoCollab(collab3.getCollaboraterId(), roles);
-			itCorrespondantDomain.createRoleCILtoCollab(collab4.getCollaboraterId(), roles);
-			
-			assertAll(() -> assertThat(itCorrespondantDomain.
-					findAllItCorrespondantFilters("112114", "Doe", "John", null, null, null))
-					.hasSize(1)
-					.allMatch(s -> s.getLastNamePerson() == "Doe"),
-					
-					() -> assertThat(itCorrespondantDomain.
-							findAllItCorrespondantFilters(null, null, "John", null, null, null))
-							.hasSize(3)
-							.allMatch(s -> s.getFirstNamePerson() == "John"),
-							
-					() -> assertThat(itCorrespondantDomain.
-							findAllItCorrespondantFilters(null, "McEnroe", "John", null, null, null))
-							.hasSize(2)
-							.allMatch(s -> s.getFirstNamePerson() == "John")
-							.allMatch(s -> s.getLastNamePerson() == "McEnroe"),
-							
-					() -> assertThat(itCorrespondantDomain.
-							findAllItCorrespondantFilters(null, null, null, "01-43-34-45-57", null, null))
-							.hasSize(2)
-							.allMatch(s -> s.getDeskPhoneNumber() == "01-43-34-45-57"),
-							
-					() -> assertThat(itCorrespondantDomain.
-							findAllItCorrespondantFilters(null, null, null, "01-43-34-45-57", "06-12-13-14-16", null))
-							.hasSize(1)
-							.allMatch(s -> s.getDeskPhoneNumber() == "01-43-34-45-57")
-							.allMatch(s -> s.getMobilePhoneNumber() == "06-12-13-14-16"),
-							
-					() -> assertThat(itCorrespondantDomain.
-							findAllItCorrespondantFilters(null, null, null, null, null, "john.tennis@gmail.com"))
-							.hasSize(2)
-							.allMatch(s -> s.getMailAdress() == "john.tennis@gmail.com")
-					);
-		}	
+	@Test
+	@DisplayName("Vérifier que le filtrage d'un profil fonctionne pour différents attribut")
+	public void verifyCILPropertiesFiltration () {
+		collaboraterDomain.create(collab1);
+		collaboraterDomain.create(collab2);
+		collaboraterDomain.create(collab3);
+		collaboraterDomain.create(collab4);
+		
+		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
+		roles.add(RoleTypeEnum.ROLE_USER);
+		roles.add(RoleTypeEnum.ROLE_RESP);		
+		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab2.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab3.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab4.getCollaboraterId(), roles);
+		
+		assertAll(() -> assertThat(itCorrespondantDomain.
+				findAllItCorrespondantFilters("112114", "Doe", "John", null, null, null))
+				.hasSize(1)
+				.allMatch(s -> s.getLastNamePerson() == "Doe"),
+				
+				() -> assertThat(itCorrespondantDomain.
+						findAllItCorrespondantFilters(null, null, "John", null, null, null))
+						.hasSize(3)
+						.allMatch(s -> s.getFirstNamePerson() == "John"),
+						
+				() -> assertThat(itCorrespondantDomain.
+						findAllItCorrespondantFilters(null, "McEnroe", "John", null, null, null))
+						.hasSize(2)
+						.allMatch(s -> s.getFirstNamePerson() == "John")
+						.allMatch(s -> s.getLastNamePerson() == "McEnroe"),
+						
+				() -> assertThat(itCorrespondantDomain.
+						findAllItCorrespondantFilters(null, null, null, "01-43-34-45-57", null, null))
+						.hasSize(2)
+						.allMatch(s -> s.getDeskPhoneNumber() == "01-43-34-45-57"),
+						
+				() -> assertThat(itCorrespondantDomain.
+						findAllItCorrespondantFilters(null, null, null, "01-43-34-45-57", "06-12-13-14-16", null))
+						.hasSize(1)
+						.allMatch(s -> s.getDeskPhoneNumber() == "01-43-34-45-57")
+						.allMatch(s -> s.getMobilePhoneNumber() == "06-12-13-14-16"),
+						
+				() -> assertThat(itCorrespondantDomain.
+						findAllItCorrespondantFilters(null, null, null, null, null, "john.tennis@gmail.com"))
+						.hasSize(2)
+						.allMatch(s -> s.getMailAdress() == "john.tennis@gmail.com")
+				);
+	}	
 	
 }

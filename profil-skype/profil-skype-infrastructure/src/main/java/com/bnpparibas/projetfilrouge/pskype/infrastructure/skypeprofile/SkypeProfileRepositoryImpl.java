@@ -153,7 +153,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 //US005 Mise à jour d'un profil skype
 	@Override
 	public boolean update(SkypeProfile skypeProfileUpdated) {
-		
+			
 		// Récupérer le SIP à partir de l'Id collaborater
 		
 		SkypeProfileEntity sp = skypeProfileRepository
