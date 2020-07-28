@@ -97,11 +97,12 @@ public class ItCorrespondantController {
 	@GetMapping("createauto")
 	public String CreateUserAuto() {
 		
-//		ItCorrespondant itCorrespondant = new ItCorrespondant("Grept", "Fabien", "116453", "0140401234", "0640140102", "fabien.toto@gmail.com");
-//		correspondantManagement.createCIL("Grept", "Fabien", "000004", "0140401234", "0640140102", "fabien.toto@gmail.com");
+		//ItCorrespondant itCorrespondant = new ItCorrespondant("Grept", "Fabien", "000020", "0140401234", "0640140102", "fabien.toto@gmail.com");
+//		ITCorrespon
+		//correspondantManagement.createCIL("Grept", "Fabien", "000004", "0140401234", "0640140102", "fabien.toto@gmail.com");
 //		correspondantManagement.createCIL("ElOuarak", "Mehdi", "000005", "0140402345", "0640140304", "mehdi.titi@gmail.com");
 //		correspondantManagement.createCIL("Tige", "Judicael", "000006", "0140403456", "0640140405", "judi.tata@gmail.com");	
-//		correspondantManagement.createItCorrespondant"Tige", "Judi", "000020", "0140403456", "0640140405", "judi.tatatoto@gmail.com","000000");
+		//userManagment.createItCorrespondant("Tige", "Judi", "000020", "0140403456", "0640140405", "judi.tatatoto@gmail.com","000000");
 		//Password associé : $2a$10$mLw0BcfmsIszyoBvIiqTWOcaBW8vc8.VoOZ2u27xroUi638aeUvLO
 //		correspondantManagement.createItCorrespondant("Tige", "Juju", "000021", "0140403456", "0640140405", "judi.tatatiti@gmail.com","000000");
 		//Password associé : $2a$10$zjrjQg24MpCtPxu.ekG4yuv3eJ1tbm9PRPiD7S85w.SEGNJqx1fRy

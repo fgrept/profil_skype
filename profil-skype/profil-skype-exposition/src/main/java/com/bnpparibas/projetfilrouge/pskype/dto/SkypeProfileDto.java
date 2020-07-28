@@ -2,7 +2,14 @@ package com.bnpparibas.projetfilrouge.pskype.dto;
 
 import java.util.Date;
 
+import javax.validation.Constraint;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.ConstraintComposition;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.BooleanString;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 
@@ -13,20 +20,28 @@ import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
  */
 public class SkypeProfileDto {
 	
-	// données du profil
+	// DONNEES DU PROFIL
+	// ******************************************************************************
+	//syntaxe d'un SIP (RFC 3261) : URI = sip:x@y:Port x=nom d’utilisateur et y=hôte (domaine ou IP)
+	@Pattern(regexp = "^sip:.*$", message = "l'adresse skype doit commencer par sip:")
 	private String SIP;
-	private boolean enterpriseVoiceEnabled;	
+	@Pattern(regexp = "^(true|false)$", message = "enterpriseVoiceEnabled doit être true ou false")
+	private String enterpriseVoiceEnabled;	
 	private String voicePolicy;
 	private String dialPlan;
 	private String samAccountName;
-	private boolean exUmEnabled;
+	@Pattern(regexp = "^(true|false)$", message = "exUmEnabled doit être true ou false")
+	private String exUmEnabled;
 	private String exchUser;
 	private String objectClass;
 	//statut du profil : activé, désactivé, expiré
 	private StatusSkypeProfileEnum statusProfile;	
-	
-	// données du collaborateur possédant ce profil skype
-	@Size(max = 17)
+
+
+	// DONNEES DU COLLABORATEUR POSSEDANT CE PROFIL SKYPE
+	// ******************************************************************************
+	@Size(min = 1, max = 17, message = "l'identifiant de l'utilisateur doit être compris entre 1 et  17 caractères")
+	@NotNull
 	private String collaboraterId;
 	
 	
@@ -44,18 +59,18 @@ public class SkypeProfileDto {
 	
 	public SkypeProfileDto(String SIP, String collaboraterId) {
 		this.SIP=SIP;
-		this.enterpriseVoiceEnabled=true;
+		this.enterpriseVoiceEnabled="true";
 		this.voicePolicy="EMEA-VP-FR_BDDF_NationalOnlyAuthorized";
 		this.dialPlan="DP-EN";
 		this.exchUser="mehdi.el@gmail.com";
-		this.exUmEnabled=false;
+		this.exUmEnabled="false";
 		this.objectClass="user";
 		this.collaboraterId=collaboraterId;
 		this.statusProfile=StatusSkypeProfileEnum.ENABLED;
 	}
 	
-	public SkypeProfileDto(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
-			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass,
+	public SkypeProfileDto(String sIP, String enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
+			String samAccountName, String exUmEnabled, String exchUser, String objectClass,
 			@Size(max = 17) String collaboraterId,StatusSkypeProfileEnum statusProfile) {
 		super();
 		SIP = sIP;
@@ -70,10 +85,10 @@ public class SkypeProfileDto {
 		this.statusProfile = statusProfile;
 	}
 
-	public boolean isEnterpriseVoiceEnabled() {
+	public String getEnterpriseVoiceEnabled() {
 		return enterpriseVoiceEnabled;
 	}
-	public void setEnterpriseVoiceEnabled(boolean enterpriseVoiceEnabled) {
+	public void setEnterpriseVoiceEnabled(String enterpriseVoiceEnabled) {
 		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
 	}
 	public String getVoicePolicy() {
@@ -94,10 +109,10 @@ public class SkypeProfileDto {
 	public void setSamAccountName(String samAccountName) {
 		this.samAccountName = samAccountName;
 	}
-	public boolean isExUmEnabled() {
+	public String getExUmEnabled() {
 		return exUmEnabled;
 	}
-	public void setExUmEnabled(boolean exUmEnabled) {
+	public void setExUmEnabled(String exUmEnabled) {
 		this.exUmEnabled = exUmEnabled;
 	}
 	public String getExchUser() {

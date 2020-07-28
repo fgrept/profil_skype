@@ -1,7 +1,7 @@
 package com.bnpparibas.projetfilrouge.pskype.dto;
 
-import java.util.Date;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
@@ -14,8 +14,11 @@ import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 public class SkypeProfileDtoCreate extends SkypeProfileDto{
 	
 	//toute action sur un profil skype est réalisée par un CIL et sera tracée en base évènement
-	@Size(max = 17)
+	@Size(min = 1, max = 17, message = "l'identifiant de l'utilisateur doit être compris entre 1 et  17 caractères")
+	@NotNull
 	private String itCorrespondantId;
+	//@Pattern(regexp = "^([a-zA-Z0-9[\\x20\\x2C\\x2D]]{1,250})$") => ne fonctionne pas encore ...
+	//TO CONITUE
 	private String eventComment;
 	
 	
@@ -28,8 +31,8 @@ public class SkypeProfileDtoCreate extends SkypeProfileDto{
 		this.itCorrespondantId=itCorrespondantId;
 	}
 	
-	public SkypeProfileDtoCreate(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
-			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass,
+	public SkypeProfileDtoCreate(String sIP, String enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
+			String samAccountName, String exUmEnabled, String exchUser, String objectClass,
 			@Size(max = 17) String collaboraterId, @Size(max = 17) String itCorrespondantId,
 			StatusSkypeProfileEnum statusProfile, String eventComment) {
 		super(sIP, enterpriseVoiceEnabled, voicePolicy, dialPlan,

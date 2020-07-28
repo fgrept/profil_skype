@@ -67,5 +67,31 @@ public class SkypeProfileEvent {
 	public void setItCorrespondant(ItCorrespondant itCorrespondant) {
 		this.itCorrespondant = itCorrespondant;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((commentEvent == null) ? 0 : commentEvent.hashCode());
+		result = prime * result + ((typeEvent == null) ? 0 : typeEvent.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SkypeProfileEvent other = (SkypeProfileEvent) obj;
+		if (commentEvent == null) {
+			if (other.commentEvent != null)
+				return false;
+		} else if (!commentEvent.equals(other.commentEvent))
+			return false;
+		if (typeEvent != other.typeEvent)
+			return false;
+		return true;
+	}
 	
 }
