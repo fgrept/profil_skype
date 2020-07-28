@@ -2,3 +2,5 @@
 10000Z01;entity;sdi services digitaux;10000S02
 10000Z02;entity;baq banque au quotidien;10000S02
 10000Z03;entity;mon monetique;10000S02
+;entity;jeu de donnees en erreur;10000S02
+10000Z04;entity;jeu de donnees en erreur;

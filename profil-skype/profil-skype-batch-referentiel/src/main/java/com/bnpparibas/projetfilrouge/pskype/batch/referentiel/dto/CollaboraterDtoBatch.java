@@ -1,13 +1,28 @@
 package com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.bnpparibas.projetfilrouge.pskype.domain.control.EmailControl;
+
 public class CollaboraterDtoBatch {
+	
+	@Size(max = 17)
 	private String collaboraterId;
+	@Size(max = 50)
 	private String lastName;
+	@Size(max = 50)
 	private String firstName;
+	// en attente de fonctionnement du test sur le n° de tel
 	private String deskPhoneNumber;
 	private String mobilePhoneNumber;
+	@EmailControl
 	private String mailAdress;
+	@NotNull
+	@Size(min = 1)
 	private String orgaUnitCode;
+	
+	
 	public CollaboraterDtoBatch() {
 		
 	}

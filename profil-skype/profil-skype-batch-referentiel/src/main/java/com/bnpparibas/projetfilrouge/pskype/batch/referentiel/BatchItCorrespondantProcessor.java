@@ -1,14 +1,20 @@
 package com.bnpparibas.projetfilrouge.pskype.batch.referentiel;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.item.ItemCountAware;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
 import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.ItCorrespondantDto;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
@@ -17,7 +23,10 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.IItCorrespondant
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
 
 public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespondantDto, ItCorrespondantEntity> {
-
+	
+	Logger log = LoggerFactory.getLogger(BatchUoProcessor.class);	
+	private int cptLigne = 1;
+	
 	@Autowired
 	private ICollaboraterRepository collaboraterRepository;
 	
@@ -32,6 +41,18 @@ public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespond
 	@Override
 	public ItCorrespondantEntity process(ItCorrespondantDto item) throws Exception {
 		
+		cptLigne +=1;
+		
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	    Validator validator = factory.getValidator();
+		
+	    Set<ConstraintViolation<ItCorrespondantDto>> constraintViolations = 
+	    	      validator.validate(item);
+	    if (constraintViolations.size() > 0 ) {
+	    	log.error("Données de l'it correspondant incorrects en ligne : " + cptLigne);
+	    	return null;
+	      }
+	    
 		if (item.getIdAnnuaire()==null) {
 			return null;
 		}
@@ -63,4 +84,5 @@ public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespond
 		}
 		return entity;
 	}
+
 }
