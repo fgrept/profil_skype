@@ -1,12 +1,19 @@
 package com.bnpparibas.projetfilrouge.pskype.batch.referentiel;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.CollaboraterDtoBatch;
-
+import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.ItCorrespondantDto;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ICollaboraterRepository;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.IOrganizationUnityRepository;
@@ -21,6 +28,8 @@ public class BatchCollaboraterProcessor implements ItemProcessor<CollaboraterDto
 
 	Logger log = LoggerFactory.getLogger(BatchCollaboraterProcessor.class);
 	
+	private int cptLigne = 1;
+	
 	@Autowired
 	private IOrganizationUnityRepository uoRepository;
 	
@@ -29,6 +38,18 @@ public class BatchCollaboraterProcessor implements ItemProcessor<CollaboraterDto
 	
 	@Override
 	public CollaboraterEntity process(CollaboraterDtoBatch item) throws Exception {
+		
+		cptLigne +=1;
+		
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	    Validator validator = factory.getValidator();
+		
+	    Set<ConstraintViolation<CollaboraterDtoBatch>> constraintViolations = 
+	    	      validator.validate(item);
+	    if (constraintViolations.size() > 0 ) {
+	    	log.error("Données du collaborateur incorrects en ligne : " + cptLigne);
+	    	return null;
+	      }
 		
 		if(item.getCollaboraterId() == null) {
 			log.error("Pas de collaborateur en entree");

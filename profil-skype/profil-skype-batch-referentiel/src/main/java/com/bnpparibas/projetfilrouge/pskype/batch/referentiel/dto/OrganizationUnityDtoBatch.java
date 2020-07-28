@@ -1,10 +1,17 @@
 package com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class OrganizationUnityDtoBatch {
 	
+	@NotNull
+	@Size(min = 1)
 	private String orgaUnityCode;
 	private String orgaUnityType;
 	private String orgaShortLabel;
+	@NotNull
+	@Size(min = 1)
 	private String siteCode;
 	
 	public OrganizationUnityDtoBatch() {

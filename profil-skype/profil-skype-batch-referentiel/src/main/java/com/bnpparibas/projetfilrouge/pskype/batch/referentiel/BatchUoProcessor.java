@@ -1,5 +1,12 @@
 package com.bnpparibas.projetfilrouge.pskype.batch.referentiel;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
@@ -13,9 +20,9 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.SiteEntity;
 
 
 public class BatchUoProcessor implements ItemProcessor<OrganizationUnityDtoBatch, OrganizationUnityEntity>{
-
 	
 	Logger log = LoggerFactory.getLogger(BatchUoProcessor.class);
+	private int cptLigne = 1;
 	
 	@Autowired
 	private IOrganizationUnityRepository uoRepository;
@@ -26,6 +33,18 @@ public class BatchUoProcessor implements ItemProcessor<OrganizationUnityDtoBatch
 	@Override
 	public OrganizationUnityEntity process(OrganizationUnityDtoBatch item) throws Exception {
 		
+		cptLigne +=1;
+		
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	    Validator validator = factory.getValidator();
+		
+	    Set<ConstraintViolation<OrganizationUnityDtoBatch>> constraintViolations = 
+	    	      validator.validate(item);
+	    if (constraintViolations.size() > 0 ) {
+	    	log.error("Données de l'uo incorrects en ligne : " + cptLigne);
+	    	return null;
+	      }
+	    
 		if (item.getOrgaUnityCode()==null) {
 			log.error("Pas de code uo en entree");
 			return null;

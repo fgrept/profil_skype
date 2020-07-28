@@ -17,8 +17,9 @@ public class SkypeProfileDtoCreate extends SkypeProfileDto{
 	@Size(min = 1, max = 17, message = "l'identifiant de l'utilisateur doit être compris entre 1 et  17 caractères")
 	@NotNull
 	private String itCorrespondantId;
-	//@Pattern(regexp = "^([a-zA-Z0-9[\\x20\\x2C\\x2D]]{1,250})$") => ne fonctionne pas encore ...
-	//TO CONITUE
+	//ne fonctionne pas encore ...
+	//doit comprendre les chiffres, les caracères latin accentués et les caractères suivants : , - ' .
+	//@Pattern(regexp = "^([A-Za-z1-9\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\u0027]*)$")
 	private String eventComment;
 	
 	

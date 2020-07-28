@@ -1,5 +1,7 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
+import javax.validation.constraints.Size;
+
 /**
  * Liste des sites physiques avec leur adresse
  * Cette classe permet de situer physiquement un collaborateur
@@ -8,10 +10,15 @@ package com.bnpparibas.projetfilrouge.pskype.domain;
  *
  */
 public class Site {
+	@Size(min = 1)
 	private String siteCode;
+	@Size(min = 1)
 	private String siteName;
+	@Size(min = 1)
 	private String siteAddress;
+	@Size(min = 1)
 	private String sitePostalCode;
+	@Size(min = 1)
 	private String siteCity;
 	
 	public Site() {
