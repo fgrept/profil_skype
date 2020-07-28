@@ -26,8 +26,8 @@ public class SkypeProfileDtoSearch extends SkypeProfileDto {
 	private String orgaUnityCode;
 	private String siteCode;
 	
-	public SkypeProfileDtoSearch(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
-			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass,
+	public SkypeProfileDtoSearch(String sIP, String enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
+			String samAccountName, String exUmEnabled, String exchUser, String objectClass,
 			StatusSkypeProfileEnum statusProfile, Date expirationDate, String collaboraterId, String firstName,
 			String lastName, String orgaUnityCode, String siteCode) {
 		super(sIP, enterpriseVoiceEnabled, voicePolicy, dialPlan,

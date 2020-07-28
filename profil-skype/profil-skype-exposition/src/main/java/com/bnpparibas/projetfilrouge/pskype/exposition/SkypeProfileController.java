@@ -2,6 +2,9 @@ package com.bnpparibas.projetfilrouge.pskype.exposition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +33,7 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoCreate;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoSearch;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 
-import jdk.internal.net.http.common.Log;
+//import jdk.internal.net.http.common.Log;
 
 /**
  * Classe exposant des API rest dédiées à profil Skype
@@ -52,7 +55,7 @@ public class SkypeProfileController {
 	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/create")
-	public ResponseEntity<String> createSkypeProfil(@RequestBody SkypeProfileDtoCreate skypeProfile) {
+	public ResponseEntity<String> createSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
 		
 		// on récupère le collaborateur dans sa totalité avant de le passer
 		// au service applicatif.
@@ -134,7 +137,7 @@ public class SkypeProfileController {
 
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/update")
-	public ResponseEntity<Boolean> updateSkypeProfil(@RequestBody SkypeProfileDtoCreate skypeProfile) {
+	public ResponseEntity<Boolean> updateSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
 
 		// on récupère le collaborateur dans sa totalité avant de le passer
 		// au service applicatif.
@@ -191,9 +194,9 @@ public class SkypeProfileController {
 	private SkypeProfile mapDtoToDomain (SkypeProfileDtoCreate profilDto, Collaborater collab) {
 		
 		// la date d'expiration est calculée par le domain
-		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(), profilDto.isEnterpriseVoiceEnabled(),
+		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(), Boolean.valueOf(profilDto.getEnterpriseVoiceEnabled()),
 				profilDto.getVoicePolicy(), profilDto.getDialPlan(), profilDto.getSamAccountName(),
-				profilDto.isExUmEnabled(),profilDto.getExchUser(),profilDto.getObjectClass(),
+				Boolean.valueOf(profilDto.getExUmEnabled()),profilDto.getExchUser(),profilDto.getObjectClass(),
 				collab);
 		
 		return profilDom;
@@ -212,9 +215,9 @@ public class SkypeProfileController {
 		collab.setOrgaUnit(uo);
 		
 		// suite du mapper pour les attributs de recherche du profil
-		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(), profilDto.isEnterpriseVoiceEnabled(),
+		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(), Boolean.valueOf(profilDto.getEnterpriseVoiceEnabled()),
 				profilDto.getVoicePolicy(), profilDto.getDialPlan(), profilDto.getSamAccountName(),
-				profilDto.isExUmEnabled(),profilDto.getExchUser(),profilDto.getObjectClass(),
+				Boolean.valueOf(profilDto.getExUmEnabled()),profilDto.getExchUser(),profilDto.getObjectClass(),
 				collab);
 		
 		return profilDom;
@@ -240,10 +243,12 @@ public class SkypeProfileController {
 				}
 			}	
 		}
-		SkypeProfileDtoSearch profilDto = new SkypeProfileDtoSearch(profil.getSIP(), profil.isEnterpriseVoiceEnabled(), profil.getVoicePolicy(),
-				profil.getDialPlan(), profil.getSamAccountName(), profil.isExUmEnabled(), profil.getExchUser(), profil.getObjectClass(),
+		
+		SkypeProfileDtoSearch profilDto = new SkypeProfileDtoSearch(profil.getSIP(), Boolean.toString(profil.isEnterpriseVoiceEnabled()), profil.getVoicePolicy(),
+				profil.getDialPlan(), profil.getSamAccountName(), Boolean.toString(profil.isExUmEnabled()), profil.getExchUser(), profil.getObjectClass(),
 				profil.getStatusProfile(), profil.getExpirationDate(),
-				collaboraterId, firstName, lastName, orgaUnitCode, siteCode);
+				collaboraterId, firstName, lastName,
+				orgaUnitCode, siteCode);
 		
 		return profilDto;
 		
