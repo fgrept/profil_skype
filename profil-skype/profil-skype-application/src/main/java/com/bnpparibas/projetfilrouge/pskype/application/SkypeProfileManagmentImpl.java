@@ -192,7 +192,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				return false;
 			} else {
 				SkypeProfileEvent event = new SkypeProfileEvent(comment + 
-						"" + skypeProfile.getSIP(), skypeProfile,
+						" - nouveau SIP : " + skypeProfile.getSIP(), skypeProfile,
 						cilRequester, TypeEventEnum.CREATION);
 				repositorySkypeProfileEvent.create(event);
 				return true;
@@ -244,10 +244,10 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 					e.printStackTrace();
 					return false;
 				}
-				for (int i = 0; i <= changedFields.size(); i++) {
+				for (int i = 0; i < changedFields.size(); i++) {
 					if (i==0) comment += " - Champs modifiés : ";
 					comment += changedFields.get(i);
-					if (i == changedFields.size()) comment += ", ";
+					if (i < changedFields.size()-1) comment += ", ";
 				}
 			
 				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
