@@ -196,6 +196,8 @@ public class SkypeProfileController {
 				profilDto.isExUmEnabled(),profilDto.getExchUser(),profilDto.getObjectClass(),
 				collab);
 		
+		profilDom.setStatusProfile(profilDto.getStatusProfile());
+		logger.info(profilDom.toString());
 		return profilDom;
 		
 	}

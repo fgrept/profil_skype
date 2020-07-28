@@ -212,6 +212,14 @@ public class SkypeProfile {
 	    return changedProperties;
 	}
 	
+	@Override
+	public String toString() {
+		return "SkypeProfile [SIP=" + SIP + ", enterpriseVoiceEnabled=" + enterpriseVoiceEnabled + ", voicePolicy="
+				+ voicePolicy + ", dialPlan=" + dialPlan + ", samAccountName=" + samAccountName + ", exUmEnabled="
+				+ exUmEnabled + ", exchUser=" + exchUser + ", objectClass=" + objectClass + ", collaborater="
+				+ collaborater + ", statusProfile=" + statusProfile + ", expirationDate=" + expirationDate + "]";
+	}
+
 	private Date calcDate () {
 		// La date d'expiration du profil skype est de 2 ans à partir de sa date de création 
 		Calendar cal = Calendar.getInstance();

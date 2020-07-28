@@ -184,7 +184,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		}
 		
 		// 1) Cas de la modification d'adresse SIP => création d'un nouveau profil
-		if (skypeProfile.getSIP() != profilExisting.getSIP()) {
+		if (!(skypeProfile.getSIP().equals(profilExisting.getSIP()))) {
 			skypeProfile.setExpirationDateWhenReCreated();
 			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
 			if (!isUpdatedProfil) {
@@ -244,10 +244,11 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 					e.printStackTrace();
 					return false;
 				}
-				for (int i = 0; i <= changedFields.size(); i++) {
-					if (i==0) comment += " - Champs modifiés : ";
-					comment += changedFields.get(i);
-					if (i == changedFields.size()) comment += ", ";
+				if (changedFields.size() > 0) {
+					comment += " - Champs modifiés : ";
+				}
+				for (String attribut:changedFields) {
+					comment += attribut+" - ";
 				}
 			
 				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,

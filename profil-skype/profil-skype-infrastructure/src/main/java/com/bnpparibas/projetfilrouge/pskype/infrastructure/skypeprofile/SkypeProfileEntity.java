@@ -52,7 +52,7 @@ public class SkypeProfileEntity {
 	private String exchUser;
 		 
 	private String objectClass;
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private StatusSkypeProfileEnum statusProfile;
 	
 	@Temporal(TemporalType.TIMESTAMP)

@@ -199,7 +199,12 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	@Override
 	public SkypeProfile findSkypeProfileByIdCollab(String idAnnuaire) {
 		
-		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.getSkypeProfilByIdCollab(idAnnuaire));
+		SkypeProfileEntity entity = skypeProfileRepository.getSkypeProfilByIdCollab(idAnnuaire);
+		if (entity == null) {
+			return null;
+		}else {
+			return entityMapperSkypeProfile.mapToDomain(entity);
+		}
 	}
 
 	@Override
