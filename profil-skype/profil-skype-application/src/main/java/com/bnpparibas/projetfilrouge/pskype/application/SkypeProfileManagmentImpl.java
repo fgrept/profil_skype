@@ -76,47 +76,6 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		}
 	}
 	
-
-/* Méthode conservée si détection dynamique des champs ne fonctionne pas
-	@Override
-	public void addNewSkypeProfileEventForUpdate(SkypeProfile skypeProfileUpdated, SkypeProfile skypeProfileExisting,
-			String itCorrespondantId) {
-
-		String commentForDataUpdated = "Mise à jour des champs : \n ";
-
-		SkypeProfileEvent skypeProfileEvent = new SkypeProfileEvent();
-
-		skypeProfileEvent.setTypeEvent(TypeEventEnum.MODIFICATION);
-
-		skypeProfileEvent.setSkypeProfile(skypeProfileUpdated);
-
-		skypeProfileEvent
-				.setItCorrespondant(repositoryItCorrespondant.findItCorrespondantByCollaboraterId(itCorrespondantId));
-
-		// Creation d'un commentaire dynamique contenant les différents modification
-		// apportées au profil Skype
-
-		// A faire! : alimentation dynamique via une boucle (à vérifier).
-
-		if (!skypeProfileExisting.getDialPlan().equals(skypeProfileUpdated.getDialPlan())) {
-			commentForDataUpdated += "-DialPlan \n";
-		}
-
-		if (!skypeProfileExisting.getExchUser().equals(skypeProfileUpdated.getExchUser())) {
-			commentForDataUpdated += "-ExchUser \n";
-		}
-		
-		if (!skypeProfileExisting.getSIP().equals(skypeProfileUpdated.getSIP())) {
-			commentForDataUpdated += "-SIP \n";
-		}
-
-		skypeProfileEvent.setCommentEvent(commentForDataUpdated);
-
-		repositorySkypeProfileEvent.create(skypeProfileEvent);
-
-	}*/
-
-	
 	/**
 	 * Cette méthode accède directement au REPO
 	 * C'est le REPO qui fera la vérification avant suppression pour récupérer l'id entity
@@ -192,7 +151,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				return false;
 			} else {
 				SkypeProfileEvent event = new SkypeProfileEvent(comment + 
-						"" + skypeProfile.getSIP(), skypeProfile,
+						" - nouveau SIP : " + skypeProfile.getSIP(), skypeProfile,
 						cilRequester, TypeEventEnum.CREATION);
 				repositorySkypeProfileEvent.create(event);
 				return true;
@@ -244,11 +203,11 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 					e.printStackTrace();
 					return false;
 				}
-				if (changedFields.size() > 0) {
-					comment += " - Champs modifiés : ";
-				}
-				for (String attribut:changedFields) {
-					comment += attribut+" - ";
+
+				for (int i = 0; i < changedFields.size(); i++) {
+					if (i==0) comment += " - Champs modifiés : ";
+					comment += changedFields.get(i);
+					if (i < changedFields.size()-1) comment += ", ";
 				}
 			
 				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,

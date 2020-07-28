@@ -75,7 +75,6 @@ public class SkypeProfilTest {
 	}
 
 	@Test
-	@Rollback(false)
 	@DisplayName("Vérifier qu'un cil peut avoit un profil skype")
 	public void verifyCilCanHaveProfil () {
 		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
