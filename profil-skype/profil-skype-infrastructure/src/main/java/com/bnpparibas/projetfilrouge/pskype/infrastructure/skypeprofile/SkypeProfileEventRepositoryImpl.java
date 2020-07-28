@@ -3,6 +3,8 @@ package com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +15,9 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 @Repository
 public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain {
 
+	
+	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEventRepositoryImpl.class);
+	
 	@Autowired
 	private SkypeProfileEventEntityMapper entityMapper;
 	
@@ -48,7 +53,7 @@ public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain
 	@Override
 	public void deleteAllEventByProfile(SkypeProfile skypeProfile) {
 		
-		List<SkypeProfileEventEntity> listEventProfile = skypeProfileEventRepository.findBySkypeProfile(entityMapperSkypeProfile.mapToEntity(skypeProfile));
+		List<SkypeProfileEventEntity> listEventProfile = skypeProfileEventRepository.findBySkypeProfileSIP(skypeProfile.getSIP());
 		for (SkypeProfileEventEntity entity : listEventProfile) {
 			skypeProfileEventRepository.delete(entity);
 		}
@@ -57,9 +62,10 @@ public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain
 	@Override
 	public List<SkypeProfileEvent> findAllEventBySkypeProfile(SkypeProfile skypeProfile) {		
 		
-		SkypeProfileEntity entity = entityMapperSkypeProfile.mapToEntity(skypeProfile);
-		
-		List<SkypeProfileEventEntity> Entitys = skypeProfileEventRepository.findBySkypeProfile(entity);		
+		List<SkypeProfileEventEntity> Entitys = skypeProfileEventRepository.findBySkypeProfileSIP(skypeProfile.getSIP());		
+		for (SkypeProfileEventEntity entity:Entitys) {
+			logger.info(entity.toString());
+		}
 		return entityMapper.mapToDomainList(Entitys);	
 		
 	}

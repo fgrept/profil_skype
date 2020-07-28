@@ -3,6 +3,8 @@ package com.bnpparibas.projetfilrouge.pskype.exposition;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bnpparibas.projetfilrouge.pskype.application.ISkypeProfileEventManagement;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEventEntityMapper;
 
 /**
  * Classe exposant les API rest sur les évènements associés au profils Skype
@@ -28,6 +31,8 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 @RequestMapping("/events")
 @Secured("ROLE_USER")
 public class SkypeProfileEventController {
+	
+	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEventController.class);
 	
 	@Autowired
 	ISkypeProfileEventManagement skypeProfileEventManagement;
@@ -51,12 +56,24 @@ public class SkypeProfileEventController {
 	 * @return eventDto
 	 */
 	private SkypeProfileEventDto mapperDomaintoDto (SkypeProfileEvent eventDom) {
-		
+		String firstName;
+		String lastName;
+		String collaboraterId;
+		if (eventDom.getItCorrespondant() == null) {
+			logger.error("It correspondant non trouvé");
+			firstName="";
+			lastName="";
+			collaboraterId="";
+		}else {
+			firstName=eventDom.getItCorrespondant().getFirstNamePerson();
+			lastName=eventDom.getItCorrespondant().getLastNamePerson();
+			collaboraterId=eventDom.getItCorrespondant().getCollaboraterId();
+		}
 		SkypeProfileEventDto profilDto = new SkypeProfileEventDto(
 				eventDom.getDateEvent(), eventDom.getTypeEvent(), eventDom.getCommentEvent(),
-				eventDom.getItCorrespondant().getCollaboraterId(),
-				eventDom.getItCorrespondant().getFirstNamePerson(),
-				eventDom.getItCorrespondant().getLastNamePerson());
+				collaboraterId,
+				firstName,
+				lastName);
 
 		return profilDto;
 	}

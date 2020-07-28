@@ -1,14 +1,13 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
-import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileDomain;
+
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
-import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntityMapper;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.IItCorrespondantRepository;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntityMapper;
 /**
@@ -27,18 +26,26 @@ public class SkypeProfileEventEntityMapper extends AbstractMapper<SkypeProfileEv
 //	@Autowired
 //	SkypeProfileEntityMapper skypeProfileMapper;
 	
-	 
-	@Autowired
-	private ISkypeProfileDomain repositorySkypeProfileDomain;
 	
-	@Autowired 
-	IItCorrespondantDomain repositoryItCorrespondantDomain;
+	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEventEntityMapper.class);
+	
+//	@Autowired
+//	private ISkypeProfileDomain repositorySkypeProfileDomain;
+	
+//	@Autowired 
+//	IItCorrespondantDomain repositoryItCorrespondantDomain;
 	
 	@Autowired
 	private ISkypeProfileRepository repositorySkypeProfile;
 	
 	@Autowired 
-	IItCorrespondantRepository repositoryItCorrespondant;
+	private IItCorrespondantRepository repositoryItCorrespondant;
+	
+	@Autowired
+	private SkypeProfileEntityMapper mapperSkypeProfile;
+	
+	@Autowired
+	private ItCorrespondantEntityMapper mapperItCorrespondant;
 	
 	@Override
 	public SkypeProfileEvent mapToDomain(SkypeProfileEventEntity entity) {
@@ -51,9 +58,13 @@ public class SkypeProfileEventEntityMapper extends AbstractMapper<SkypeProfileEv
 	//	skypeProfileEvent.setItCorrespondant(itCorrespondantMapper.mapToDomain(entity.getItCorrespondant()));
 	//	skypeProfileEvent.setSkypeProfile(skypeProfileMapper.mapToDomain(entity.getSkypeProfile()));
 		
-		skypeProfileEvent.setItCorrespondant(repositoryItCorrespondantDomain.findItCorrespondantByCollaboraterId(skypeProfileEvent.getItCorrespondant().getCollaboraterId()));
 		
-		skypeProfileEvent.setSkypeProfile(repositorySkypeProfileDomain.findSkypeProfileBySip(skypeProfileEvent.getSkypeProfile().getSIP()));
+		if (entity.getItCorrespondant()==null ||entity.getItCorrespondant().getCollaborater()==null) {
+			logger.error("Aucun it correspondant trouvé");
+		}else {
+			skypeProfileEvent.setItCorrespondant(mapperItCorrespondant.mapToDomain(repositoryItCorrespondant.findByCollaboraterCollaboraterId(entity.getItCorrespondant().getCollaborater().getCollaboraterId())));
+		}
+		skypeProfileEvent.setSkypeProfile(mapperSkypeProfile.mapToDomain(repositorySkypeProfile.findBySIP(entity.getSkypeProfile().getSIP())));
 				
 		return skypeProfileEvent;
 	}

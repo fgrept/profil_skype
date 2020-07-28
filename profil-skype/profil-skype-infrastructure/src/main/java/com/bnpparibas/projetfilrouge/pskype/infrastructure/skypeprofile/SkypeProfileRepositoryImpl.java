@@ -124,7 +124,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		} else {
 
 			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
-			skypeProfileEventRepository.deleteAll(skypeProfileEventRepository.findBySkypeProfile(skypeProfile));
+			skypeProfileEventRepository.deleteAll(skypeProfileEventRepository.findBySkypeProfileSIP(sip));
 			skypeProfileRepository.delete(skypeProfile);
 			return true;
 

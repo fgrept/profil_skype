@@ -20,7 +20,7 @@ public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntit
 	
 	List<SkypeProfileEntity> findBySIPNotNull();
 	
-	SkypeProfileEntity findBySIPAndStatusProfile(String SIP, StatusSkypeProfileEnum status);
+	SkypeProfileEntity findBySIPAndStatusProfile(String sip, StatusSkypeProfileEnum status);
 	
 	SkypeProfileEntity findByCollaborater(CollaboraterEntity collaboraterEntity);
 	
