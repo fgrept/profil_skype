@@ -29,6 +29,8 @@ import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoCreate;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoResult;
@@ -106,18 +108,27 @@ public class ItCorrespondantController {
 			@ApiResponse(code = 201,message = "création effectuée"),
 			@ApiResponse(code = 304,message = "It correspondant non créé (collaborateur déjà existant, etc)")
 	})
-	public ResponseEntity<Boolean> createItCorrespondantFromCollab(@Valid @RequestBody ItCorrespondantDtoCreate dto) {
+	public ResponseEntity<String> createItCorrespondantFromCollab(@Valid @RequestBody ItCorrespondantDtoCreate dto) {
+
+		
+		boolean isCreated = false;
+
 		
 		//La création d'un it correspondant se fait suite à une recherche en base des collaborateurs
 		//Donc on reçoit juste l'id du collaborateur et les rôles que l'on souhaite lui donner.
 		//Les données sont controllés via le valideur de bean dto
-		
-		boolean isCreated = userManagment.createItCorrespondant(dto.getCollaboraterId(), dto.getRoles());
+		 try {
+			isCreated = userManagment.createItCorrespondant(dto.getCollaboraterId(), dto.getRoles());
+		} catch (NotFoundException | AllReadyExistException e) {
+			logger.error("exception déclenchée : " + e.getMessage());
+			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+
 		if (isCreated) {
 			logger.info("Création it correspondant");
-			return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
+			return new ResponseEntity<String>("Role CIL crée",HttpStatus.CREATED);
 		}else {
-			return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
+			return new ResponseEntity<String>("PB lors de la création du rôle CIL",HttpStatus.NOT_FOUND); 
 		}
 		
 	}
@@ -189,8 +200,10 @@ public class ItCorrespondantController {
 			@ApiResponse(code = 304,message = "problème lors de la mise à jour, non effectuée"),
 			@ApiResponse(code = 404,message = "it correspondant non trouvé en base")
 	})
-	public ResponseEntity<Boolean> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
-		
+	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
+
+		boolean isUpdate = false;
+				
 		logger.debug("id en entree " + id);
 		logger.debug("role en entree " + role);
 		
@@ -213,14 +226,21 @@ public class ItCorrespondantController {
 				roles.add(RoleTypeEnum.ROLE_USER);
 				break;
 			default:
-				return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("Le role demandé n'existe pas", HttpStatus.NOT_FOUND);
 		}
-		boolean isUpdate = userManagment.updateRoleItCorrespondant(id, roles);
+		
+		try {
+			isUpdate = userManagment.updateRoleItCorrespondant(id, roles);
+		} catch (NotFoundException e) {
+			logger.error("exception déclenchée : " + e.getMessage());
+			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+
 		if (isUpdate) {
 			logger.debug("Mise à jour effectuée");
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return new ResponseEntity<String>("Mise à jour des rôles cil effectuée", HttpStatus.OK);
 		}else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
+			return new ResponseEntity<String>("Pb lors de la mise à jour", HttpStatus.NOT_FOUND);
 		}
 	}
 	/**
@@ -237,31 +257,47 @@ public class ItCorrespondantController {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
 			@ApiResponse(code = 304,message = "Pas de mise à jour : ancien et nouveau mot de passes identiques ou problème lors de la mise à jour en base")
 	})
-	public ResponseEntity<Boolean> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("oldpass") String oldPassword, @PathVariable("newpass") String newPassword) {
+	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("oldpass") String oldPassword, @PathVariable("newpass") String newPassword) {
 		
+		boolean isUpdate = false; 
+				
 		if (oldPassword ==newPassword) {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
+			return new ResponseEntity<String>("Les 2 passwords doivent être différents", HttpStatus.NOT_FOUND);
 		}
-		boolean isUpdate = userManagment.updatePasswordItCorrespondant(id, oldPassword, newPassword);
+		try {
+			isUpdate = userManagment.updatePasswordItCorrespondant(id, oldPassword, newPassword);
+		} catch (NotFoundException e) {
+			logger.error("exception déclenchée : " + e.getMessage());
+			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		
 		if(isUpdate) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return new ResponseEntity<String>("Mise à jour password effectuée", HttpStatus.OK);
 		}else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
+			return new ResponseEntity<String>("Un pb est survenu lors de la mise à jour", HttpStatus.NOT_FOUND);
 		}
 	}
+
 	@ApiOperation(value = "Supprime un utilisateur")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),
 			@ApiResponse(code = 404,message = "Utilisateur non supprimé : utilisateur absent ou problème lors de la suppression en base")
 	})
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Boolean> deleteItCorrespondant(@PathVariable("id") String id){
+	public ResponseEntity<String> deleteItCorrespondant(@PathVariable("id") String id){
 		
-		boolean isDeleted = userManagment.deleteItCorrespondant(id);
+		boolean isDeleted = false;
+		try {
+			isDeleted = userManagment.deleteItCorrespondant(id);
+		} catch (NotFoundException e) {
+			logger.error("exception déclenchée : " + e.getMessage());
+			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		
 		if (isDeleted) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return new ResponseEntity<String>("Suppression des droits effectués", HttpStatus.OK);
 		}else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND); 
+			return new ResponseEntity<String>("Un pb est survenu lors de la suppression", HttpStatus.NOT_FOUND); 
 		}
 		
 	}

@@ -23,6 +23,9 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntityMapper;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ICollaboraterRepository;
@@ -92,14 +95,16 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					return true;
 				}
 				else {
-					logger.error(skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype");
-					return false;
+					String msg = skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype";
+					logger.error(msg);
+					throw new AllReadyExistException(ExceptionListEnum.ALLREADY1, msg);
 				}
 			}
 
 		}else {
-			logger.error("Profil Skype "+skypeProfile.getSIP()+" existe déjà");
-			return false;
+			String msg = "Profil Skype "+skypeProfile.getSIP()+" existe déjà";
+			logger.error(msg);
+			throw new AllReadyExistException(ExceptionListEnum.ALLREADY2, msg);
 		}
 	}
 	
@@ -121,8 +126,9 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		SkypeProfileEntity skypeProfile = skypeProfileRepository.findBySIP(sip);
 
 		if (skypeProfile == null) {
-			logger.error("Profil skype non trouvé , SIP : "+sip);
-			return false;
+			String msg = "Profil skype non trouvé , SIP : "+sip;
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND1, msg);
 		} else {
 
 			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
@@ -194,8 +200,9 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		SkypeProfileEntity skypeProfileEntityDB = skypeProfileRepository.findBySIP(sp.getSIP());
 
 		if (skypeProfileEntityDB == null) {
-			logger.error("Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP());
-			return false;
+			String msg = "Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP();
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND2, msg);
 			
 		} else {
 

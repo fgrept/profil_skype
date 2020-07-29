@@ -19,6 +19,8 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 
 /**
  * Services dédiées au profil skype
@@ -139,15 +141,17 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		// On récupère donc le profil existant associé au collaborateur
 		SkypeProfile profilExisting = findSkypeProfilFromCollab(skypeProfile.getCollaborater().getCollaboraterId());		
 		if (profilExisting == null) {
-			logger.error("mise à jour sur profil inexistant");
-			return false;
+			String msg = "Pas de profil skype pour ce collaborateur : " + skypeProfile.getCollaborater().getCollaboraterId();
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND3, msg);
 		}
 		
 		// Récupération du CIL demandant la modif
 		ItCorrespondant cilRequester = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);		
 		if (cilRequester == null) {
-			logger.error("cil non trouvé, id annuaire: "+idAnnuaireCIL);
-			return false;
+			String msg = "cil non trouvé, id annuaire: "+idAnnuaireCIL;
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND4, msg);
 		}
 		
 		// 1) Cas de la modification d'adresse SIP => création d'un nouveau profil

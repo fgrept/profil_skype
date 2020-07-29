@@ -26,6 +26,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -71,7 +72,7 @@ public class SkypeProfilTest {
 		
 		SkypeProfile skypeProfilBis = new SkypeProfile("aaa-bbb@gmail.com", collab);
 		
-		assertThat(skypeProfilDomain.create(skypeProfilBis)).isFalse();
+		assertThatThrownBy(() -> {skypeProfilDomain.create(skypeProfilBis);}).isInstanceOf(AllReadyExistException.class);
 	}
 
 	@Test
@@ -104,12 +105,16 @@ public class SkypeProfilTest {
 		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.tennis@gmail.com",uo);		
 		SkypeProfile skypeProfilBis = new SkypeProfile("aaa-bbb@gmail.com", collab2);
 		
-		assertThat(skypeProfilDomain.create(skypeProfilBis)).isFalse();
+		assertThatThrownBy(() -> {skypeProfilDomain.create(skypeProfilBis);}).isInstanceOf(AllReadyExistException.class);
+
 	}
 
 	@Test
 	@DisplayName("Vérifier que la totalité des profils peut être ramenée")
 	public void verifyGetAllProfils () {
+		
+		int cptExist = skypeProfilDomain.findAllSkypeProfile().size();
+		
 		OrganizationUnity uo2 = new OrganizationUnity("SDI2", "I", "Big Data", site);
 		OrganizationUnity uo3 = new OrganizationUnity("SDI3", "I", "Outils interne", site);
 		Collaborater collab1 = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
@@ -122,7 +127,7 @@ public class SkypeProfilTest {
 		skypeProfilDomain.create(skypeProfil2);
 		skypeProfilDomain.create(skypeProfil3);
 		
-		assertThat(skypeProfilDomain.findAllSkypeProfile().size()).isEqualTo(3);
+		assertThat(skypeProfilDomain.findAllSkypeProfile().size()).isEqualTo(3+cptExist);
 		
 	}
 	
