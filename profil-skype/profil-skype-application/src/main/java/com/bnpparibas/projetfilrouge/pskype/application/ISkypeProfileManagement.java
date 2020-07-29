@@ -80,6 +80,25 @@ public interface ISkypeProfileManagement {
 	
 	
 	boolean deleteSkypeProfile(String sip);
+
+	/**
+	 * Méthode qui récupère une liste de profil Skype pour un numéro de page donné de taille donnée.
+	 * Le tri peut appliqué sur un critère avec un ordre de tri.
+	 * par défaut, le tri sera ascendant sur le SIP
+	 * @param numberPage
+	 * @param sizePage
+	 * @param criteria
+	 * @param boolean sort ascending
+	 * @return List<SkypeProfile>
+	 */
+	List<SkypeProfile> findAllSkypeProfilePage(int numberPage, int sizePage, String criteria, boolean b);
+
+
+	Long countSkypeProfile();
+
+
+	List<SkypeProfile> findSkypeProfileWithCriteriaPage(SkypeProfile profilDom, int numberPage, int sizePage,
+			String sortCriteria, boolean sortAscending);
 	
 
 	

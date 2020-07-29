@@ -133,7 +133,7 @@ public class ItCorrespondantController {
 	 * @return Liste des IT Correspondant
 	 */
 
-	@GetMapping("/search")
+	@GetMapping("/list/criteria")
 	public ResponseEntity<List<ItCorrespondantDtoResult>> listItCorrespondantFilters(@RequestBody ItCorrespondantDtoSearch dtoSearch){
 		
 		ItCorrespondant itCorrespondant=mapperDtoToDomain(dtoSearch);

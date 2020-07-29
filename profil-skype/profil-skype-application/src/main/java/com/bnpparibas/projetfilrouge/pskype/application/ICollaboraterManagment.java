@@ -14,5 +14,7 @@ public interface ICollaboraterManagment {
 	boolean createCollaborater(Collaborater collaborater);
 	Collaborater findCollaboraterbyIdAnnuaire(String idAnnuaire);
 	List<Collaborater> listCollaborater();
-	
+	List<Collaborater> listCollaboraterSortByPage(int numberPage, int sizePage, String attribute,boolean sortAscending);
+	List<Collaborater> listCollaboraterCriteriaSortByPage(Collaborater mapperDtoToDomain, int numberPage, int sizePage,
+			String criteria, boolean b);	
 }

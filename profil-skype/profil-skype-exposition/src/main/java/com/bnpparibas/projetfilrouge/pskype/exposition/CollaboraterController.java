@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,53 @@ public class CollaboraterController {
 			dto.add(mapperDomainToDto(collaborater));
 		}
 //		 new ResponseEntity<List<Collaborater>>(collaboraterManagment.);
+		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/list/{numberPage}/{sizePage}/{criteria}")
+	public ResponseEntity<List<CollaboraterDto>> listCollaboraterPage(@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
+		List<CollaboraterDto> dto = new ArrayList<CollaboraterDto>();
+		if (numberPage<0) {
+			logger.error("numéro de page négatif");
+			return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.NOT_MODIFIED);
+		}
+		if (sizePage<=0) {
+			logger.error("taille de la page insuffisante");
+			return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.NOT_MODIFIED);
+		}
+		if (criteria == null) {
+			criteria="";
+		}
+		List<Collaborater> list =  collaboraterManagment.listCollaboraterSortByPage(numberPage, sizePage, criteria, true);
+		
+		for (Collaborater collaborater:list) {
+			dto.add(mapperDomainToDto(collaborater));
+		}
+//		 new ResponseEntity<List<Collaborater>>(collaboraterManagment.);
+		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
+	public ResponseEntity<List<CollaboraterDto>> listCollaboraterCriteriaPage(@RequestBody CollaboraterDto collaboraterDto,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
+		
+		List<CollaboraterDto> dto = new ArrayList<CollaboraterDto>();
+		if (numberPage<0) {
+			logger.error("numéro de page négatif");
+			return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.NOT_MODIFIED);
+		}
+		if (sizePage<=0) {
+			logger.error("taille de la page insuffisante");
+			return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.NOT_MODIFIED);
+		}
+		if (criteria == null) {
+			criteria="";
+		}
+		
+		List<Collaborater> list =  collaboraterManagment.listCollaboraterCriteriaSortByPage(mapperDtoToDomain(collaboraterDto),numberPage, sizePage, criteria, true);
+		for (Collaborater collaborater:list) {
+			dto.add(mapperDomainToDto(collaborater));
+		}
+		
 		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
 	
