@@ -40,13 +40,16 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	 * @version V0.2
 	 */
 	@Override
-	public boolean createItCorrespondant(ItCorrespondant itCorrespondant) {
+	public boolean createItCorrespondant(String idAnnuaire, Set<RoleTypeEnum> roles) {
 
-		itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
-		String password = itCorrespondant.getPassword();
-		itCorrespondant.setPassword(passwordEncoder.encode(password));
-
-		return itCorrespodantDomain.create(itCorrespondant);
+	//	itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
+		String passwordBrut = "000000";
+		String passwordCode = passwordEncoder.encode(passwordBrut);
+		
+		// TODO : mettre un password aléatoire 1ère fois
+		// et le communiquer à l'utilisateur par mail pour qu'il le change 
+		
+		return itCorrespodantDomain.createRoleCILtoCollab(idAnnuaire, roles, passwordCode);
 	}
 	/**
 	 *  Cette méthode permet la création complète d'un utilisateur (avec informations de niveau collaborater, uo et site)

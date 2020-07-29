@@ -26,14 +26,16 @@ public interface IItCorrespondantDomain {
 	 * @return booléen
 	 */
 	boolean create(ItCorrespondant itCorrespondant);
+	
 	/**
 	 * Attribution d'un rôle CIL à un collaborateur existant déjà en base
-	 * (ils sont récupérés depuis un référentiel normalement)
+	 * (ils sont récupérés depuis la base de données)
 	 * 
 	 * @param idAnnuaire
 	 * @param roles
+	 * @param password
 	 */
-	boolean createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles);
+	boolean createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles, String password);
 	
 	/**
 	 * Mise à jour des rôles d'un CIL (annule et remplace les rôles existants)

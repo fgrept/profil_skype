@@ -271,7 +271,7 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 	}
 
 	@Override
-	public boolean createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles) {
+	public boolean createRoleCILtoCollab(String idAnnuaire, Set<RoleTypeEnum> roles, String password) {
 
 		CollaboraterEntity collabEntity = collaboraterRepository.findByCollaboraterId(idAnnuaire);
 		if (collabEntity == null) {
@@ -286,17 +286,11 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 //				throw new RuntimeException("Un rôle CIL existe déjà pour ce collaborateur : " + idAnnuaire);
 				return false;
 			} else {
-				Collaborater collab = collabMapper.mapToDomain(collabEntity);
-				ItCorrespondant itCorresp = new ItCorrespondant();
-				itCorresp.setFirstNamePerson(collab.getFirstNamePerson());
-				itCorresp.setLastNamePerson(collab.getLastNamePerson());
-				itCorresp.setDeskPhoneNumber(collab.getDeskPhoneNumber());
-				itCorresp.setMobilePhoneNumber(collab.getMobilePhoneNumber());
-				itCorresp.setMailAdress(collab.getMailAdress());
-				itCorresp.setOrgaUnit(collab.getOrgaUnit());
-				itCorresp.setCollaboraterId(collab.getCollaboraterId());
-				itCorresp.setRoles(roles);
-				ItCorrespondantEntity itCorrespEntity = entityMapper.mapToEntity(itCorresp);			
+				ItCorrespondantEntity itCorrespEntity = new ItCorrespondantEntity();
+				itCorrespEntity.setCollaborater(collabEntity);
+				itCorrespEntity.setEncryptedPassword(password);
+				itCorrespEntity.setRoles(roles);
+				itCorrespEntity.setItCorrespondantId(idAnnuaire);			
 				itCorrespondantRepository.save(itCorrespEntity);
 				return true;
 			}

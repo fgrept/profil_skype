@@ -36,17 +36,20 @@ public interface IItCorrespondantManagment {
 	boolean deleteItCorrespondant(String idAnnuaire);
 /**
  *  Cette méthode permet la création d'un utilisateur avec le rôle user par défaut (US010)
- * @param itCorrespondant
+ *  Le password sera généré et envoyé à l'utilisateur
+ *  
+ * @param idAnnuaire
+ * @param roles
  * @return boolean
  */
-	boolean createItCorrespondant(ItCorrespondant itCorrespondant);
+	boolean createItCorrespondant(String idAnnuaire, Set<RoleTypeEnum> roles);
 	
 	/**
 	 *  Cette méthode permet la création complète d'un utilisateur (avec informations de niveau collaborater, uo et site)
 	 * @param itCorrespondant
 	 * @return boolean
 	 */
-		boolean createFullItCorrespondant(ItCorrespondant itCorrespondant);
+	boolean createFullItCorrespondant(ItCorrespondant itCorrespondant);
 /**
  * 	Mise à jour du password
  * @param idAnnuaire
