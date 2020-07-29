@@ -19,6 +19,9 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 
 
 /**
@@ -104,9 +107,9 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 		logger.debug("Mise à jour du rôle It Correspondant");
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(idAnnuaire);
 		if (entity == null) {
-//			throw new RuntimeException("Mise à jour impossible, id : "+idAnnuaire+" non trouvé");
-			logger.error("Mise à jour impossible, id : "+idAnnuaire+" non trouvé");
-			return false;
+			String msg = "Mise à jour impossible, id : "+idAnnuaire+" non trouvé";
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND6, msg);
 		}else {
 			entity.setRoles(roles);
 			itCorrespondantRepository.save(entity);
@@ -275,16 +278,16 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 
 		CollaboraterEntity collabEntity = collaboraterRepository.findByCollaboraterId(idAnnuaire);
 		if (collabEntity == null) {
-			logger.error("Pas de colaborateur trouvé pour id : "+idAnnuaire);
-//			throw new RuntimeException("Pas de colaborateur trouvé pour id : "+idAnnuaire);
-			return false;
+			String msg = "Pas de colaborateur trouvé pour id : " + idAnnuaire;
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND5, msg);
 		}
 		else {
 			ItCorrespondantEntity entityRepo = itCorrespondantRepository.findByCollaboraterCollaboraterId(idAnnuaire);
 			if (entityRepo != null) {
-				logger.error("Un rôle existe déjà pour ce collaborateur : " + idAnnuaire);
-//				throw new RuntimeException("Un rôle CIL existe déjà pour ce collaborateur : " + idAnnuaire);
-				return false;
+				String msg = "Le rôle cil existe déjà pour ce collaborateur : " + idAnnuaire;
+				logger.error(msg);
+				throw new AllReadyExistException(ExceptionListEnum.ALLREADY3, msg);
 			} else {
 				ItCorrespondantEntity itCorrespEntity = new ItCorrespondantEntity();
 				itCorrespEntity.setCollaborater(collabEntity);

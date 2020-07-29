@@ -29,6 +29,8 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoCreate;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoSearch;
@@ -63,30 +65,25 @@ public class SkypeProfileController {
 		Collaborater collab = collabManagement.findCollaboraterbyIdAnnuaire(skypeProfile.getCollaboraterId());
 		String idAnnuaireCIL = skypeProfile.getItCorrespondantId();
 		String comment = skypeProfile.getEventComment();
+		boolean isCreated = false;
 		
 		if (collab == null) {
-			logger.error("id annuaire collaborateur non trouvé : "+ skypeProfile.getCollaboraterId());;
-			return new ResponseEntity<String>("id annuaire collaborateur non trouvé en base : "+ skypeProfile.getCollaboraterId(), HttpStatus.NO_CONTENT);
-		}
-
-		if (idAnnuaireCIL == null) {
-			logger.error("CIL non renseigné, id annuaire CIL : "+idAnnuaireCIL);
-			return new ResponseEntity<String>("CIL non renseigné, id annuaire CIL : "+idAnnuaireCIL, HttpStatus.NO_CONTENT);
-			
-		} 
-		
-		if (skypeProfile.getSIP() == null||skypeProfile.getSIP() == "") {
-			logger.error("Adresse SIP non renseigné : "+skypeProfile.getSIP());
-			return new ResponseEntity<String>("Adresse SIP non renseigné : "+skypeProfile.getSIP(), HttpStatus.NO_CONTENT);
+			logger.error("id annuaire collaborateur non trouvé : "+ skypeProfile.getCollaboraterId());
+			return new ResponseEntity<String>("id annuaire collaborateur non trouvé en base : "+ skypeProfile.getCollaboraterId(), HttpStatus.NOT_FOUND);
 		}
 		
 		SkypeProfile profilWithCollab = mapDtoToDomain(skypeProfile, collab);
-		boolean isCreated = skypeProfileManagement.addNewSkypeProfile (profilWithCollab,idAnnuaireCIL,comment);
+		try {
+			isCreated = skypeProfileManagement.addNewSkypeProfile (profilWithCollab,idAnnuaireCIL,comment);
+		} catch (AllReadyExistException e) {
+			logger.error("exception déclenchée : " + e.getMessage());
+			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 		
 		if (isCreated) {
 			return new ResponseEntity<String>("Profil skype créé", HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("erreur lors de la création du profil", HttpStatus.NOT_MODIFIED);
+			return new ResponseEntity<String>("erreur lors de la création du profil", HttpStatus.NOT_FOUND);
 		}
 
 	}	
@@ -94,42 +91,59 @@ public class SkypeProfileController {
 	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/delete/{sip}")
-	public ResponseEntity<Boolean> deleteSkypeProfil(@PathVariable("sip") String sip) {
+	public ResponseEntity<String> deleteSkypeProfil(@PathVariable("sip") String sip) {
+		
+		boolean isDeleted = false;
 		
 		System.out.println(sip ) ;
-		
-		boolean isDeleted = skypeProfileManagement.deleteSkypeProfile(sip);	
+		try {
+			isDeleted = skypeProfileManagement.deleteSkypeProfile(sip);	
+		} catch (NotFoundException e) {
+			logger.error("exception déclenchée : " + e.getMessage());
+			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+
 
 		if (isDeleted) {
 			logger.info("Exposition : Suppression effectuée");
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return new ResponseEntity<String>("Supression effectuée", HttpStatus.OK);
 
 		} else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+			logger.error("Pb lors de la supression");
+			return new ResponseEntity<String>("Pb lors de la supression", HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/update")
-	public ResponseEntity<Boolean> updateSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
-
+	public ResponseEntity<String> updateSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
+		
+		boolean isModified = false;
+				
 		// on récupère le collaborateur dans sa totalité avant de le passer
 		// au service applicatif.
 		Collaborater collab = collabManagement.findCollaboraterbyIdAnnuaire(skypeProfile.getCollaboraterId());
 		String idAnnuaireCIL = skypeProfile.getItCorrespondantId();
 		String comment = skypeProfile.getEventComment();
 		
-		if (collab == null || idAnnuaireCIL == null || idAnnuaireCIL=="" ) {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
+		if (collab == null) {
+			return new ResponseEntity<String>("Collaborateur inexistant en base pour l'idAnnuaire : "
+						+ skypeProfile.getCollaboraterId(), HttpStatus.NOT_FOUND);
 		} else {
 			SkypeProfile profilToChange = mapDtoToDomain(skypeProfile, collab);
 			
-			boolean isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL,comment);
+			try {
+				isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL,comment);
+
+			} catch (NotFoundException e) {
+				logger.error("exception déclenchée : " + e.getMessage());
+				return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			}
 			
 			if (isModified) {
-				return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+				return new ResponseEntity<String>("Profil mis à jour", HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
+				return new ResponseEntity<String>("Pb lors de la mise à jour du profil", HttpStatus.NOT_FOUND);
 			}
 		}
 

@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 
 /**
  * Service exposant les méthodes d'interfaction avec le CIL (US007 et US010)
@@ -103,9 +105,9 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		
 		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
 		if (itCorrespondant == null) {
-			logger.error("Utilisateur non trouvé en base, id "+idAnnuaire);
-//			throw new RuntimeException("Utilisateur non trouvé en base, id "+idAnnuaire);
-			return false;
+			String msg = "Utilisateur non trouvé en base, id "+idAnnuaire;
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND9, msg);
 		}else {
 			return itCorrespodantDomain.delete(itCorrespondant);
 		}
@@ -129,16 +131,17 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	public boolean updatePasswordItCorrespondant(String idAnnuaire, String oldPassword, String newPassword) {
 		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
 		if (itCorrespondant == null) {
-//			throw new RuntimeException("Utilisateur non trouvé en base, id "+idAnnuaire);
-			logger.error("Utilisateur non trouvé en base, id "+idAnnuaire);
-			return false;
+			String msg = "Utilisateur non trouvé en base, id "+idAnnuaire;
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND7, msg);
 		}else {
 			if (passwordEncoder.matches(oldPassword, itCorrespondant.getPassword())) {
 				String newEncryptedPassword = passwordEncoder.encode(newPassword);
 				return itCorrespodantDomain.updatePassword(idAnnuaire,newEncryptedPassword);
 			}else {
-				logger.error("ancien mot de passe incorrect : "+oldPassword);
-				return false;	
+				String msg = "ancien mot de passe incorrect : "+oldPassword;
+				logger.error(msg);
+				throw new NotFoundException(ExceptionListEnum.NOTFOUND8, msg);	
 			}
 		}	
 	}

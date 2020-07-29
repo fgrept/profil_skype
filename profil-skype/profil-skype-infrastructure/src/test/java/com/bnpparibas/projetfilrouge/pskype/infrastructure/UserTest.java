@@ -23,6 +23,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -59,6 +60,7 @@ public class UserTest {
 		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
 		
 		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId()).getCollaboraterId()).isEqualTo(collab1.getCollaboraterId());
+
 	}
 	
 	
@@ -73,7 +75,8 @@ public class UserTest {
 		roles.add(RoleTypeEnum.ROLE_RESP);
 		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
 		
-		assertThat(itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000")).isFalse();
+		assertThatThrownBy(() -> {itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");}).isInstanceOf(AllReadyExistException.class);
+
 	}
 	
 	@Test
