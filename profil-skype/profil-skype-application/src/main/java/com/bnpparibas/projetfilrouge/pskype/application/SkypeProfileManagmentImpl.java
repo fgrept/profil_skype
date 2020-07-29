@@ -119,6 +119,14 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				profil.getExchUser(), profil.getStatusProfile(), profil.getCollaborater().getOrgaUnit().getOrgaUnityCode(),
 				profil.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode());
 	}
+	
+
+	@Override
+	public List<SkypeProfile> findSkypeProfileWithCriteriaPage(SkypeProfile profilDom, int numberPage, int sizePage,
+			String sortCriteria, boolean sortAscending) {
+		// TODO Auto-generated method stub
+		return repositorySkypeProfile.findAllSkypeProfileFiltersPage(profilDom,numberPage,sizePage,sortCriteria,sortAscending);
+	}
 
 	@Override
 	public boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment) {
@@ -226,6 +234,19 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		
 		return repositorySkypeProfile.findSkypeProfileByIdCollab(idAnnuaire);
 	}
+
+	@Override
+	public List<SkypeProfile> findAllSkypeProfilePage(int numberPage, int sizePage, String criteria, boolean sortAscending) {
+		// TODO Auto-generated method stub
+		return repositorySkypeProfile.findAllSkypeProfilePage(numberPage,sizePage,criteria,sortAscending);
+	}
+
+	@Override
+	public Long countSkypeProfile() {
+		
+		return repositorySkypeProfile.countSkypeProfile();
+	}
+
 
 
 }

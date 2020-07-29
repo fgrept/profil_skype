@@ -47,6 +47,14 @@ public interface ISkypeProfileDomain {
 				String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser,
 				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode);
 
+		Long countSkypeProfile();
+
+		List<SkypeProfile> findAllSkypeProfilePage(int numberPage, int sizePage, String criteria,
+				boolean sortAscending);
+
+		List<SkypeProfile> findAllSkypeProfileFiltersPage(SkypeProfile profilDom, int numberPage, int sizePage,
+				String sortCriteria, boolean sortAscending);
+
 		
 
 	

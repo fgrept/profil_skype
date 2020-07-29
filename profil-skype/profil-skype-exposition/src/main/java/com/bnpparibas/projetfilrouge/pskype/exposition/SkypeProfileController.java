@@ -29,6 +29,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
+import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoCreate;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoSearch;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
@@ -174,8 +175,37 @@ public class SkypeProfileController {
 		
 		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
+	@GetMapping("/list/all/{numberPage}/{sizePage}/{criteria}")
+	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilPage(@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
+		
+		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
+		if (numberPage<0) {
+			logger.error("numéro de page négatif");
+			return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto,HttpStatus.NOT_MODIFIED);
+		}
+		if (sizePage<=0) {
+			logger.error("taille de la page insuffisante");
+			return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto,HttpStatus.NOT_MODIFIED);
+		}
+		if (criteria == null) {
+			criteria="";
+		}
+		List<SkypeProfile> profilListDom = skypeProfileManagement.findAllSkypeProfilePage(numberPage,sizePage,criteria,true);
+		
+		for (SkypeProfile skypeProfile : profilListDom) {
+			profilListDto.add(mapDomainToDtoSearch(skypeProfile));
+		}		
+		
+		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/count")
+	public ResponseEntity<Long> countSkypeProfile(){
+		return new ResponseEntity<Long>(skypeProfileManagement.countSkypeProfile(), HttpStatus.OK);
+	}
+	
 
-	@Secured({"ROLE_RESP","ROLE_ADMIN", "ROLE_USER"})
+
 	@GetMapping("/list/criteria")
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteria(@RequestBody SkypeProfileDtoSearch searchCriteria){
 		
@@ -190,6 +220,35 @@ public class SkypeProfileController {
 		
 		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
+
+	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
+	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
+		
+		logger.debug("numberPage : "+numberPage+" sizePage : "+sizePage+" criteria : "+criteria);
+		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
+		if (numberPage<0) {
+			logger.error("numéro de page négatif");
+			return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto,HttpStatus.NOT_MODIFIED);
+		}
+		if (sizePage<=0) {
+			logger.error("taille de la page insuffisante");
+			return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto,HttpStatus.NOT_MODIFIED);
+		}
+		if (criteria == null) {
+			criteria="";
+		}
+		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
+		
+		List<SkypeProfile> profilListDom = skypeProfileManagement.findSkypeProfileWithCriteriaPage(profilDom,numberPage,sizePage,criteria,true);
+		
+		
+		for (SkypeProfile skypeProfile : profilListDom) {
+			profilListDto.add(mapDomainToDtoSearch(skypeProfile));
+		}		
+		
+		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
+	}
+	
 	
 	private SkypeProfile mapDtoToDomain (SkypeProfileDtoCreate profilDto, Collaborater collab) {
 		

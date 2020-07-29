@@ -46,6 +46,21 @@ public class CollaboraterManagementImpl implements ICollaboraterManagment {
 		}
 		
 	}
+	@Override
+	public List<Collaborater> listCollaboraterSortByPage(int numberPage, int sizePage, String attribute,
+			boolean sortAscending) {
+		
+		return collaboraterDomain.findAllCollaboraterPage(numberPage, sizePage, attribute, sortAscending);
+	}
+	
+	
+	@Override
+	public List<Collaborater> listCollaboraterCriteriaSortByPage(Collaborater collaborater, int numberPage,
+			int sizePage, String attribute, boolean sortAscending) {
+		
+		return collaboraterDomain.findAllCollaboraterCriteriaPage(collaborater, numberPage, sizePage, attribute, sortAscending);
+	}
+
 
 
 }
