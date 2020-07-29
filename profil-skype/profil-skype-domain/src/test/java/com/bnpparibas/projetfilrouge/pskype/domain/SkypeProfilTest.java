@@ -1,5 +1,6 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
+import org.assertj.core.api.AbstractBooleanAssert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,8 +71,33 @@ public class SkypeProfilTest {
 	@DisplayName("Contrôle sur le contrôle de validité du numéro de téléphone")
 	public void validityTel () {
 		
-		// TO COMPLETE : ne fonctionne pas actuellement.
-		assertThat(true).isFalse();
+		Collaborater collab1 = new Collaborater("McEnroe", "John", "112114", "0102030405", null, "Abc.123@example.com",uo);
+		Collaborater collab2 = new Collaborater("McEnroe", "John", "112114", "02 30 40 05 06", null, "Abc.123@example.com",uo);
+		Collaborater collab3 = new Collaborater("McEnroe", "John", "112114", "12345", null, "Abc.123@example.com",uo);
+		Collaborater collab4 = new Collaborater("McEnroe", "John", "112114", "12340578910", null, "Abc.123@example.com",uo);
+		Collaborater collab5 = new Collaborater("McEnroe", "John", "112114", "9999999999", null, "Abc.123@example.com",uo);		
+		Collaborater collab6 = new Collaborater("McEnroe", "John", "112114", "01-02-03-04-05", null, "Abc.123@example.com",uo);
+		Collaborater collab7 = new Collaborater("McEnroe", "John", "112114", "06-02-03-04-05", null, "Abc.123@example.com",uo);
+		
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		javax.validation.Validator validator = factory.getValidator();
+		
+		Set<ConstraintViolation<Collaborater>> valid1 = validator.validate(collab1);
+		Set<ConstraintViolation<Collaborater>> valid2 = validator.validate(collab2);
+		Set<ConstraintViolation<Collaborater>> valid3 = validator.validate(collab3);
+		Set<ConstraintViolation<Collaborater>> valid4 = validator.validate(collab4);
+		Set<ConstraintViolation<Collaborater>> valid5 = validator.validate(collab5);
+		Set<ConstraintViolation<Collaborater>> valid6 = validator.validate(collab6);
+		Set<ConstraintViolation<Collaborater>> valid7 = validator.validate(collab7);
+		
+		assertThat(valid1).isEmpty();
+		assertThat(valid2).isEmpty();
+		assertThat(valid3).isNotEmpty();
+		assertThat(valid4).isNotEmpty();
+		assertThat(valid5).isNotEmpty();
+		assertThat(valid6).isEmpty();
+		assertThat(valid7).isEmpty();
+		
 		
 	}
 }

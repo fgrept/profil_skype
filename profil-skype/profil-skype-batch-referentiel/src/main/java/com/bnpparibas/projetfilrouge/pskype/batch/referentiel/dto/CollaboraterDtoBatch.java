@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.control.EmailControl;
+import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 
 public class CollaboraterDtoBatch {
 	
@@ -13,8 +14,9 @@ public class CollaboraterDtoBatch {
 	private String lastName;
 	@Size(max = 50)
 	private String firstName;
-	// en attente de fonctionnement du test sur le n° de tel
+	@PhoneControl
 	private String deskPhoneNumber;
+	@PhoneControl
 	private String mobilePhoneNumber;
 	@EmailControl
 	private String mailAdress;

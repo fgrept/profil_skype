@@ -33,6 +33,11 @@ import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoCreate;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoResult;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoSearch;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 /**
  * Classe exposant des API rest dédiées à l'itCorrespondant
  * @author La Fabrique
@@ -41,6 +46,7 @@ import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoSearch;
 @RestController
 @RequestMapping("/users")
 @Secured("ROLE_ADMIN")
+@Api(value = "It correspondant REST Controller : contient toutes les opérations pour manager un It correspondant")
 public class ItCorrespondantController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantController.class);
@@ -95,6 +101,11 @@ public class ItCorrespondantController {
 	}*/
 	
 	@PostMapping("create")
+	@ApiOperation(value = "Crée un it correspondant")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201,message = "création effectuée"),
+			@ApiResponse(code = 304,message = "It correspondant non créé (collaborateur déjà existant, etc)")
+	})
 	public ResponseEntity<Boolean> createItCorrespondantFromCollab(@Valid @RequestBody ItCorrespondantDtoCreate dto) {
 		
 		//La création d'un it correspondant se fait suite à une recherche en base des collaborateurs
@@ -138,6 +149,8 @@ public class ItCorrespondantController {
 	 * @return Liste des IT Correspondant
 	 */
 	@GetMapping("/list")
+	@ApiOperation(value = "Récupère l'ensemble des it correspondant stockés")
+	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<ItCorrespondantDtoResult>> listItCorrespondant(){
 		
 		List<ItCorrespondantDtoResult> listDto = new ArrayList<ItCorrespondantDtoResult>();
@@ -155,6 +168,8 @@ public class ItCorrespondantController {
 	 */
 
 	@GetMapping("/list/criteria")
+	@ApiOperation(value = "Récupère l'ensemble des it correspondant stockés en fonction de critères de recherche")
+	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<ItCorrespondantDtoResult>> listItCorrespondantFilters(@RequestBody ItCorrespondantDtoSearch dtoSearch){
 		
 		ItCorrespondant itCorrespondant=mapperDtoToDomain(dtoSearch);
@@ -168,6 +183,12 @@ public class ItCorrespondantController {
 	}
 
 	@PutMapping("uprole/{id}/{role}")
+	@ApiOperation(value = "Met à jour un rôle à partir d'un id annuaire")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
+			@ApiResponse(code = 304,message = "problème lors de la mise à jour, non effectuée"),
+			@ApiResponse(code = 404,message = "it correspondant non trouvé en base")
+	})
 	public ResponseEntity<Boolean> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
 		
 		logger.debug("id en entree " + id);
@@ -211,6 +232,11 @@ public class ItCorrespondantController {
 	 */
 	
 	@PutMapping("/updatepassword/{id}/{oldpass}/{newpass}")
+	@ApiOperation(value = "Met à jour le mot de passe d'un utilisateur")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
+			@ApiResponse(code = 304,message = "Pas de mise à jour : ancien et nouveau mot de passes identiques ou problème lors de la mise à jour en base")
+	})
 	public ResponseEntity<Boolean> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("oldpass") String oldPassword, @PathVariable("newpass") String newPassword) {
 		
 		if (oldPassword ==newPassword) {
@@ -223,7 +249,11 @@ public class ItCorrespondantController {
 			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_MODIFIED);
 		}
 	}
-	
+	@ApiOperation(value = "Supprime un utilisateur")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),
+			@ApiResponse(code = 404,message = "Utilisateur non supprimé : utilisateur absent ou problème lors de la suppression en base")
+	})
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Boolean> deleteItCorrespondant(@PathVariable("id") String id){
 		

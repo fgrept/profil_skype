@@ -19,6 +19,10 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEventEntityMapper;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+
 /**
  * Classe exposant les API rest sur les évènements associés au profils Skype
  * Elle comprend uniquement la possibilté de récupérer les évènements associés
@@ -30,6 +34,7 @@ import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.SkypePro
 @RestController
 @RequestMapping("/events")
 @Secured("ROLE_USER")
+@Api(value = "Skype profile event REST Controller : contient toutes les opérations pour manager les événements d'un profil skype")
 public class SkypeProfileEventController {
 	
 	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEventController.class);
@@ -38,6 +43,8 @@ public class SkypeProfileEventController {
 	ISkypeProfileEventManagement skypeProfileEventManagement;
 	
 	@GetMapping("/list/{sip}")
+	@ApiOperation(value = "Récupère l'ensemble des événements d'un profil skype")
+	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<SkypeProfileEventDto>> getEventsFromProfil (@PathVariable("sip") String SIP) {
 		
 		List<SkypeProfileEvent> listEvents = skypeProfileEventManagement.getAllEventFromSkypeProfil(SIP);

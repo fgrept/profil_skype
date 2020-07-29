@@ -4,6 +4,7 @@ import javax.validation.constraints.Size;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.Person;
 import com.bnpparibas.projetfilrouge.pskype.domain.control.EmailControl;
+import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 
 /**
  * Cette classe permet contient la liste des collaborateurs.
@@ -18,9 +19,9 @@ public class Collaborater extends Person {
 	// Seules les annotations personnalisées sont conservées : utilisées par le batch de chargement
 	// Elles sont aussi utilisées pour les tests du Domain
 	private String collaboraterId;
-	//@PhoneControl
+	@PhoneControl
 	private String deskPhoneNumber;
-	//@PhoneControl
+	@PhoneControl
 	private String mobilePhoneNumber;
 	@EmailControl
 	private String mailAdress;

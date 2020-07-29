@@ -11,11 +11,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.bnpparibas.projetfilrouge.pskype.security.SecurityConfiguration;
 
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 //@SpringBootApplication
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @ComponentScan(basePackages = {"com.bnpparibas.projetfilrouge.pskype"})
 @EnableJpaRepositories(basePackages = {"com.bnpparibas.projetfilrouge.pskype"})
 @EntityScan("com.bnpparibas.projetfilrouge.pskype")
+@EnableSwagger2
 public class ProfilSkypeApplication {
 	
 	
@@ -31,6 +34,6 @@ public class ProfilSkypeApplication {
 
 	public static void main(final String[] args) {
 		SpringApplication.run(ProfilSkypeApplication.class, args);
-		LOG.info("Application is running!\n look at http://localhost:9095/swagger-ui.html");
+		LOG.info("Application is running!\n look at http://localhost:8181/swagger-ui.html");
 	}
 }

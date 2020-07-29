@@ -12,9 +12,9 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PhoneControlValidator.class)
 public @interface PhoneControl {
- /*   String message() default "Numéro de téléphone non valide selon la norme RFC";
+    String message() default "Numéro de téléphone non valide selon la norme RFC";
 
     Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};*/
+    Class<? extends Payload>[] payload() default {};
 }

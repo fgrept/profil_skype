@@ -28,9 +28,7 @@ public class PhoneControlValidator implements ConstraintValidator<PhoneControl, 
 		}
 	       try{
 	            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-	            //PhoneNumber phone = phoneNumberUtil.parse(phoneNumber, "");
-	            //boolean test = phoneNumberUtil.isValidNumberForRegion(phone, "FR");
-	            return phoneNumberUtil.isValidNumberForRegion(phoneNumberUtil.parse(phoneNumber, ""), "FR");
+	            return phoneNumberUtil.isValidNumberForRegion(phoneNumberUtil.parse(phoneNumber, "FR"), "FR");
 	        }
 	        catch (NumberParseException e){
 	            return false;

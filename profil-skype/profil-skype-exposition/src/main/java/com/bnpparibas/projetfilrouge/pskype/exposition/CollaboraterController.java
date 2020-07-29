@@ -25,6 +25,11 @@ import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoCreate;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoResult;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * 
  * @author Judicaël
@@ -33,6 +38,7 @@ import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoResult;
 @RestController
 @RequestMapping("/collaborater")
 @Secured({"ROLE_RESP","ROLE_ADMIN"})
+@Api(value = "Collaborater REST Controller : contient toutes les opérations pour manager un collaborateur")
 public class CollaboraterController {
 	
 	private static Logger logger = LoggerFactory.getLogger(CollaboraterController.class);
@@ -41,6 +47,8 @@ public class CollaboraterController {
 	private ICollaboraterManagment collaboraterManagment;
 	
 	@GetMapping("/list")
+	@ApiOperation(value = "Récupère l'ensemble des collaborateurs stockés")
+	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<CollaboraterDto>> listCollaborater(){
 		
 		List<Collaborater> list =  collaboraterManagment.listCollaborater();
@@ -53,6 +61,11 @@ public class CollaboraterController {
 	}
 	
 	@GetMapping("/list/{numberPage}/{sizePage}/{criteria}")
+	@ApiOperation(value = "Récupère un ensemble de collaborateurs stockés selon des critères de pagination")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, liste retournée"),
+			@ApiResponse(code = 304,message = "Critères de pagination incorrects"),
+	})
 	public ResponseEntity<List<CollaboraterDto>> listCollaboraterPage(@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
 		List<CollaboraterDto> dto = new ArrayList<CollaboraterDto>();
 		if (numberPage<0) {
@@ -76,6 +89,11 @@ public class CollaboraterController {
 	}
 	
 	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
+	@ApiOperation(value = "Récupère un ensemble de collaborateurs stockés selon des critères de pagination et des critères de recherches")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, liste retournée"),
+			@ApiResponse(code = 304,message = "Critères de pagination incorrects"),
+	})
 	public ResponseEntity<List<CollaboraterDto>> listCollaboraterCriteriaPage(@RequestBody CollaboraterDto collaboraterDto,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
 		
 		List<CollaboraterDto> dto = new ArrayList<CollaboraterDto>();
@@ -100,6 +118,12 @@ public class CollaboraterController {
 	}
 	
 	@PostMapping("/create")
+	@ApiOperation(value = "Crée un collaborateur")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201,message = "création effectuée"),
+			@ApiResponse(code = 204,message = "id collaborateur absent en entrée"),
+			@ApiResponse(code = 304,message = "Collaborateur déjà existant")
+	})
 	public ResponseEntity<Boolean> createCollaborater(@RequestBody CollaboraterDto dto) {
 		
 		if ((dto.getCollaboraterId() == null)|| (dto.getCollaboraterId()=="")) {

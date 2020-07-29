@@ -34,6 +34,11 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoCreate;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoSearch;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 //import jdk.internal.net.http.common.Log;
 
 /**
@@ -44,6 +49,7 @@ import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 @RestController
 @RequestMapping("/profile")
 @Secured({"ROLE_USER","ROLE_RESP","ROLE_ADMIN"})
+@Api(value = "Skype profile REST Controller : contient toutes les opérations pour manager profil skype")
 public class SkypeProfileController {
 	
 	private static Logger logger = LoggerFactory.getLogger(SkypeProfileController.class);
@@ -56,6 +62,12 @@ public class SkypeProfileController {
 	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/create")
+	@ApiOperation(value = "Crée un profil skype")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201,message = "création effectuée"),
+			@ApiResponse(code = 204,message = "Données obligatoire absentes en entrée : id annuaire du collaborateur, adresse sip ou id annuaire de l'it correspondant"),
+			@ApiResponse(code = 304,message = "Erreur lors de la création du profil skype")
+	})
 	public ResponseEntity<String> createSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
 		
 		// on récupère le collaborateur dans sa totalité avant de le passer
@@ -94,6 +106,11 @@ public class SkypeProfileController {
 	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/delete/{sip}")
+	@ApiOperation(value = "Supprime un profil skype")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),
+			@ApiResponse(code = 404,message = "Profil skype non supprimé : absent ou problème lors de la suppression en base")
+	})
 	public ResponseEntity<Boolean> deleteSkypeProfil(@PathVariable("sip") String sip) {
 		
 		System.out.println(sip ) ;
@@ -111,6 +128,12 @@ public class SkypeProfileController {
 
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/update")
+	@ApiOperation(value = "Met à jour les données d'un profil skype")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
+			@ApiResponse(code = 204,message = "Données obligatoire absentes en entrée ou collaborateur absent de la base"),
+			@ApiResponse(code = 304,message = "Problème de la mise à jour")
+	})
 	public ResponseEntity<Boolean> updateSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
 
 		// on récupère le collaborateur dans sa totalité avant de le passer
@@ -119,7 +142,7 @@ public class SkypeProfileController {
 		String idAnnuaireCIL = skypeProfile.getItCorrespondantId();
 		String comment = skypeProfile.getEventComment();
 		
-		if (collab == null || idAnnuaireCIL == null || idAnnuaireCIL=="" ) {
+		if (collab == null || skypeProfile.getSIP() == null || idAnnuaireCIL=="" ) {
 			return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
 		} else {
 			SkypeProfile profilToChange = mapDtoToDomain(skypeProfile, collab);
@@ -137,6 +160,8 @@ public class SkypeProfileController {
 	
 //	@Secured({"ROLE_RESP","ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/list/all")
+	@ApiOperation(value = "Récupère l'ensemble des profils skype stockés")
+	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfil(){
 		
 		List<SkypeProfile> profilListDom = skypeProfileManagement.findAllSkypeProfile();
@@ -149,6 +174,11 @@ public class SkypeProfileController {
 		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
 	@GetMapping("/list/all/{numberPage}/{sizePage}/{criteria}")
+	@ApiOperation(value = "Récupère un ensemble de profils skype stockés selon des critères de pagination")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, liste retournée"),
+			@ApiResponse(code = 304,message = "Critères de pagination incorrects"),
+	})
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilPage(@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
 		
 		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
@@ -172,6 +202,8 @@ public class SkypeProfileController {
 		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "Compte l'ensemble des profils skype stockés")
+	@ApiResponse(code = 200,message ="Ok, nombre de profils skype retourné")
 	@GetMapping("/count")
 	public ResponseEntity<Long> countSkypeProfile(){
 		return new ResponseEntity<Long>(skypeProfileManagement.countSkypeProfile(), HttpStatus.OK);
@@ -180,6 +212,8 @@ public class SkypeProfileController {
 
 
 	@GetMapping("/list/criteria")
+	@ApiOperation(value = "Récupère l'ensemble des profils skype stockés en fonction de critères de recherche")
+	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteria(@RequestBody SkypeProfileDtoSearch searchCriteria){
 		
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
@@ -195,6 +229,11 @@ public class SkypeProfileController {
 	}
 
 	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
+	@ApiOperation(value = "Récupère un ensemble de profils skype stockés selon des critères de pagination et des critères de recherches")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, liste retournée"),
+			@ApiResponse(code = 304,message = "Critères de pagination incorrects"),
+	})
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
 		
 		logger.debug("numberPage : "+numberPage+" sizePage : "+sizePage+" criteria : "+criteria);

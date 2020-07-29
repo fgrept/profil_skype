@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.ConstraintComposition;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.BooleanString;
+
 
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 
