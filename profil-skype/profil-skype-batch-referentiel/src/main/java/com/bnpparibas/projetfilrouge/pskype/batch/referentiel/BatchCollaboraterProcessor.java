@@ -51,9 +51,6 @@ public class BatchCollaboraterProcessor implements ItemProcessor<CollaboraterDto
 	    	return null;
 	      }
 		
-		if(item.getCollaboraterId() == null) {
-			log.error("Pas de collaborateur en entree");
-		}
 		CollaboraterEntity entity = collaboraterRepository.findByCollaboraterId(item.getCollaboraterId());
 		if (entity == null) {
 			entity = new CollaboraterEntity();

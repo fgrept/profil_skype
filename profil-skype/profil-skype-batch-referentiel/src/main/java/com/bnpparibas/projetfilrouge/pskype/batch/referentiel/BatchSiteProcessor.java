@@ -45,10 +45,6 @@ public class BatchSiteProcessor implements ItemProcessor<Site, SiteEntity>{
 	    	return null;
 	      }
 		
-		if (site.getSiteCode()==null) {
-			log.error("Pas de code site en entree");
-			return null;
-		}
 		SiteEntity entity = siteRepository.findBySiteCode(site.getSiteCode());
 		if (entity == null) {
 			entity = new SiteEntity();

@@ -53,9 +53,6 @@ public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespond
 	    	return null;
 	      }
 	    
-		if (item.getIdAnnuaire()==null) {
-			return null;
-		}
 		CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(item.getIdAnnuaire());
 		if (collaboraterEntity == null) {
 			return null;

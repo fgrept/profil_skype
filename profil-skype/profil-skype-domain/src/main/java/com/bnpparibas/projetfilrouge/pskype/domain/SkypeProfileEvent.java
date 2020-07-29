@@ -16,9 +16,7 @@ public class SkypeProfileEvent {
 	private TypeEventEnum typeEvent;
 	private String commentEvent;
 	
-	@NotNull
 	private SkypeProfile skypeProfile;
-	@NotNull
 	private ItCorrespondant itCorrespondant;
 	
 	public SkypeProfileEvent() {

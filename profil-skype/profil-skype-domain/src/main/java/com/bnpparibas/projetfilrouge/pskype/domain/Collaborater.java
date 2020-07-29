@@ -1,13 +1,9 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.format.annotation.NumberFormat;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.Person;
 import com.bnpparibas.projetfilrouge.pskype.domain.control.EmailControl;
-import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 
 /**
  * Cette classe permet contient la liste des collaborateurs.
@@ -19,7 +15,8 @@ import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
  */
 public class Collaborater extends Person {
 	
-	@Size(max = 17)
+	// Seules les annotations personnalisées sont conservées : utilisées par le batch de chargement
+	// Elles sont aussi utilisées pour les tests du Domain
 	private String collaboraterId;
 	//@PhoneControl
 	private String deskPhoneNumber;
@@ -27,7 +24,6 @@ public class Collaborater extends Person {
 	private String mobilePhoneNumber;
 	@EmailControl
 	private String mailAdress;
-	@NotNull
 	private OrganizationUnity orgaUnit; 
 	
 	public Collaborater() {

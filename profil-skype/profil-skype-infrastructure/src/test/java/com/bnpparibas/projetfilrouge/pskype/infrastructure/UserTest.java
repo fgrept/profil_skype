@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,16 +45,7 @@ public class UserTest {
 	
 	@Autowired
 	private ICollaboraterDomain collaboraterDomain;
-	
-	@Test
-	@DisplayName("Vérifier la présence d'un CIL après sa création,"
-			+ " lorsque le collaborateur n'existe pas")
-	public void verifyProfilAfterCreationWhenCollabExist () {
-		ItCorrespondant itCorrespondant0 = new ItCorrespondant("John", "Doe", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",null);
-		
-		itCorrespondantDomain.createFull(itCorrespondant0);		
-		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId("112114")).isEqualTo(itCorrespondant0);
-	}
+
 	
 	@Test
 	@DisplayName("Vérifier la présence d'un CIL après sa création,"
@@ -64,7 +56,7 @@ public class UserTest {
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
 		roles.add(RoleTypeEnum.ROLE_USER);
 		roles.add(RoleTypeEnum.ROLE_RESP);
-		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
 		
 		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId()).getCollaboraterId()).isEqualTo(collab1.getCollaboraterId());
 	}
@@ -79,14 +71,17 @@ public class UserTest {
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
 		roles.add(RoleTypeEnum.ROLE_USER);
 		roles.add(RoleTypeEnum.ROLE_RESP);
-		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
 		
-		assertThat(itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles)).isFalse();
+		assertThat(itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000")).isFalse();
 	}
 	
 	@Test
+	//@Rollback(false)
 	@DisplayName("Vérifier que la totalité des CIL peut être ramenée")
 	public void verifyGetAllITCorresp () {
+		
+		int nbExisting = itCorrespondantDomain.findAllItCorrespondant().size();
 		collaboraterDomain.create(collab1);
 		collaboraterDomain.create(collab2);
 		collaboraterDomain.create(collab3);
@@ -94,11 +89,11 @@ public class UserTest {
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
 		roles.add(RoleTypeEnum.ROLE_USER);
 		roles.add(RoleTypeEnum.ROLE_RESP);		
-		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
-		itCorrespondantDomain.createRoleCILtoCollab(collab2.getCollaboraterId(), roles);
-		itCorrespondantDomain.createRoleCILtoCollab(collab3.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
+		itCorrespondantDomain.createRoleCILtoCollab(collab2.getCollaboraterId(), roles, "000000");
+		itCorrespondantDomain.createRoleCILtoCollab(collab3.getCollaboraterId(), roles, "000000");
 		
-		assertThat(itCorrespondantDomain.findAllItCorrespondant().size()).isEqualTo(3);
+		assertThat(itCorrespondantDomain.findAllItCorrespondant().size()).isEqualTo(nbExisting + 3);
 	}
 	
 	@Test
@@ -112,10 +107,10 @@ public class UserTest {
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
 		roles.add(RoleTypeEnum.ROLE_USER);
 		roles.add(RoleTypeEnum.ROLE_RESP);		
-		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles);
-		itCorrespondantDomain.createRoleCILtoCollab(collab2.getCollaboraterId(), roles);
-		itCorrespondantDomain.createRoleCILtoCollab(collab3.getCollaboraterId(), roles);
-		itCorrespondantDomain.createRoleCILtoCollab(collab4.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
+		itCorrespondantDomain.createRoleCILtoCollab(collab2.getCollaboraterId(), roles, "000000");
+		itCorrespondantDomain.createRoleCILtoCollab(collab3.getCollaboraterId(), roles, "000000");
+		itCorrespondantDomain.createRoleCILtoCollab(collab4.getCollaboraterId(), roles, "000000");
 		
 		assertAll(() -> assertThat(itCorrespondantDomain.
 				findAllItCorrespondantFilters("112114", "Doe", "John", null, null, null))

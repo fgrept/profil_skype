@@ -89,35 +89,8 @@ public class SkypeProfileController {
 			return new ResponseEntity<String>("erreur lors de la création du profil", HttpStatus.NOT_MODIFIED);
 		}
 
-	}
-	
-/*	@GetMapping("/createauto")
-	public void createSkypeProfilAuto() {
-		//SkypeProfileDto skypeProfile =new SkypeProfileDto("juju.titi@live.toto.com", "000015","000015");
-		SkypeProfileDto skypeProfile =new SkypeProfileDto("mido.82@live.com", "000017","000016");
-		skypeProfileManagement.addNewSkypeProfile(skypeProfile);
-		System.out.println("Exposition : création effectuée");
+	}	
 
-	
-	}*/
-	
-/*	@GetMapping("/createautowithevent")
-	public void createSkypeProfilAutoWithEvent() {
-		
-		System.out.println("Début Event");
-		
-		SkypeProfileDto skypeProfile =new SkypeProfileDto("mido.82@live.com", "000017","000016");
-		
-		SkypeProfileEventDto skypeProfileEvent =new SkypeProfileEventDto (skypeProfile, TypeEventEnum.CREATION,"CREATION DU PROFIL SKYPE","000016");
-						
-		System.out.println("it_correspondant_id_user :" + skypeProfileEvent.getItCorrespondantId()  );
-		
-		skypeProfileManagement.addNewSkypeProfileWithEvent(skypeProfile,skypeProfileEvent);
-		
-		System.out.println("Exposition : création effectuée avec Event");
-		
-	
-	}*/
 	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/delete/{sip}")

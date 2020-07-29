@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.context.annotation.Profile;
-
 /**
  * Cette classe contient les informations d'un profil Skype.
  * Il n'existe au plus qu'un seul profil skype par collaborateur
@@ -40,7 +38,6 @@ public class SkypeProfile {
 	//par défaut vaut "user"
 	private String objectClass;
 	
-//	@NotNull
 	private Collaborater collaborater;
 	
 	//statut du profil : activé, désactivé, expiré (si date d'expiration supérieure > date du jour)

@@ -75,6 +75,7 @@ public class SkypeProfilTest {
 	}
 
 	@Test
+	//@Rollback(false)
 	@DisplayName("Vérifier qu'un cil peut avoit un profil skype")
 	public void verifyCilCanHaveProfil () {
 		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
@@ -83,7 +84,7 @@ public class SkypeProfilTest {
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
 		roles.add(RoleTypeEnum.ROLE_USER);
 		roles.add(RoleTypeEnum.ROLE_RESP);
-		itCorrespondantDomain.createRoleCILtoCollab(collab.getCollaboraterId(), roles);
+		itCorrespondantDomain.createRoleCILtoCollab(collab.getCollaboraterId(), roles, "000000");
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
 			

@@ -22,13 +22,11 @@ import org.hibernate.annotations.CascadeType;
  * fetch en eager car les données sont toujours affichées avec les infos adresse du site
  */
 @Entity
-//@Table(uniqueConstraints=@UniqueConstraint(columnNames={"orga_unity_code"}))
 public class OrganizationUnityEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orgaUnityId;
-	//@Column(name = "orga_unity_code")
 	private String orgaUnityCode;
 	private String orgaUnityType;
 	private String orgaShortLabel;

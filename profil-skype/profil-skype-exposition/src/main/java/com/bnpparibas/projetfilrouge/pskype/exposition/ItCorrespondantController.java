@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,6 @@ import org.springframework.security.access.annotation.Secured;
 
 import com.bnpparibas.projetfilrouge.pskype.application.ICollaboraterManagment;
 import com.bnpparibas.projetfilrouge.pskype.application.IItCorrespondantManagment;
-import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
@@ -35,7 +35,7 @@ import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoResult;
 import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoSearch;
 /**
  * Classe exposant des API rest dédiées à l'itCorrespondant
- * @author Judicaël
+ * @author La Fabrique
  * Spring security : classe correspondant au module de paramétrage, réservée aux administrateurs
  */
 @RestController
@@ -52,12 +52,16 @@ public class ItCorrespondantController {
 	ICollaboraterManagment collaboraterManagment;
 	
 	/**
-	 * Création d'un it correspondant
+	 * Création d'un it correspondant en même temps qu'un collaborateur
+	 * Nota : ce use cas n'existe pas actuellement et risque d'introduire des données erronées en base // REFERENTIEL
+	 * car la recherche des collaborateurs dans l'IHM se fait de toute manière à partir des données en BDD et pas
+	 * depuis le référentiel.
+	 *  
 	 * @param dto
 	 * @return
 	 */
-	@PostMapping("create")
-	public ResponseEntity<Boolean> createItCorrespondant(@RequestBody ItCorrespondantDtoCreate dto) {
+/*	@PostMapping("create")
+	public ResponseEntity<Boolean> createItCorrespondantFull(@RequestBody ItCorrespondantDtoCreate dto) {
 		
 		//La création d'un utilisateur requiert toutes les données nécessaires à la création d'un it correspondant donc aussi
 		//collaborateur, personn, uo et site s'ils n'existent pas déjà
@@ -80,7 +84,7 @@ public class ItCorrespondantController {
 		}else {
 			//création de l'utilisateur à partir des données de la table
 			logger.debug("Demande de création partielle");
-			boolean isCreated = userManagment.createItCorrespondant(itCorrespondant);
+			boolean isCreated = userManagment.createFullItCorrespondant(itCorrespondant);
 			if (isCreated) {
 				logger.info("Création it correspondant");
 				return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
@@ -88,6 +92,23 @@ public class ItCorrespondantController {
 				return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
 			}
 		}
+	}*/
+	
+	@PostMapping("create")
+	public ResponseEntity<Boolean> createItCorrespondantFromCollab(@Valid @RequestBody ItCorrespondantDtoCreate dto) {
+		
+		//La création d'un it correspondant se fait suite à une recherche en base des collaborateurs
+		//Donc on reçoit juste l'id du collaborateur et les rôles que l'on souhaite lui donner.
+		//Les données sont controllés via le valideur de bean dto
+		
+		boolean isCreated = userManagment.createItCorrespondant(dto.getCollaboraterId(), dto.getRoles());
+		if (isCreated) {
+			logger.info("Création it correspondant");
+			return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
+		}else {
+			return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
+		}
+		
 	}
 	
 	/**
