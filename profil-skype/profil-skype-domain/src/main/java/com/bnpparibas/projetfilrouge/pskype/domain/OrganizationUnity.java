@@ -1,6 +1,5 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
-import javax.validation.constraints.NotNull;
 /**
  * Contient la liste des UO d'appartenance aux collaborateurs avec le site associé.
  * Ces UO représentent une vision logique
@@ -13,7 +12,6 @@ public class OrganizationUnity {
 	private String orgaUnityCode;
 	private String orgaUnityType;
 	private String orgaShortLabel;
-	@NotNull
 	private Site orgaSite;
 	
 	public OrganizationUnity() {

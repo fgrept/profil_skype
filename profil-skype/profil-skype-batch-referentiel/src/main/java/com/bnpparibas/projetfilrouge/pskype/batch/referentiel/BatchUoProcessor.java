@@ -45,10 +45,6 @@ public class BatchUoProcessor implements ItemProcessor<OrganizationUnityDtoBatch
 	    	return null;
 	      }
 	    
-		if (item.getOrgaUnityCode()==null) {
-			log.error("Pas de code uo en entree");
-			return null;
-		}
 		OrganizationUnityEntity entity = uoRepository.findByOrgaUnityCode(item.getOrgaUnityCode());
 		if (entity == null) {
 			entity = new OrganizationUnityEntity();

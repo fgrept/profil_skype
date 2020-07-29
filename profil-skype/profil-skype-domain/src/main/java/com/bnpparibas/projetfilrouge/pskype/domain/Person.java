@@ -1,7 +1,5 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
-import javax.validation.constraints.Size;
-
 /**
  * Classe abstraite d'une personne
  * @author Judicaël
@@ -9,10 +7,10 @@ import javax.validation.constraints.Size;
  *
  */
 public abstract class Person {
-	@Size(max = 50)
+
 	private String lastNamePerson;
-	@Size(max = 50)
 	private String firstNamePerson;
+	
 	public String getLastNamePerson() {
 		return lastNamePerson;
 	}

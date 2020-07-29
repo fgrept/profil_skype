@@ -31,27 +31,6 @@ public class SkypeProfilTest {
 		assertThat(Period.between(deb, fin).minusYears(2).isZero()).isTrue();
 		
 	}
-
-	@Test
-	@DisplayName("Contrôle sur quelques paramètres std d'un collaborateur")
-	public void validityBeanCollaborator () {
-		
-		Collaborater collab1 = new Collaborater("McEnroe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.tennis@gmail.com",uo);
-		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115112115112115112115112115", null, null, null ,uo);
-		Collaborater collab3 = new Collaborater("112115112115112115112115112115112115112115112115112115112115112115112115112115112115112115", "Stephen", "118116", null, null, "stephen.horror@gmail.com",uo);
-		
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		javax.validation.Validator validator = factory.getValidator();
-		
-		Set<ConstraintViolation<Collaborater>> valid1 = validator.validate(collab1);
-		Set<ConstraintViolation<Collaborater>> valid2 = validator.validate(collab2);
-		Set<ConstraintViolation<Collaborater>> valid3 = validator.validate(collab3);
-
-		assertThat(valid1).isEmpty();
-		assertThat(valid2).isNotEmpty();
-		assertThat(valid3).isNotEmpty();
-		
-	}
 	
 	@Test
 	@DisplayName("Contrôle sur le contrôle de validité de l'email à la norme RFC")

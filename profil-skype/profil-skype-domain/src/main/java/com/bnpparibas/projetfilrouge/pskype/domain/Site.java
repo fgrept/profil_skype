@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
  *
  */
 public class Site {
+	
+	// Les annotations de validation sont utilisées par le batch de chargement du référentiel
 	@Size(min = 1)
 	private String siteCode;
 	@Size(min = 1)
