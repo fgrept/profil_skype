@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Cette classe contient les informations d'un profil Skype.
  * Il n'existe au plus qu'un seul profil skype par collaborateur
@@ -16,6 +19,9 @@ import java.util.Objects;
  *
  */
 public class SkypeProfile {
+	
+	private static Logger logger = LoggerFactory.getLogger(SkypeProfile.class);
+	
 	//SIP : adresse mail skype. Ex : judicael.tige@live.bnpparibas.com
 	private String SIP;
 	
@@ -199,8 +205,8 @@ public class SkypeProfile {
 	        if ( (value1 != null && value2 != null) 
 	        		&& (field.getName() != "SIP")
 	        		&& (field.getName() != "collaborater")) {
-	            System.out.println(field.getName() + "=" + value1);
-	            System.out.println(field.getName() + "=" + value2);
+	            logger.debug(field.getName() + "=" + value1);
+	            logger.debug(field.getName() + "=" + value2);
 	            if (!Objects.equals(value1, value2)) {
 	                changedProperties.add(field.getName()+ " : " + value2);
 	            }

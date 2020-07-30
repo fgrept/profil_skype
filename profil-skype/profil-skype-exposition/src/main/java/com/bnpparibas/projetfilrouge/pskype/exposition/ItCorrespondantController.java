@@ -68,39 +68,7 @@ public class ItCorrespondantController {
 	 * @param dto
 	 * @return
 	 */
-/*	@PostMapping("create")
-	public ResponseEntity<Boolean> createItCorrespondantFull(@RequestBody ItCorrespondantDtoCreate dto) {
-		
-		//La création d'un utilisateur requiert toutes les données nécessaires à la création d'un it correspondant donc aussi
-		//collaborateur, personn, uo et site s'ils n'existent pas déjà
-		if (dto.getCollaboraterId() == null||dto.getCollaboraterId() == "") {
-			return new ResponseEntity<Boolean>(false,HttpStatus.NO_CONTENT);
-		}
-		Collaborater collaborater = collaboraterManagment.findCollaboraterbyIdAnnuaire(dto.getCollaboraterId());
-		ItCorrespondant itCorrespondant=mapperDtoToDomain(dto);
-		itCorrespondant.setPassword(dto.getPassword());
-		if (collaborater == null) {		
-			//création complète
-			logger.debug("Demande de création complète");
-			boolean isCreated = userManagment.createFullItCorrespondant(itCorrespondant);
-			if (isCreated) {
-				logger.info("Création it correspondant");
-				return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
-			}else {
-				return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
-			}
-		}else {
-			//création de l'utilisateur à partir des données de la table
-			logger.debug("Demande de création partielle");
-			boolean isCreated = userManagment.createFullItCorrespondant(itCorrespondant);
-			if (isCreated) {
-				logger.info("Création it correspondant");
-				return new ResponseEntity<Boolean>(true,HttpStatus.CREATED);
-			}else {
-				return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
-			}
-		}
-	}*/
+
 	
 	@PostMapping("create")
 	@ApiOperation(value = "Crée un it correspondant")
@@ -109,11 +77,9 @@ public class ItCorrespondantController {
 			@ApiResponse(code = 304,message = "It correspondant non créé (collaborateur déjà existant, etc)")
 	})
 	public ResponseEntity<String> createItCorrespondantFromCollab(@Valid @RequestBody ItCorrespondantDtoCreate dto) {
-
 		
 		boolean isCreated = false;
-
-		
+	
 		//La création d'un it correspondant se fait suite à une recherche en base des collaborateurs
 		//Donc on reçoit juste l'id du collaborateur et les rôles que l'on souhaite lui donner.
 		//Les données sont controllés via le valideur de bean dto
@@ -132,6 +98,7 @@ public class ItCorrespondantController {
 		}
 		
 	}
+
 	
 	/**
 	 * API dédiée aux tests pour ajouter manuellement un ensemble d'it correspondant
@@ -154,6 +121,7 @@ public class ItCorrespondantController {
 		logger.info("Création automatique effectuée");
 		return "creation effectuée";
 	}
+
 	
 	/**
 	 * API permettant de récupérer l'ensemble des utilisateurs présents en table
@@ -177,7 +145,6 @@ public class ItCorrespondantController {
 	 * @param itCorrespondant
 	 * @return Liste des IT Correspondant
 	 */
-
 	@GetMapping("/list/criteria")
 	@ApiOperation(value = "Récupère l'ensemble des it correspondant stockés en fonction de critères de recherche")
 	@ApiResponse(code = 200,message ="Ok, liste retournée")
@@ -193,6 +160,7 @@ public class ItCorrespondantController {
 		
 	}
 
+	
 	@PutMapping("uprole/{id}/{role}")
 	@ApiOperation(value = "Met à jour un rôle à partir d'un id annuaire")
 	@ApiResponses(value = {
@@ -243,14 +211,15 @@ public class ItCorrespondantController {
 			return new ResponseEntity<String>("Pb lors de la mise à jour", HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
 	/**
 	 * Mise à jour du mot de passe
 	 * @param id
 	 * @param oldPassword
 	 * @param newPassword
 	 * @return
-	 */
-	
+	 */	
 	@PutMapping("/updatepassword/{id}/{oldpass}/{newpass}")
 	@ApiOperation(value = "Met à jour le mot de passe d'un utilisateur")
 	@ApiResponses(value = {
@@ -278,6 +247,7 @@ public class ItCorrespondantController {
 		}
 	}
 
+	
 	@ApiOperation(value = "Supprime un utilisateur")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),
@@ -302,6 +272,7 @@ public class ItCorrespondantController {
 		
 	}
 	
+	
 	/**
 	 * Mapper de type collaborater vers It Correspondant (données de niveau collaborateur)
 	 * A voir si dans un second, ce mapper n'est pas externalisé dans une classe dédiée afin de ne pas exposer les objets de niveau domaine
@@ -315,6 +286,8 @@ public class ItCorrespondantController {
 		ItCorrespondant itCorrespondant = new ItCorrespondant(dto.getLastName(),dto.getFirstName(),dto.getCollaboraterId(),dto.getDeskPhoneNumber(),dto.getMobilePhoneNumber(),dto.getMailAdress(), orgaUnit);
 		return itCorrespondant;
 		}
+	
+	
 	/**
 	 * Mapper de type It Correspondant vers collaborater(données de niveau collaborateur)
 	 * A voir si dans un second, ce mapper n'est pas externalisé dans une classe dédiée afin de ne pas exposer les objets de niveau domaine

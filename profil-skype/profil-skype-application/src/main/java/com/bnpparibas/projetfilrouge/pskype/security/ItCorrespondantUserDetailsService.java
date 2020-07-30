@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +27,9 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 @Service
 @Transactional
 public class ItCorrespondantUserDetailsService implements UserDetailsService {
-
+	
+	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantUserDetailsService.class);
+	
 	@Autowired
 	IItCorrespondantDomain itCorrespondantDomain;
 	/**
@@ -39,9 +43,12 @@ public class ItCorrespondantUserDetailsService implements UserDetailsService {
 		if (itCorrespondant ==null) {
 			throw new UsernameNotFoundException("Utilisateur, id annuaire : "+idAnnuaire+" non trouvé");
 		}
-		System.out.println(itCorrespondant.getCollaboraterId()+" , password : "+itCorrespondant.getPassword());
+		logger.debug(itCorrespondant.getCollaboraterId()+" , password : "+itCorrespondant.getPassword());
+		
 		return new User(idAnnuaire, itCorrespondant.getPassword(), getRolesAuthorities(itCorrespondant));
 	}
+	
+	
 	/**
 	 * Méthode pour mapper le set de rôles avec la liste de type GrantedAuthority
 	 * @param itCorrespondant
@@ -53,7 +60,7 @@ public class ItCorrespondantUserDetailsService implements UserDetailsService {
 		if (rolesAuthorities !=null) {
 			for (RoleTypeEnum role : itCorrespondant.getRoles()) {
 				rolesAuthorities.add(new SimpleGrantedAuthority(role.name()));
-				System.out.println(itCorrespondant.getCollaboraterId()+" : ROLE - "+role.name());
+				logger.debug(itCorrespondant.getCollaboraterId()+" : ROLE - "+role.name());
 			}
 		}
 		return rolesAuthorities;

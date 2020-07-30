@@ -20,8 +20,6 @@ import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
 
 
-
-
 /**
  * 
  * Entité du Profil Skype
@@ -52,6 +50,7 @@ public class SkypeProfileEntity {
 	private String exchUser;
 		 
 	private String objectClass;
+	
 	@Enumerated(EnumType.STRING)
 	private StatusSkypeProfileEnum statusProfile;
 	

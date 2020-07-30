@@ -44,7 +44,6 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	@Override
 	public boolean createItCorrespondant(String idAnnuaire, Set<RoleTypeEnum> roles) {
 
-	//	itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
 		String passwordBrut = "000000";
 		String passwordCode = passwordEncoder.encode(passwordBrut);
 		
@@ -116,7 +115,7 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 
 	@Override
 	public List<ItCorrespondant> listItCorrespondantFilters(ItCorrespondant itCorrespondant) {
-		// TODO Auto-generated method stub
+		
 		return itCorrespodantDomain.findAllItCorrespondantFilters(itCorrespondant.getCollaboraterId(),itCorrespondant.getLastNamePerson(), itCorrespondant.getFirstNamePerson(), 
 				itCorrespondant.getDeskPhoneNumber(),itCorrespondant.getMobilePhoneNumber(),itCorrespondant.getMailAdress());
 	}

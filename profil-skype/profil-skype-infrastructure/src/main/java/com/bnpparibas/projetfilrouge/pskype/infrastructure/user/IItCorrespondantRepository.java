@@ -16,9 +16,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IItCorrespondantRepository extends JpaRepository <ItCorrespondantEntity, Long>, JpaSpecificationExecutor<ItCorrespondantEntity>{
-//	void create(ItCorrespondantEntity itc);
+
 	List<ItCorrespondantEntity> findByItCorrespondantIdNotNull();
 	ItCorrespondantEntity findByCollaboraterCollaboraterId(String id);
-//	List<ItCorrespondantEntity> recupItCorrespondantByName(String lastName,String firstName);
-//	ItCorrespondantEntity recupItCorrespondantByIdAgent(String id);
+
 }

@@ -156,7 +156,6 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 			listItCorrespondant.add(entityMapper.mapToDomain(entity));
 		}
 		
-	//	listItCorrespondantEntity = itCorrespondantRepository.findAll(new Specification<ItCorrespondantEntity>());
 		return listItCorrespondant;
 	}
 	/**

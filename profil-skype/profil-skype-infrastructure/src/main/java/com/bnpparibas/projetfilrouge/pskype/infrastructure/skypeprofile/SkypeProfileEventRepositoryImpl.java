@@ -14,7 +14,6 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 
 @Repository
 public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain {
-
 	
 	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEventRepositoryImpl.class);
 	
@@ -30,17 +29,8 @@ public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain
 	@Override
 	public void create(SkypeProfileEvent skypeProfileEvent) {
 		
-		SkypeProfileEventEntity entity = entityMapper.mapToEntity(skypeProfileEvent);
-		
-		//System.out.println("Mapper-Event :" + entity.getItCorrespondant().getCollaboraterId()) ;
-		
+		SkypeProfileEventEntity entity = entityMapper.mapToEntity(skypeProfileEvent);		
 		skypeProfileEventRepository.save(entity);
-	}
-
-	@Override
-	public void update(SkypeProfileEvent skypeProfileEvent) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

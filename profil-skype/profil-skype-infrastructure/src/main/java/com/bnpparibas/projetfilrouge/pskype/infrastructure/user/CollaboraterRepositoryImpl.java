@@ -47,8 +47,6 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 	@Override
 	public boolean create(Collaborater collaborater) {
 		
-	//	System.out.println(collaborater.toString());
-		
 		CollaboraterEntity entity = collaboraterRepository.save(mapperCollab.mapToEntity(collaborater));
 		if (entity !=null) {
 			return true;
