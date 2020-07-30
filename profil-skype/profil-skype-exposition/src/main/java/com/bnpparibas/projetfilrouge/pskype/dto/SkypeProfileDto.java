@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.ConstraintComposition;
 
-
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 
 /**
