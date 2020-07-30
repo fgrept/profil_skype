@@ -165,14 +165,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		}
 		
 		
-		// Controller si au moins un champ est à modifier
-		
-		
-		if (skypeProfile.equals(profilExisting)) {
-			logger.error("aucun champ n'est modifié, sip: "+profilExisting.getSIP());
-			return false;
-		}
-		
+	
 				
 		// 1) Cas de la modification d'adresse SIP => création d'un nouveau profil
 		if (!(skypeProfile.getSIP().equals(profilExisting.getSIP()))) {
