@@ -19,6 +19,7 @@ public interface IItCorrespondantRepository extends JpaRepository <ItCorresponda
 //	void create(ItCorrespondantEntity itc);
 	List<ItCorrespondantEntity> findByItCorrespondantIdNotNull();
 	ItCorrespondantEntity findByCollaboraterCollaboraterId(String id);
+	ItCorrespondantEntity findByItCorrespondantId(String id);
 //	List<ItCorrespondantEntity> recupItCorrespondantByName(String lastName,String firstName);
 //	ItCorrespondantEntity recupItCorrespondantByIdAgent(String id);
 }

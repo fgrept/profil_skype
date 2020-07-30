@@ -9,4 +9,6 @@ public interface ISkypeProfileEventDomain {
 	void delete(SkypeProfileEvent skypeProfileEvent);
 	void deleteAllEventByProfile(SkypeProfile skypeProfile);
 	List<SkypeProfileEvent> findAllEventBySkypeProfile(SkypeProfile skypeProfile);
+	List<SkypeProfileEvent> findAllEventByItCorrespondantId(String collaboraterId);
+	boolean updateEventItCorrespondant(ItCorrespondant itCorrespondant, ItCorrespondant itCorrespondantNew);
 } 

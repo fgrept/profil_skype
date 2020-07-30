@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
+import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.IItCorrespondantRepository;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
 
 @Repository
 public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain {
@@ -26,6 +29,9 @@ public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain
 	
 	@Autowired
 	private ISkypeProfileEventRepository skypeProfileEventRepository;
+	
+	@Autowired
+	private IItCorrespondantRepository itCorrespondantRepository;
 	
 	@Override
 	public void create(SkypeProfileEvent skypeProfileEvent) {
@@ -68,6 +74,35 @@ public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain
 		}
 		return entityMapper.mapToDomainList(Entitys);	
 		
+	}
+
+	@Override
+	public List<SkypeProfileEvent> findAllEventByItCorrespondantId(String collaboraterId) {
+		
+		List<SkypeProfileEventEntity> Entitys = skypeProfileEventRepository.findByItCorrespondantItCorrespondantId(collaboraterId);
+		if (Entitys==null) {
+			return null;
+		}else {
+			return entityMapper.mapToDomainList(Entitys);
+		}
+	}
+
+	@Override
+	public boolean updateEventItCorrespondant(ItCorrespondant itCorrespondant, ItCorrespondant itCorrespondantNew) {
+		
+		ItCorrespondantEntity correspondantEntityNew;
+		if (itCorrespondantNew ==null) {
+			correspondantEntityNew = null;
+		}else {
+			correspondantEntityNew = itCorrespondantRepository.findByItCorrespondantId(itCorrespondantNew.getCollaboraterId());
+		}
+		for (SkypeProfileEventEntity entity : skypeProfileEventRepository.findByItCorrespondantItCorrespondantId(itCorrespondant.getCollaboraterId())) {
+			entity.setItCorrespondant(correspondantEntityNew);
+			if (skypeProfileEventRepository.save(entity)==null) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
