@@ -30,6 +30,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotAuthorizedException;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoCreate;
@@ -160,7 +161,7 @@ public class SkypeProfileController {
 			try {
 				isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL,comment);
 
-			} catch (NotFoundException e) {
+			} catch (NotFoundException | NotAuthorizedException e) {
 				logger.error("exception déclenchée : " + e.getMessage());
 				return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
 			}

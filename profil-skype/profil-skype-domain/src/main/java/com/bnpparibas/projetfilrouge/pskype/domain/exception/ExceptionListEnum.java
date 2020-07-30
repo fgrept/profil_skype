@@ -7,14 +7,18 @@ package com.bnpparibas.projetfilrouge.pskype.domain.exception;
  */
 public enum ExceptionListEnum {
 	
-	// il s'agit ci-dessous d'exceptions levées dans la couche infra Profil Skype
+	// il s'agit ci-dessous d'exceptions levées par les packages Profil Skype
 	ALLREADY1("AllReadyExistException", "Le collaborateur a déjà un profil skype"),
 	ALLREADY2("AllReadyExistException", "L'adresse SIP existe dejà"),
 	NOTFOUND1("NotFoundException", "Le profil skype à supprimer n'existe pas"),
 	NOTFOUND2("NotFoundException", "Le profil skype à mettre à jour n'existe pas"),
 	NOTFOUND3("NotFoundException", "Le collaborateur dont on veut maj le profil skype n'existe pas"),
 	NOTFOUND4("NotFoundException", "cil demandant la modif du profil non trouvé"),
-	// il s'agit ci-dessous d'exceptions levées dans la couche infra User
+	NOTAUTHORIZED1("NotAuthorized", "demande de mise à jour du profil à expiré"),
+	NOTAUTHORIZED2("NotAuthorized", "création d'un nouveau profil autrement que actif interdite"),
+	NOTAUTHORIZED3("NotAuthorized", "Modification d'autre champs interdite en cas de désactivation de profil"),
+	NOTAUTHORIZED4("NotAuthorized", "Modification d'autre champs interdite en cas de résactivation de profil"),
+	// il s'agit ci-dessous d'exceptions levées par les packages User
 	NOTFOUND5("NotFoundException", "collaborateur à passer en cil non trouvé"),
 	NOTFOUND6("NotFoundException", "collaborateur cil pour mise à jour droits non trouvé"),
 	NOTFOUND7("NotFoundException", "collaborateur cil pour mise à jour password non trouvé"),
