@@ -57,8 +57,6 @@ public class CollaboraterEntityMapper extends AbstractMapper<Collaborater, Colla
 			entity.setOrgaUnit(orgaMapper.mapToEntity(dto.getOrgaUnit()));
 		}
 		
-//		System.out.println(entity.toString());
-		
 		return entity;
 	}
 

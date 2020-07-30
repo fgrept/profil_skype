@@ -56,9 +56,9 @@ public class CollaboraterController {
 		for (Collaborater collaborater:list) {
 			dto.add(mapperDomainToDto(collaborater));
 		}
-//		 new ResponseEntity<List<Collaborater>>(collaboraterManagment.);
 		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
+	
 	
 	@GetMapping("/list/{numberPage}/{sizePage}/{criteria}")
 	@ApiOperation(value = "Récupère un ensemble de collaborateurs stockés selon des critères de pagination")
@@ -84,9 +84,9 @@ public class CollaboraterController {
 		for (Collaborater collaborater:list) {
 			dto.add(mapperDomainToDto(collaborater));
 		}
-//		 new ResponseEntity<List<Collaborater>>(collaboraterManagment.);
 		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
+	
 	
 	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
 	@ApiOperation(value = "Récupère un ensemble de collaborateurs stockés selon des critères de pagination et des critères de recherches")
@@ -117,6 +117,7 @@ public class CollaboraterController {
 		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
 	
+	
 	@PostMapping("/create")
 	@ApiOperation(value = "Crée un collaborateur")
 	@ApiResponses(value = {
@@ -137,6 +138,7 @@ public class CollaboraterController {
 		return new ResponseEntity<Boolean>(isCreated,HttpStatus.CREATED);
 	}
 	
+	
 	/**
 	 * Mapper de type collaborater vers It Correspondant (données de niveau collaborateur)
 	 * A voir si dans un second, ce mapper n'est pas externalisé dans une classe dédiée afin de ne pas exposer les objets de niveau domaine
@@ -150,6 +152,8 @@ public class CollaboraterController {
 		Collaborater collaborater = new Collaborater(dto.getLastName(),dto.getFirstName(),dto.getCollaboraterId(),dto.getDeskPhoneNumber(),dto.getMobilePhoneNumber(),dto.getMailAdress(), orgaUnit);
 		return collaborater;
 		}
+	
+	
 	/**
 	 * Mapper de type It Correspondant vers collaborater(données de niveau collaborateur)
 	 * A voir si dans un second, ce mapper n'est pas externalisé dans une classe dédiée afin de ne pas exposer les objets de niveau domaine

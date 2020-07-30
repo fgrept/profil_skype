@@ -22,11 +22,7 @@ public interface ICollaboraterRepository extends JpaRepository<CollaboraterEntit
 
 	List<CollaboraterEntity> findByLastNameAndFirstName(String lastName,String firstName);
 	CollaboraterEntity findByCollaboraterId(String id);
-//	CollaboraterEntity findDistinctByCollaboraterId(String id);
-//	@Query(value = "select p from CollaboraterEntity p where p.collaboraterId = :id and dtype = 'Collaborater'", nativeQuery = false)
-//	CollaboraterEntity getCollabOnlyByIdCollab (@Param("id") String idAnnuaire);
 	List<CollaboraterEntity> findByCollaboraterIdNotNull();
 	List<CollaboraterEntity> findByCollaboraterIdNotNull(Pageable pageable);
-//	List<CollaboraterEntity> findAll(Specification<CollaboraterEntity> specification);
 	List<CollaboraterEntity> findAll(Specification<CollaboraterEntity> specification, Pageable pageable);
 }

@@ -53,7 +53,6 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 
 	@Override
 	public SkypeProfile consultActiveSkypeProfile(String sip) {
-		// TODO Auto-generated method stub
 
 		return repositorySkypeProfile.consultSkypeProfile(sip, StatusSkypeProfileEnum.ENABLED);
 	}
@@ -128,7 +127,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 	@Override
 	public List<SkypeProfile> findSkypeProfileWithCriteriaPage(SkypeProfile profilDom, int numberPage, int sizePage,
 			String sortCriteria, boolean sortAscending) {
-		// TODO Auto-generated method stub
+		
 		return repositorySkypeProfile.findAllSkypeProfileFiltersPage(profilDom,numberPage,sizePage,sortCriteria,sortAscending);
 	}
 
@@ -314,7 +313,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 
 	@Override
 	public List<SkypeProfile> findAllSkypeProfilePage(int numberPage, int sizePage, String criteria, boolean sortAscending) {
-		// TODO Auto-generated method stub
+		
 		return repositorySkypeProfile.findAllSkypeProfilePage(numberPage,sizePage,criteria,sortAscending);
 	}
 

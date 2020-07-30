@@ -228,7 +228,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 
 	@Override
 	public SkypeProfile findSkypeProfileByCollaborater(Collaborater collaborater) {
-		// TODO Auto-generated method stub
+		
 		CollaboraterEntity collaboraterEntity = entityMapperCollaborater.mapToEntity(collaborater);
 		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findByCollaborater(collaboraterEntity)) ;
 	}
@@ -440,7 +440,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	//US034 : ajouter la pagination dans la restitution des listes
 	@Override
 	public Long countSkypeProfile() {
-		// TODO Auto-generated method stub
+		
 		return skypeProfileRepository.count();
 	}
 

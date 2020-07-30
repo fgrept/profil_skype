@@ -61,6 +61,7 @@ public class SkypeProfileController {
 	
 	@Autowired
 	private ICollaboraterManagment collabManagement;
+
 	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/create")
@@ -109,11 +110,10 @@ public class SkypeProfileController {
 			@ApiResponse(code = 404,message = "Profil skype non supprimé : absent ou problème lors de la suppression en base")
 	})
 	public ResponseEntity<String> deleteSkypeProfil(@PathVariable("sip") String sip) {
-
 		
 		boolean isDeleted = false;
 		
-		System.out.println(sip ) ;
+		logger.debug("sip en entrée : " + sip);
 		try {
 			isDeleted = skypeProfileManagement.deleteSkypeProfile(sip);	
 		} catch (NotFoundException e) {
@@ -132,6 +132,7 @@ public class SkypeProfileController {
 		}
 	}
 
+	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/update")
 	@ApiOperation(value = "Met à jour les données d'un profil skype")
@@ -141,11 +142,9 @@ public class SkypeProfileController {
 			@ApiResponse(code = 304,message = "Problème de la mise à jour")
 	})
 	public ResponseEntity<String> updateSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
-
-		
+	
 		boolean isModified = false;
 				
-
 		// on récupère le collaborateur dans sa totalité avant de le passer
 		// au service applicatif.
 		Collaborater collab = collabManagement.findCollaboraterbyIdAnnuaire(skypeProfile.getCollaboraterId());
@@ -190,6 +189,8 @@ public class SkypeProfileController {
 		
 		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
+	
+	
 	@GetMapping("/list/all/{numberPage}/{sizePage}/{criteria}")
 	@ApiOperation(value = "Récupère un ensemble de profils skype stockés selon des critères de pagination")
 	@ApiResponses(value = {
@@ -219,13 +220,13 @@ public class SkypeProfileController {
 		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
 	
+	
 	@ApiOperation(value = "Compte l'ensemble des profils skype stockés")
 	@ApiResponse(code = 200,message ="Ok, nombre de profils skype retourné")
 	@GetMapping("/count")
 	public ResponseEntity<Long> countSkypeProfile(){
 		return new ResponseEntity<Long>(skypeProfileManagement.countSkypeProfile(), HttpStatus.OK);
-	}
-	
+	}	
 
 
 	@GetMapping("/list/criteria")
@@ -245,6 +246,7 @@ public class SkypeProfileController {
 		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
 
+	
 	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
 	@ApiOperation(value = "Récupère un ensemble de profils skype stockés selon des critères de pagination et des critères de recherches")
 	@ApiResponses(value = {
@@ -313,6 +315,7 @@ public class SkypeProfileController {
 		return profilDom;
 		
 	}
+
 	
 	private SkypeProfileDtoSearch mapDomainToDtoSearch (SkypeProfile profil) {
 		

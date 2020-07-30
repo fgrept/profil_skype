@@ -14,6 +14,12 @@ import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
 
+/**
+ * 
+ * @author stagiaire
+ *
+ */
+
 @Repository
 public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntity, Long>, JpaSpecificationExecutor<SkypeProfileEntity> {
 	
@@ -27,7 +33,6 @@ public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntit
 	
 	SkypeProfileEntity findByCollaborater(CollaboraterEntity collaboraterEntity);
 	
-
 	@Query(value = "select p from SkypeProfileEntity p where p.collaborater.collaboraterId = :id", nativeQuery = false)
 	SkypeProfileEntity getSkypeProfilByIdCollab (@Param("id") String idAnnuaire);
 	
