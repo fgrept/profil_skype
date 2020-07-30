@@ -14,6 +14,7 @@ public enum ExceptionListEnum {
 	NOTFOUND2("NotFoundException", "Le profil skype à mettre à jour n'existe pas"),
 	NOTFOUND3("NotFoundException", "Le collaborateur dont on veut maj le profil skype n'existe pas"),
 	NOTFOUND4("NotFoundException", "cil demandant la modif du profil non trouvé"),
+	NOTFOUND10("NotFoundException", "demande de suppression d'un profil skype inexistant"),
 	NOTAUTHORIZED1("NotAuthorized", "demande de mise à jour du profil à expiré"),
 	NOTAUTHORIZED2("NotAuthorized", "création d'un nouveau profil autrement que actif interdite"),
 	NOTAUTHORIZED3("NotAuthorized", "Modification d'autre champs interdite en cas de désactivation de profil"),

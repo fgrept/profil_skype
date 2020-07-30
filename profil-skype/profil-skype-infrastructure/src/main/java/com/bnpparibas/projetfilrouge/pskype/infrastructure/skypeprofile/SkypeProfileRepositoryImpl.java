@@ -128,7 +128,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		if (skypeProfile == null) {
 			String msg = "Profil skype non trouvé , SIP : "+sip;
 			logger.error(msg);
-			throw new NotFoundException(ExceptionListEnum.NOTFOUND1, msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND10, msg);
 		} else {
 
 			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
@@ -182,7 +182,12 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	@Override
 	public SkypeProfile findSkypeProfileBySip(String sip) {
 		
-		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findBySIP(sip));
+		SkypeProfileEntity entity = skypeProfileRepository.findBySIP(sip);
+		
+		if (entity == null) {
+			return null;
+		}
+		return entityMapperSkypeProfile.mapToDomain(entity);
 	}
 
 
