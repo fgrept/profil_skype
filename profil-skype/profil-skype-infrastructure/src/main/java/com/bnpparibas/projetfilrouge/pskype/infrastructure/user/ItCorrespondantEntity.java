@@ -36,7 +36,9 @@ public class ItCorrespondantEntity  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idUser;
-
+	
+	// cet id est l'identifiant de connexion, pas forcément l'identifiant annuaire
+	// mais dans le service d'attribution de role cil à un collaborateur, on set cette donnée avec l'id annuaire.
 	private String itCorrespondantId;
 	private String encryptedPassword;
 	

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bnpparibas.projetfilrouge.pskype.application.ISkypeProfileEventManagement;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEventEntityMapper;
 
@@ -48,8 +49,13 @@ public class SkypeProfileEventController {
 	public ResponseEntity<List<SkypeProfileEventDto>> getEventsFromProfil (@PathVariable("sip") String SIP) {
 		
 		List<SkypeProfileEvent> listEvents = skypeProfileEventManagement.getAllEventFromSkypeProfil(SIP);
-		
 		List<SkypeProfileEventDto> listEventsDto = new ArrayList<SkypeProfileEventDto>();
+		
+		if (listEvents == null) {
+			logger.debug("aucun évènement trouvé pour le profil skype demandé");
+			return new ResponseEntity<List<SkypeProfileEventDto>>(listEventsDto, HttpStatus.OK);
+		}
+
 		for (SkypeProfileEvent skypeProfileEvent : listEvents) {
 			listEventsDto.add(mapperDomaintoDto(skypeProfileEvent));
 		}

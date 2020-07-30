@@ -22,6 +22,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotAuthorizedException;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 
 /**
@@ -103,14 +104,17 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 	@Override
 	public List<SkypeProfileEvent> getAllEventFromSkypeProfil(String SIP) {
 		
+		List<SkypeProfileEvent> listEvents = new ArrayList<SkypeProfileEvent>();
+		
 		SkypeProfile profil = repositorySkypeProfile.findSkypeProfileBySip(SIP);
 		if (profil == null) {
-			throw new RuntimeException("Skype profil : " + SIP + "non trouvé en base");
+			String msg = "Profil Skype : " + SIP + " non trouvé en base";
+			logger.info(msg);
 		} 
 		else {
-			return repositorySkypeProfileEvent.findAllEventBySkypeProfile(profil);
+			listEvents = repositorySkypeProfileEvent.findAllEventBySkypeProfile(profil);
 		}
-
+		return listEvents;
 	}
 
 
@@ -147,8 +151,6 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND3, msg);
 		}
 
-		
-		
 		// Récupération du CIL demandant la modif
 		ItCorrespondant cilRequester = repositoryItCorrespondant.findItCorrespondantByCollaboraterId(idAnnuaireCIL);		
 		if (cilRequester == null) {
@@ -157,25 +159,22 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND4, msg);
 		}
 		
-		// Contrôle du statut du profil à mettre à jour(Impossible de mettre à jour un profil expiré)
-		
+		// Contrôle du statut du profil à mettre à jour(Impossible de mettre à jour un profil à expiré depuis le front)		
 		if (skypeProfile.getStatusProfile() == StatusSkypeProfileEnum.EXPIRED) {
-			logger.error("mise à jour profil à expiré impossible, sip: "+profilExisting.getSIP());
-			return false;
+			String msg = "mise à jour d'un profil à expiré";
+			logger.error(msg);
+			throw new NotAuthorizedException(ExceptionListEnum.NOTAUTHORIZED1, msg);
 		}
-		
-		
-		// Controller si au moins un champ est à modifier
-		
-		
-		if (skypeProfile.equals(profilExisting)) {
-			logger.error("aucun champ n'est modifié, sip: "+profilExisting.getSIP());
-			return false;
-		}
-		
-				
+							
 		// 1) Cas de la modification d'adresse SIP => création d'un nouveau profil
 		if (!(skypeProfile.getSIP().equals(profilExisting.getSIP()))) {
+			// interdit de créer un nouveau profil autrement que actif
+			if (skypeProfile.getStatusProfile() != StatusSkypeProfileEnum.ENABLED) {
+				String msg = "création d'un profil autrement que actif interdite";
+				logger.error(msg);
+				throw new NotAuthorizedException(ExceptionListEnum.NOTAUTHORIZED2, msg);
+			}
+			
 			skypeProfile.setExpirationDateWhenReCreated();
 			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
 			if (!isUpdatedProfil) {
@@ -193,61 +192,58 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		// 2) Cas de la désactivation du profil => mise de la date d'expiration à la date du jour		
 		if ((skypeProfile.getStatusProfile() == StatusSkypeProfileEnum.DISABLED)
 				&& (profilExisting.getStatusProfile() == StatusSkypeProfileEnum.ENABLED)) {
-			
-			//Verifier que les autres champs ne sont pas modifiée
-			
 			try {
+				//Verifier que les autres champs ne sont pas modifiée
 				if (verifyDifference(profilExisting, skypeProfile)) {
-					logger.error("Seule la mise à jour du status est autorisée pour SIP : "+skypeProfile.getSIP());	
-					return false;
-				} else {
-				
-				skypeProfile.setExpirationDate(new Date());
-				isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
-				if (!isUpdatedProfil) {
-					return false;
-				} else {
-					SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
-							cilRequester, TypeEventEnum.DESACTIVATION);
-					repositorySkypeProfileEvent.create(event);
-					return true;
-					}
+					String msg = "Modification d'autre champs interdite en cas de désactivation, SIP : "+skypeProfile.getSIP();
+					logger.error(msg);
+					throw new NotAuthorizedException(ExceptionListEnum.NOTAUTHORIZED3, msg);
 				}
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				String msg = "Il est impossible d'accéder au contenu de la classe SkypeProfil";
+				logger.error(msg);
 				return false;
-			}			
+			}					
+				
+			skypeProfile.setExpirationDate(new Date());
+			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+			if (!isUpdatedProfil) {
+				return false;
+			} else {
+				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
+						cilRequester, TypeEventEnum.DESACTIVATION);
+				repositorySkypeProfileEvent.create(event);
+				return true;
+				}		
 		}
 
 		// 3) Cas de la réactivation du profil => recalcul de la d'expiration + 2 ans		
 		if ((skypeProfile.getStatusProfile() == StatusSkypeProfileEnum.ENABLED)
 				&& (profilExisting.getStatusProfile() == StatusSkypeProfileEnum.DISABLED)) {
-			
-			//Verifier que les autres champs ne sont pas modifiée
-			
+						
 			try {
+				//Verifier que les autres champs ne sont pas modifiée
 				if (verifyDifference(profilExisting, skypeProfile)) {
-					logger.error("Seule la mise à jour du status est autorisé pour SIP : "+skypeProfile.getSIP());	
-					return false;
-				} else {
-				
-					skypeProfile.setExpirationDateWhenReCreated();
-					isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
-					if (!isUpdatedProfil) {
-						return false;
-					} else {
-						SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
-							cilRequester, TypeEventEnum.ACTIVATION);
-						repositorySkypeProfileEvent.create(event);
-						return true;
-							}			
-						}
+					String msg = "Modification d'autre champs interdite en cas de réactivation, SIP : "+skypeProfile.getSIP();
+					logger.error(msg);
+					throw new NotAuthorizedException(ExceptionListEnum.NOTAUTHORIZED4, msg);
+				}
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				String msg = "Il est impossible d'accéder au contenu de la classe SkypeProfil";
+				logger.error(msg);
 				return false;
-			}	
+			}		
+
+			skypeProfile.setExpirationDateWhenReCreated();
+			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+			if (!isUpdatedProfil) {
+				return false;
+			} else {
+				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
+					cilRequester, TypeEventEnum.ACTIVATION);
+				repositorySkypeProfileEvent.create(event);
+				return true;
+			}			
 		}
 		
 		// - Champs modifiés : 
@@ -262,8 +258,8 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				try {
 					changedFields = SkypeProfile.difference(profilExisting, skypeProfile);				
 				} catch (IllegalAccessException e) {
-					// TODO Mettre une log erreur
-					e.printStackTrace();
+					String msg = "Il est impossible d'accéder au contenu de la classe SkypeProfil";
+					logger.error(msg);
 					return false;
 				}
 
@@ -285,9 +281,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 
 
 	private boolean verifyDifference(SkypeProfile profilExisting, SkypeProfile skypeProfile) throws IllegalAccessException {
-		
-		
-		
+				
  	     for (Field field : profilExisting.getClass().getDeclaredFields()) {
 	        // You might want to set modifier to public first (if it is not public yet)
 	        field.setAccessible(true);
@@ -295,13 +289,11 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 	        Object value2 = field.get(skypeProfile); 
 	        if ( (value1 != null && value2 != null) 
 	        		&& (field.getName() != "collaborater") && (field.getName() != "statusProfile") && (field.getName()!="expirationDate") ) {
-
 	            if (!Objects.equals(value1, value2)) {
 	               return true;
 	            }
 	        }
-	    }
-	    	    
+	    }	    	    
 		return false;
 	}
 
