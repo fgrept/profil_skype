@@ -19,5 +19,5 @@ public interface IItCorrespondantRepository extends JpaRepository <ItCorresponda
 
 	List<ItCorrespondantEntity> findByItCorrespondantIdNotNull();
 	ItCorrespondantEntity findByCollaboraterCollaboraterId(String id);
-
+	ItCorrespondantEntity findByItCorrespondantId(String id);
 }

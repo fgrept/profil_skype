@@ -30,6 +30,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
+import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotAuthorizedException;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileDtoCreate;
@@ -68,8 +69,7 @@ public class SkypeProfileController {
 	@ApiOperation(value = "Crée un profil skype")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201,message = "création effectuée"),
-			@ApiResponse(code = 204,message = "Données obligatoire absentes en entrée : id annuaire du collaborateur, adresse sip ou id annuaire de l'it correspondant"),
-			@ApiResponse(code = 304,message = "Erreur lors de la création du profil skype")
+			@ApiResponse(code = 404,message = "Erreur lors de la création du profil skype")
 	})
 	public ResponseEntity<String> createSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
 		
@@ -138,8 +138,7 @@ public class SkypeProfileController {
 	@ApiOperation(value = "Met à jour les données d'un profil skype")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
-			@ApiResponse(code = 204,message = "Données obligatoire absentes en entrée ou collaborateur absent de la base"),
-			@ApiResponse(code = 304,message = "Problème de la mise à jour")
+			@ApiResponse(code = 404,message = "Problème de la mise à jour")
 	})
 	public ResponseEntity<String> updateSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
 	
@@ -160,7 +159,7 @@ public class SkypeProfileController {
 			try {
 				isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL,comment);
 
-			} catch (NotFoundException e) {
+			} catch (NotFoundException | NotAuthorizedException e) {
 				logger.error("exception déclenchée : " + e.getMessage());
 				return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
 			}

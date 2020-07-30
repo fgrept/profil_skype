@@ -128,7 +128,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		if (skypeProfile == null) {
 			String msg = "Profil skype non trouvé , SIP : "+sip;
 			logger.error(msg);
-			throw new NotFoundException(ExceptionListEnum.NOTFOUND1, msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND10, msg);
 		} else {
 
 			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
@@ -182,7 +182,12 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	@Override
 	public SkypeProfile findSkypeProfileBySip(String sip) {
 		
-		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findBySIP(sip));
+		SkypeProfileEntity entity = skypeProfileRepository.findBySIP(sip);
+		
+		if (entity == null) {
+			return null;
+		}
+		return entityMapperSkypeProfile.mapToDomain(entity);
 	}
 
 
@@ -190,13 +195,11 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	@Override
 	public boolean update(SkypeProfile skypeProfileUpdated) {
 			
-		// Récupérer le SIP à partir de l'Id collaborater
-		
+		// Récupérer le SIP à partir de l'Id collaborater		
 		SkypeProfileEntity sp = skypeProfileRepository
 				                .getSkypeProfilByIdCollab(skypeProfileUpdated.getCollaborater().getCollaboraterId()) ;
 				
-		// Récupérer le profil Skype en base de données à partir de l'identifiant SIP
-		
+		// Récupérer le profil Skype en base de données à partir de l'identifiant SIP		
 		SkypeProfileEntity skypeProfileEntityDB = skypeProfileRepository.findBySIP(sp.getSIP());
 
 		if (skypeProfileEntityDB == null) {
@@ -207,17 +210,13 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		} else {
 
 			// Mapper le skypeProfil Domaine
-
 			SkypeProfileEntity skypeProfileEntity = entityMapperSkypeProfile.mapToEntity(skypeProfileUpdated);
 
 			// Compléter l'Entity avec l'IdSkypeProfile et l'objet Collaborater
-
 			skypeProfileEntity.setIdSkypeProfile(skypeProfileEntityDB.getIdSkypeProfile());
-
 			skypeProfileEntity.setCollaborater(skypeProfileEntityDB.getCollaborater());
 
 			// Mise à jour du profil Skype
-
 			skypeProfileRepository.save(skypeProfileEntity);
 
 			return true;

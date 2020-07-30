@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
+import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 
@@ -31,6 +33,9 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
 	@Autowired
 	private IItCorrespondantDomain itCorrespodantDomain;
+	
+	@Autowired
+	private ISkypeProfileEventDomain eventDomain;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -108,6 +113,12 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 			logger.error(msg);
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND9, msg);
 		}else {
+			if (eventDomain.findAllEventByItCorrespondantId(itCorrespondant.getCollaboraterId()) != null) {
+				
+				if (!eventDomain.updateEventItCorrespondant(itCorrespondant,null)) {
+					return false;
+				}
+			}
 			return itCorrespodantDomain.delete(itCorrespondant);
 		}
 	}

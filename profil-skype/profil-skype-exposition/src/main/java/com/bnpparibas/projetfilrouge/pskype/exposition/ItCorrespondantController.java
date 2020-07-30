@@ -74,7 +74,7 @@ public class ItCorrespondantController {
 	@ApiOperation(value = "Crée un it correspondant")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201,message = "création effectuée"),
-			@ApiResponse(code = 304,message = "It correspondant non créé (collaborateur déjà existant, etc)")
+			@ApiResponse(code = 404,message = "It correspondant non créé (collaborateur déjà existant, etc)")
 	})
 	public ResponseEntity<String> createItCorrespondantFromCollab(@Valid @RequestBody ItCorrespondantDtoCreate dto) {
 		
@@ -165,8 +165,7 @@ public class ItCorrespondantController {
 	@ApiOperation(value = "Met à jour un rôle à partir d'un id annuaire")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
-			@ApiResponse(code = 304,message = "problème lors de la mise à jour, non effectuée"),
-			@ApiResponse(code = 404,message = "it correspondant non trouvé en base")
+			@ApiResponse(code = 404,message = "it correspondant non trouvé en base oub pb lors de la mise à jour")
 	})
 	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
 
@@ -224,7 +223,7 @@ public class ItCorrespondantController {
 	@ApiOperation(value = "Met à jour le mot de passe d'un utilisateur")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
-			@ApiResponse(code = 304,message = "Pas de mise à jour : ancien et nouveau mot de passes identiques ou problème lors de la mise à jour en base")
+			@ApiResponse(code = 404,message = "Pas de mise à jour : ancien et nouveau mot de passes identiques ou problème lors de la mise à jour en base")
 	})
 	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("oldpass") String oldPassword, @PathVariable("newpass") String newPassword) {
 		
