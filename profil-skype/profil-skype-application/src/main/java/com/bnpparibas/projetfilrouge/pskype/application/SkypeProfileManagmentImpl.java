@@ -165,7 +165,10 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 			logger.error(msg);
 			throw new NotAuthorizedException(ExceptionListEnum.NOTAUTHORIZED1, msg);
 		}
-							
+		
+		
+	
+				
 		// 1) Cas de la modification d'adresse SIP => création d'un nouveau profil
 		if (!(skypeProfile.getSIP().equals(profilExisting.getSIP()))) {
 			// interdit de créer un nouveau profil autrement que actif

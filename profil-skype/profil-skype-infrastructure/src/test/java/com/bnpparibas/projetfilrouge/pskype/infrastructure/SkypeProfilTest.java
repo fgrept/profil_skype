@@ -184,7 +184,8 @@ public class SkypeProfilTest {
 		skypeProfilDomain.create(skypeProfil3);
 		skypeProfilDomain.create(skypeProfil4);		
 		
-		assertAll(() -> assertThat(skypeProfilDomain.
+		assertAll(
+				() -> assertThat(skypeProfilDomain.
 				findAllSkypeProfileFilters(false, null, null, null, null, null, null,null,null))
 				.hasSize(1)
 				.allMatch(s -> s.isEnterpriseVoiceEnabled() == false)
@@ -251,5 +252,22 @@ public class SkypeProfilTest {
 				);
 		
 	}	
+	
+	@Test
+	@DisplayName("Vérifier la suppresion d'un profil")
+	public void verifyProfilDelete () {
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		collaboraterDomain.create(collab);
+		
+		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
+		skypeProfilDomain.create(skypeProfil);
+		
+		skypeProfilDomain.delete("aaa-bbb@gmail.com");
+		
+	//	assertThat(skypeProfilDomain.findSkypeProfileBySip("aaa-bbb@gmail.com")).isEqualTo(null);
+
+	//	assertThat(skypeProfilDomain.findSkypeProfileBySip("aaa-bbb@gmail.com")).hasAllNullFieldsOrProperties();
+		
+	}
 	
 }
