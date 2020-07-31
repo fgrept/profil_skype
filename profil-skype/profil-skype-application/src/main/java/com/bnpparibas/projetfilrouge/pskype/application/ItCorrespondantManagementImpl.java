@@ -1,6 +1,7 @@
 package com.bnpparibas.projetfilrouge.pskype.application;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -10,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bnpparibas.projetfilrouge.pskype.application.email.MailSenderProfile;
+import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
+import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
@@ -31,11 +35,18 @@ import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 public class ItCorrespondantManagementImpl implements IItCorrespondantManagment {
 
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
+	
 	@Autowired
 	private IItCorrespondantDomain itCorrespodantDomain;
 	
 	@Autowired
+	private ICollaboraterDomain collaboraterDomain;
+	
+	@Autowired
 	private ISkypeProfileEventDomain eventDomain;
+	
+	@Autowired
+	private MailSenderProfile mailSenderProfile;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -49,14 +60,33 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	@Override
 	public boolean createItCorrespondant(String idAnnuaire, Set<RoleTypeEnum> roles) {
 
-		String passwordBrut = "000000";
+		Random rand = new Random();
+		String passwordBrut = Integer.toString(rand.nextInt(999999)); 
 		String passwordCode = passwordEncoder.encode(passwordBrut);
+		logger.info("création du mot de passe : " + passwordBrut + " pour le collaborateur : " + idAnnuaire);
 		
-		// TODO : mettre un password aléatoire 1ère fois
-		// et le communiquer à l'utilisateur par mail pour qu'il le change 
+		Collaborater collab = collaboraterDomain.findByCollaboraterId(idAnnuaire);
+		
+		if (collab == null) {
+			logger.error("collaborateur inexistant pour la création du cil ");
+			return false;
+		}
+		
+		String emailToSend = collab.getMailAdress();
+		
+		try {
+			mailSenderProfile.sendMail("Bonjour," + "\n\n" + "Le mot de passe pour accéder à l'application est : " + "\n\n" + 
+						passwordBrut + "\n\n" +
+						"Merci de le modifier à la première connexion", emailToSend);
+		} catch (Exception e) {
+			logger.error("Procédure d'envoi par mail du mot de passe en échec");
+			return false;
+		}
 		
 		return itCorrespodantDomain.createRoleCILtoCollab(idAnnuaire, roles, passwordCode);
 	}
+	
+	
 	/**
 	 *  Cette méthode permet la création complète d'un utilisateur (avec informations de niveau collaborater, uo et site)
 	 * @param itCorrespondant
