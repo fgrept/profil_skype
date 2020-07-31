@@ -8,11 +8,11 @@ import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 
 public class CollaboraterDtoBatch {
 	
-	@Size(max = 17)
+	@Size(min = 1, max = 17)
 	private String collaboraterId;
-	@Size(max = 50)
+	@Size(min = 1, max = 50)
 	private String lastName;
-	@Size(max = 50)
+	@Size(min = 1, max = 50)
 	private String firstName;
 	@PhoneControl
 	private String deskPhoneNumber;

@@ -2,6 +2,9 @@ package com.bnpparibas.projetfilrouge.pskype.exposition;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.bnpparibas.projetfilrouge.pskype.application.ICollaboraterManagment;
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
@@ -122,17 +126,16 @@ public class CollaboraterController {
 	@ApiOperation(value = "Crée un collaborateur")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201,message = "création effectuée"),
-			@ApiResponse(code = 204,message = "id collaborateur absent en entrée"),
-			@ApiResponse(code = 304,message = "Collaborateur déjà existant")
+			@ApiResponse(code = 400,message = "données en entrée incorrectes"),
+			@ApiResponse(code = 404,message = "Collaborateur déjà existant")
 	})
-	public ResponseEntity<Boolean> createCollaborater(@RequestBody CollaboraterDto dto) {
+	public ResponseEntity<Boolean> createCollaborater(@Valid  @RequestBody CollaboraterDto dto) {
 		
-		if ((dto.getCollaboraterId() == null)|| (dto.getCollaboraterId()=="")) {
-			return new ResponseEntity<Boolean>(false,HttpStatus.NO_CONTENT);
-		}
 		Collaborater collaborater = collaboraterManagment.findCollaboraterbyIdAnnuaire(dto.getCollaboraterId());
 		if (collaborater !=null) {
-			return new ResponseEntity<Boolean>(false,HttpStatus.NOT_MODIFIED); 
+			String msg = "Collaborateur déjà existant";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg);
 		}
 		boolean isCreated = collaboraterManagment.createCollaborater(mapperDtoToDomain(dto));
 		return new ResponseEntity<Boolean>(isCreated,HttpStatus.CREATED);
