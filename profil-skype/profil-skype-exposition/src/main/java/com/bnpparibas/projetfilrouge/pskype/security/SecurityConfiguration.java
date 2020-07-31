@@ -22,6 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 /**
  * Classe de configuration de la sécurité
@@ -32,6 +34,8 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+	
+	public static final int TOKEN_VALIDITY_SECONDS = 24*60*60; //1 jour
 	
 	@Autowired
 	private UserDetailsService itCorrespondantUserDetailsService;
@@ -65,23 +69,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //		.authorizeRequests().antMatchers("/login","/logout").permitAll()
 //		.antMatchers("/profile/**","/cil/**").authenticated().anyRequest().permitAll();
 		.antMatchers("/*").permitAll()
-		.antMatchers("/profile/**","/cil/**", "/login","/logout").permitAll()
+		.antMatchers("/profile/**","/users/**", "/login","/logout","/collaborater/**","/events/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.formLogin()
 		.loginProcessingUrl("/login")
-		.permitAll();
+		.permitAll()
+		.and()
+		.rememberMe()
+		.key("secretKey")
+		.rememberMeCookieName("remember-me-cookie")
+		.tokenRepository(persistentTokenRepository())
+		.tokenValiditySeconds(TOKEN_VALIDITY_SECONDS)
+		;
 //		.and()
 //		.httpBasic();
 //		http.authorizeRequests().and().exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint());	
 	}
-	
-	private class AuthentificationLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-		@Override
-		public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
-				final Authentication authentication) throws IOException, ServletException {
-			response.setStatus(HttpServletResponse.SC_OK);
-		}
+
+	private PersistentTokenRepository persistentTokenRepository() {
+		
+		final JdbcTokenRepositoryImpl tokenRepositoryImpl = new JdbcTokenRepositoryImpl();
+		tokenRepositoryImpl.setDataSource(dataSource);
+		return tokenRepositoryImpl;
 	}
+
 	
 }
