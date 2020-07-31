@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -86,15 +87,18 @@ public class ItCorrespondantController {
 		 try {
 			isCreated = userManagment.createItCorrespondant(dto.getCollaboraterId(), dto.getRoles());
 		} catch (NotFoundException | AllReadyExistException e) {
-			logger.error("exception déclenchée : " + e.getMessage());
-			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			String msg = e.getCode() + " - " + e.getMessage();
+			logger.error("exception déclenchée : " + msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 
 		if (isCreated) {
 			logger.info("Création it correspondant");
 			return new ResponseEntity<String>("Role CIL crée",HttpStatus.CREATED);
 		}else {
-			return new ResponseEntity<String>("PB lors de la création du rôle CIL",HttpStatus.NOT_FOUND); 
+			String msg = "Pb technique lors de la création du rôle cil";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
 		}
 		
 	}
@@ -165,7 +169,8 @@ public class ItCorrespondantController {
 	@ApiOperation(value = "Met à jour un rôle à partir d'un id annuaire")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
-			@ApiResponse(code = 404,message = "it correspondant non trouvé en base oub pb lors de la mise à jour")
+			@ApiResponse(code = 404,message = "it correspondant non trouvé en base oub pb lors de la mise à jour"),
+			@ApiResponse(code = 400,message = "syntaxe incorrect de la requête")
 	})
 	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
 
@@ -193,21 +198,26 @@ public class ItCorrespondantController {
 				roles.add(RoleTypeEnum.ROLE_USER);
 				break;
 			default:
-				return new ResponseEntity<String>("Le role demandé n'existe pas", HttpStatus.NOT_FOUND);
+				String msg = "Le role demandé n'existe pas";
+				logger.error(msg);
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
 		}
 		
 		try {
 			isUpdate = userManagment.updateRoleItCorrespondant(id, roles);
 		} catch (NotFoundException e) {
-			logger.error("exception déclenchée : " + e.getMessage());
-			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			String msg = e.getCode() + " - " + e.getMessage();
+			logger.error("exception déclenchée : " + msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 
 		if (isUpdate) {
 			logger.debug("Mise à jour effectuée");
 			return new ResponseEntity<String>("Mise à jour des rôles cil effectuée", HttpStatus.OK);
 		}else {
-			return new ResponseEntity<String>("Pb lors de la mise à jour", HttpStatus.NOT_FOUND);
+			String msg = "Pb technique lors de la mise à jour du rôle cil";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
 		}
 	}
 	
@@ -223,26 +233,32 @@ public class ItCorrespondantController {
 	@ApiOperation(value = "Met à jour le mot de passe d'un utilisateur")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
-			@ApiResponse(code = 404,message = "Pas de mise à jour : ancien et nouveau mot de passes identiques ou problème lors de la mise à jour en base")
+			@ApiResponse(code = 404,message = "Pas de mise à jour : problème lors de la mise à jour en base"),
+			@ApiResponse(code = 400,message = "Pas de mise à jour : ancien et nouveau mot de passes identiques")
 	})
 	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("oldpass") String oldPassword, @PathVariable("newpass") String newPassword) {
 		
 		boolean isUpdate = false; 
 				
-		if (oldPassword ==newPassword) {
-			return new ResponseEntity<String>("Les 2 passwords doivent être différents", HttpStatus.NOT_FOUND);
+		if (oldPassword.equals(newPassword)) {
+			String msg = "Les 2 passwords doivent être différents";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
 		}
 		try {
 			isUpdate = userManagment.updatePasswordItCorrespondant(id, oldPassword, newPassword);
 		} catch (NotFoundException e) {
-			logger.error("exception déclenchée : " + e.getMessage());
-			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			String msg = e.getCode() + " - " + e.getMessage();
+			logger.error("exception déclenchée : " + msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 		
 		if(isUpdate) {
 			return new ResponseEntity<String>("Mise à jour password effectuée", HttpStatus.OK);
 		}else {
-			return new ResponseEntity<String>("Un pb est survenu lors de la mise à jour", HttpStatus.NOT_FOUND);
+			String msg = "Un pb est survenu lors de la mise à jour du mot de passe";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
 		}
 	}
 
@@ -259,14 +275,17 @@ public class ItCorrespondantController {
 		try {
 			isDeleted = userManagment.deleteItCorrespondant(id);
 		} catch (NotFoundException e) {
-			logger.error("exception déclenchée : " + e.getMessage());
-			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			String msg = e.getCode() + " - " + e.getMessage();
+			logger.error("exception déclenchée : " + msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 		
 		if (isDeleted) {
 			return new ResponseEntity<String>("Suppression des droits effectués", HttpStatus.OK);
 		}else {
-			return new ResponseEntity<String>("Un pb est survenu lors de la suppression", HttpStatus.NOT_FOUND); 
+			String msg = "Un pb est survenu lors de la suppression du cil";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
 		}
 		
 	}
