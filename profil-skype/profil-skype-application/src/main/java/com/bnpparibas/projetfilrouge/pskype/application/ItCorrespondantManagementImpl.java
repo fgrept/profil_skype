@@ -68,8 +68,9 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		Collaborater collab = collaboraterDomain.findByCollaboraterId(idAnnuaire);
 		
 		if (collab == null) {
-			logger.error("collaborateur inexistant pour la création du cil ");
-			return false;
+			String msg = "collaborateur "  + idAnnuaire + " inexistant pour la création du cil";
+			logger.error(msg);
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND11, msg);
 		}
 		
 		String emailToSend = collab.getMailAdress();

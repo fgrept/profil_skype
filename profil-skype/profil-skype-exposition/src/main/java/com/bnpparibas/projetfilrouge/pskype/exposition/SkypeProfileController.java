@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.bnpparibas.projetfilrouge.pskype.application.ICollaboraterManagment;
 import com.bnpparibas.projetfilrouge.pskype.application.IItCorrespondantManagment;
@@ -81,22 +82,26 @@ public class SkypeProfileController {
 		boolean isCreated = false;
 		
 		if (collab == null) {
-			logger.error("id annuaire collaborateur non trouvé : "+ skypeProfile.getCollaboraterId());
-			return new ResponseEntity<String>("id annuaire collaborateur non trouvé en base : "+ skypeProfile.getCollaboraterId(), HttpStatus.NOT_FOUND);
+			String msg = "id annuaire collaborateur non trouvé : "+ skypeProfile.getCollaboraterId();
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg);
 		}
 		
 		SkypeProfile profilWithCollab = mapDtoToDomain(skypeProfile, collab);
 		try {
 			isCreated = skypeProfileManagement.addNewSkypeProfile (profilWithCollab,idAnnuaireCIL,comment);
 		} catch (AllReadyExistException e) {
-			logger.error("exception déclenchée : " + e.getMessage());
-			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			String msg = e.getCode() + " - " + e.getMessage();
+			logger.error("exception déclenchée : " + msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 		
 		if (isCreated) {
 			return new ResponseEntity<String>("Profil skype créé", HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("erreur lors de la création du profil", HttpStatus.NOT_FOUND);
+			String msg = "Pb technique lors de la création du profil";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
 		}
 
 	}	
@@ -117,8 +122,9 @@ public class SkypeProfileController {
 		try {
 			isDeleted = skypeProfileManagement.deleteSkypeProfile(sip);	
 		} catch (NotFoundException e) {
-			logger.error("exception déclenchée : " + e.getMessage());
-			return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			String msg = e.getCode() + " - " + e.getMessage();
+			logger.error("exception déclenchée : " + msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 
 
@@ -127,8 +133,9 @@ public class SkypeProfileController {
 			return new ResponseEntity<String>("Supression effectuée", HttpStatus.OK);
 
 		} else {
-			logger.error("Pb lors de la supression");
-			return new ResponseEntity<String>("Pb lors de la supression", HttpStatus.NOT_FOUND);
+			String msg = "Pb technique lors de la suppression du profil";
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
 		}
 	}
 
@@ -138,7 +145,8 @@ public class SkypeProfileController {
 	@ApiOperation(value = "Met à jour les données d'un profil skype")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
-			@ApiResponse(code = 404,message = "Problème de la mise à jour")
+			@ApiResponse(code = 404,message = "Problème de la mise à jour"),
+			@ApiResponse(code = 400,message = "Type de mise à jour interdite")
 	})
 	public ResponseEntity<String> updateSkypeProfil(@Valid @RequestBody SkypeProfileDtoCreate skypeProfile) {
 	
@@ -151,23 +159,32 @@ public class SkypeProfileController {
 		String comment = skypeProfile.getEventComment();
 		
 		if (collab == null) {
-			return new ResponseEntity<String>("Collaborateur inexistant en base pour l'idAnnuaire : "
-						+ skypeProfile.getCollaboraterId(), HttpStatus.NOT_FOUND);
+			String msg = "Collaborateur inexistant en base pour l'idAnnuaire : " + skypeProfile.getCollaboraterId();
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg);
 		} else {
 			SkypeProfile profilToChange = mapDtoToDomain(skypeProfile, collab);
 			
 			try {
 				isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL,comment);
 
-			} catch (NotFoundException | NotAuthorizedException e) {
-				logger.error("exception déclenchée : " + e.getMessage());
-				return new ResponseEntity<String>(e.getCode() + " - " + e.getMessage(), HttpStatus.NOT_FOUND);
+			} catch (NotFoundException e) {
+				String msg = e.getCode() + " - " + e.getMessage();
+				logger.error("exception déclenchée : " + msg);
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
+				
+			} catch (NotAuthorizedException e) {
+				String msg = e.getCode() + " - " + e.getMessage();
+				logger.error("exception déclenchée : " + msg);
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg, e);
 			}
 			
 			if (isModified) {
 				return new ResponseEntity<String>("Profil mis à jour", HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("Pb lors de la mise à jour du profil", HttpStatus.NOT_FOUND);
+				String msg = "Pb technique lors de la mise à jour du profil";
+				logger.error(msg);
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, msg);
 			}
 		}
 

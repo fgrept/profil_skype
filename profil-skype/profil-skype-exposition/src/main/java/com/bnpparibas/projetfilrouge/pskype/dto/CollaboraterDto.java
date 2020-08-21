@@ -1,7 +1,11 @@
 
 package com.bnpparibas.projetfilrouge.pskype.dto;
 
+import javax.validation.constraints.Size;
+
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
+import com.bnpparibas.projetfilrouge.pskype.domain.control.EmailControl;
+import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 
 /**
  * Classe dédiée à l'ItCollborater
@@ -11,15 +15,23 @@ import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
  */
 public class CollaboraterDto {
 	
+	@Size(min = 1, max = 17)
 	private String collaboraterId;
+	@Size(min = 1, max = 50)
 	private String lastName;
+	@Size(min = 1, max = 50)
 	private String firstName;
+	@PhoneControl
 	private String deskPhoneNumber;
+	@PhoneControl
 	private String mobilePhoneNumber;
+	@EmailControl
 	private String mailAdress;
+	@Size(min = 1)
 	private String orgaUnitCode;
 	private String orgaUnityType;
 	private String orgaShortLabel;
+	@Size(min = 1)
 	private String siteCode;
 	private String siteName;
 	private String siteAddress;
