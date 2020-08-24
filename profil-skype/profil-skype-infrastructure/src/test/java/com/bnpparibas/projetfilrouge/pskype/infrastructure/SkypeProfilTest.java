@@ -269,5 +269,42 @@ public class SkypeProfilTest {
 	//	assertThat(skypeProfilDomain.findSkypeProfileBySip("aaa-bbb@gmail.com")).hasAllNullFieldsOrProperties();
 		
 	}
+
+	@Test
+	//@Rollback(false)
+	@DisplayName("Vérifier l'authenticité d'un profil suite à consultation")
+	public void verifyProfilAuthenticity() {
+		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		collaboraterDomain.create(collab);
+		
+		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
+	
+		skypeProfilDomain.create(skypeProfil);
+		
+		SkypeProfile skypeProfilConsulted = skypeProfilDomain.consultSkypeProfile("aaa-bbb@gmail.com",StatusSkypeProfileEnum.ENABLED)  ;
+	
+		//assertThat(skypeProfilDomain.consultSkypeProfile("aaa-bbb@gmail.com",StatusSkypeProfileEnum.ENABLED)).isEqualTo(skypeProfil);
+				
+		assertAll(
+				() -> assertThat(skypeProfilConsulted.getDialPlan()).isEqualTo(skypeProfil.getDialPlan()),
+				
+				() -> assertThat(skypeProfilConsulted.getExchUser()).isEqualTo(skypeProfil.getExchUser()),
+				
+				() -> assertThat(skypeProfilConsulted.getObjectClass()).isEqualTo(skypeProfil.getObjectClass()),
+	
+				() -> assertThat(skypeProfilConsulted.getSamAccountName()).isEqualTo(skypeProfil.getSamAccountName()),
+				
+				() -> assertThat(skypeProfilConsulted.getSIP()).isEqualTo(skypeProfil.getSIP()),
+	
+				() -> assertThat(skypeProfilConsulted.getVoicePolicy()).isEqualTo(skypeProfil.getVoicePolicy()),
+	
+				() -> assertThat(skypeProfilConsulted.getCollaborater()).isEqualTo(skypeProfil.getCollaborater())
+				
+				);
+				
+				
+						
+						
+	}
 	
 }
