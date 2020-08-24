@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
+import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
@@ -48,6 +49,9 @@ public class UserTest {
 	@Autowired
 	private IItCorrespondantManagment itCorrespondantManagment;	
 
+	@MockBean
+	private ISkypeProfileEventDomain eventDomain;
+	
 	private static final Site site = new Site("8802", "Valmy 2", "41 rue de Valmy", "93100", "Montreuil");
 	private static final OrganizationUnity uo = new OrganizationUnity("SDI1", "I", "Business intelligence", site);
 	
@@ -69,7 +73,6 @@ public class UserTest {
 		
 		Mockito.verify(itCorrespondantDomain).createFull(itCorrespondantTest);
 				
-		//assertThat(itCorrespondantManagment.createFullItCorrespondant(itCorrespondantTest)).isEqualTo(true);
 		
 	}
 	
@@ -93,18 +96,18 @@ public class UserTest {
 		
 		//when(itCorrespondantDomain.findItCorrespondantByCollaboraterId("479680").getRoles()).thenReturn(roles) ;
 		
-		when(itCorrespondantDomain.findItCorrespondantByCollaboraterId("479680")).thenReturn(itCorrespondantTest) ;
+		//when(itCorrespondantDomain.findItCorrespondantByCollaboraterId("479680")).thenReturn(itCorrespondantTest) ;
 		
 		//When
 		
 		itCorrespondantManagment.createFullItCorrespondant(itCorrespondantTest);
+
 	 	itCorrespondantTest.addRole(RoleTypeEnum.ROLE_USER);
 		
 		//Then
-						
-
+			
 	 	
-		Mockito.verify(itCorrespondantDomain).findItCorrespondantByCollaboraterId(itCorrespondantTest.getCollaboraterId());
+		Mockito.verify(itCorrespondantDomain).findItCorrespondantByCollaboraterId("479680").getRoles();
 		
 		 
 		

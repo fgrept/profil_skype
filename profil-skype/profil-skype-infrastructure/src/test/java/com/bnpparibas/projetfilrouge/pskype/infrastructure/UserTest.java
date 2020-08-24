@@ -147,6 +147,45 @@ public class UserTest {
 						.hasSize(2)
 						.allMatch(s -> s.getMailAdress() == "john.tennis@gmail.com")
 				);
+	}
+
+
+	@Test
+	@DisplayName("Vérifier la suppresion d'un role CIL")
+	public void verifyCilDelete () {
+		
+		collaboraterDomain.create(collab1);
+		
+		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
+		roles.add(RoleTypeEnum.ROLE_USER);
+		//roles.add(RoleTypeEnum.ROLE_RESP);
+		
+		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
+		
+		itCorrespondantDomain.delete(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId()))  ;
+		
+		
+		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId())).isEqualTo(null);
+	
+		
+	}
+
+
+	@Test
+	@DisplayName("Vérifier l'attribution d'un role CIL")
+	public void verifyCilRoles () {
+		
+		collaboraterDomain.create(collab1);
+		
+		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
+		roles.add(RoleTypeEnum.ROLE_USER);
+		roles.add(RoleTypeEnum.ROLE_RESP);
+		
+		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
+		
+		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId()).getRoles()).isEqualTo(roles);
+	
+		
 	}	
 	
 }
