@@ -1,11 +1,6 @@
 package com.bnpparibas.projetfilrouge.pskype.dto;
 
 import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
-import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
 
 /**

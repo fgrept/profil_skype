@@ -1,5 +1,9 @@
 package com.bnpparibas.projetfilrouge.pskype;
 
+/**
+ * Couche exposition de l'application profil skype
+ * 
+ */
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -8,9 +12,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import com.bnpparibas.projetfilrouge.pskype.security.SecurityConfiguration;
-
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 //@SpringBootApplication

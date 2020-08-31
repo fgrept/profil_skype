@@ -189,19 +189,19 @@ public class SkypeProfile {
 	/**
 	 * Méthode permettant de détecter les différences entre deux profils skype
 	 * sur tous les champs de classe
-	 * @param avant
-	 * @param après
-	 * @return
-	 * @throws IllegalAccessException
+	 * @param profil skype avant
+	 * @param profil skype apres
+	 * @return Liste des attributs modifiés
+	 * @throws retourner une exception du type IllegalAccessException
 	 */
 	
-	public static List<String> difference(SkypeProfile avant, SkypeProfile après) throws IllegalAccessException {
+	public static List<String> difference(SkypeProfile avant, SkypeProfile apres) throws IllegalAccessException {
 	     List<String> changedProperties = new ArrayList<>();
 	     for (Field field : avant.getClass().getDeclaredFields()) {
 	        // You might want to set modifier to public first (if it is not public yet)
 	        field.setAccessible(true);
 	        Object value1 = field.get(avant);
-	        Object value2 = field.get(après); 
+	        Object value2 = field.get(apres); 
 	        if ( (value1 != null && value2 != null) 
 	        		&& (field.getName() != "SIP")
 	        		&& (field.getName() != "collaborater")) {
@@ -223,7 +223,11 @@ public class SkypeProfile {
 				+ collaborater + ", statusProfile=" + statusProfile + ", expirationDate=" + expirationDate + "]";
 	}
 
-	private Date calcDate () {
+	/**
+	 * 
+	 * @return la date d'expiration qui vaut Date du jour + 2 ans
+	 */
+	public Date calcDate () {
 		// La date d'expiration du profil skype est de 2 ans à partir de sa date de création 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());

@@ -2,7 +2,6 @@ package com.bnpparibas.projetfilrouge.pskype.exposition;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.bnpparibas.projetfilrouge.pskype.application.ISkypeProfileEventManagement;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
-import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 import com.bnpparibas.projetfilrouge.pskype.dto.SkypeProfileEventDto;
-import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEventEntityMapper;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

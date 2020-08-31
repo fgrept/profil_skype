@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,25 +18,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.bnpparibas.projetfilrouge.pskype.application.ICollaboraterManagment;
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
-import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.dto.CollaboraterDto;
-import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoCreate;
-import com.bnpparibas.projetfilrouge.pskype.dto.ItCorrespondantDtoResult;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 /**
- * 
- * @author Judicaël
- *
+ * Classe exposant des API rest dédiées au Collaborater
+ * @author La Fabrique
+ * Spring security : classe correspondant au module de paramétrage, réservée aux administrateurs
  */
 @RestController
 @RequestMapping("/collaborater")

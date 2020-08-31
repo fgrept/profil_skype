@@ -2,7 +2,6 @@ package com.bnpparibas.projetfilrouge.pskype.dto;
 
 import java.util.Date;
 
-import javax.validation.constraints.Size;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 

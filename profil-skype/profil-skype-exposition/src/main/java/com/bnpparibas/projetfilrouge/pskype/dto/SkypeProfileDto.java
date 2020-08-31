@@ -1,15 +1,9 @@
 package com.bnpparibas.projetfilrouge.pskype.dto;
 
-import java.util.Date;
 
-import javax.validation.Constraint;
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.ConstraintComposition;
-
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 
 /**

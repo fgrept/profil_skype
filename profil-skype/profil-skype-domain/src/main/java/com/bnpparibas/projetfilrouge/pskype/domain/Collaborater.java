@@ -8,7 +8,7 @@ import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 
 /**
  * Cette classe permet contient la liste des collaborateurs.
- * Elle inclut aussi les informations du CIL et les administrateurs
+ * Elle inclut aussi les informations du CIL et les administrateurs.
  * Les informations de cette classe sont issues d'un référentiel externe et ne sont pas modifiables par la transaction.
  * @author Judicaël
  * @version : V0.1

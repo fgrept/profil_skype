@@ -1,6 +1,5 @@
 package com.bnpparibas.projetfilrouge.pskype.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
@@ -10,14 +9,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.internal.verification.Times;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;

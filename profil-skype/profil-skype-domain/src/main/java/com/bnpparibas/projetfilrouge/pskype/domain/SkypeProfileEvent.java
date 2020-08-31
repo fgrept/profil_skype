@@ -1,10 +1,7 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.validation.constraints.NotNull;
 /**
  * Liste des événements pour un profil skype donné
  * Les événènements sont le résultat d'une action et sont non modifiables après

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,11 +18,9 @@ import java.util.Set;
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.ICollaboraterDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
-import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 
 @ExtendWith(SpringExtension.class)
@@ -190,40 +187,5 @@ public class UserTest {
 	}	
 	
 	
-	@Test
-	@DisplayName("Vérifier la suppresion d'un role CIL")
-	public void verifyCilDelete () {
-		
-		collaboraterDomain.create(collab1);
-		
-		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
-		roles.add(RoleTypeEnum.ROLE_USER);
- 		
-		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
-		
-		itCorrespondantDomain.delete(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId()))  ;
-		
-		
-		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId())).isEqualTo(null);
 
-		
- 	}
-	
-	@Test
-	@DisplayName("Vérifier les roles d'un CIL après création")
-	public void verifyCilRoles () {
-		
-		collaboraterDomain.create(collab1);
-		
-		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
-		roles.add(RoleTypeEnum.ROLE_USER);
-		roles.add(RoleTypeEnum.ROLE_RESP);
-		
-		itCorrespondantDomain.createRoleCILtoCollab(collab1.getCollaboraterId(), roles, "000000");
-		
-		
-		assertThat(itCorrespondantDomain.findItCorrespondantByCollaboraterId(collab1.getCollaboraterId()).getRoles()).isEqualTo(roles);
-
-		
- 	}
 }
