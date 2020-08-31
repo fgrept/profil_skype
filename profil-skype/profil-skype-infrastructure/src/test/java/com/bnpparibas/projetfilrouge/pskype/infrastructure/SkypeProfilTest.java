@@ -49,7 +49,7 @@ public class SkypeProfilTest {
 	//@Rollback(false)
 	@DisplayName("Vérifier la consultation possible d'un profil après sa création")
 	public void verifyProfilAfterCreation () {
-		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
@@ -64,7 +64,7 @@ public class SkypeProfilTest {
 	@DisplayName("Vérifier qu'il n'est pas possible de créer un 2ème profil skype"
 			+ "pour le même collaborateur")
 	public void verifyUnicityProfil () {
-		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
@@ -79,7 +79,7 @@ public class SkypeProfilTest {
 	//@Rollback(false)
 	@DisplayName("Vérifier qu'un cil peut avoit un profil skype")
 	public void verifyCilCanHaveProfil () {
-		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
@@ -96,7 +96,7 @@ public class SkypeProfilTest {
 	@DisplayName("Vérifier qu'il n'est pas possible de créer un profil skype"
 			+ "sur une SIP dejà affecté à un autre profil")
 	public void verifyUnicitySIP () {
-		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
@@ -117,8 +117,8 @@ public class SkypeProfilTest {
 		
 		OrganizationUnity uo2 = new OrganizationUnity("SDI2", "I", "Big Data", site);
 		OrganizationUnity uo3 = new OrganizationUnity("SDI3", "I", "Outils interne", site);
-		Collaborater collab1 = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
-		Collaborater collab2 = new Collaborater("McEnroe", "John", "112116", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
+		Collaborater collab1 = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
+		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
 		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
 		SkypeProfile skypeProfil1 = new SkypeProfile("sip.john.doe@gmail.com", collab1);
 		SkypeProfile skypeProfil2 = new SkypeProfile("sip.john.tennis@gmail.com", collab2);
@@ -137,8 +137,8 @@ public class SkypeProfilTest {
 		Site site2 = new Site("8812", "Valmy 3", "41 rue de Paris", "93100", "Montreuil");
 		OrganizationUnity uo2 = new OrganizationUnity("SDI2", "I", "Big Data", site);
 		OrganizationUnity uo3 = new OrganizationUnity("SDI3", "I", "Outils interne", site2);
-		Collaborater collab1 = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
-		Collaborater collab2 = new Collaborater("McEnroe", "John", "112116", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
+		Collaborater collab1 = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
+		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo2);
 		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
 		Collaborater collab4 = new Collaborater("McEnroe", "John", "112119", "01-43-34-45-57", "06-12-13-14-20", "john.tennis@gmail.com",uo2);
 
@@ -169,8 +169,8 @@ public class SkypeProfilTest {
 	@Test
 	@DisplayName("Vérifier que le filtrage d'un profil fonctionne pour différents attributs")
 	public void verifyProfilPropertiesFiltration () {
-		Collaborater collab1 = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
-		Collaborater collab2 = new Collaborater("McEnroe", "John", "112116", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo);
+		Collaborater collab1 = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
+		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo);
 		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo);
 		Collaborater collab4 = new Collaborater("Christ", "Jesus", "118119", "01-43-34-45-58", "06-12-13-14-17", "jesus.auciel@gmail.com",uo);
 		
@@ -226,8 +226,8 @@ public class SkypeProfilTest {
 	@Test
 	@DisplayName("Vérifier que le filtrage d'un profil fonctionne sur le statut (après un maj donc)")
 	public void verifyStatusFiltration () {
-		Collaborater collab1 = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
-		Collaborater collab2 = new Collaborater("McEnroe", "John", "112116", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo);
+		Collaborater collab1 = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
+		Collaborater collab2 = new Collaborater("McEnroe", "John", "112115", "01-43-34-45-57", "06-12-13-14-16", "john.tennis@gmail.com",uo);
 		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo);
 		Collaborater collab4 = new Collaborater("Christ", "Jesus", "118119", "01-43-34-45-58", "06-12-13-14-17", "jesus.auciel@gmail.com",uo);
 		
@@ -252,47 +252,11 @@ public class SkypeProfilTest {
 				);
 		
 	}	
-
-	@Test
-	//@Rollback(false)
-	@DisplayName("Vérifier l'authenticité d'un profil suite à consultation")
-	public void verifyProfilAuthenticity() {
-		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
-		collaboraterDomain.create(collab);
-		
-		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
-
-		skypeProfilDomain.create(skypeProfil);
-		
-		SkypeProfile skypeProfilConsulted = skypeProfilDomain.consultSkypeProfile("aaa-bbb@gmail.com",StatusSkypeProfileEnum.ENABLED)  ;
-	
-				
-		assertAll(
-				() -> assertThat(skypeProfilConsulted.getDialPlan()).isEqualTo(skypeProfil.getDialPlan()),
-				
-				() -> assertThat(skypeProfilConsulted.getExchUser()).isEqualTo(skypeProfil.getExchUser()),
-				
-				() -> assertThat(skypeProfilConsulted.getObjectClass()).isEqualTo(skypeProfil.getObjectClass()),
-
-				() -> assertThat(skypeProfilConsulted.getSamAccountName()).isEqualTo(skypeProfil.getSamAccountName()),
-				
-				() -> assertThat(skypeProfilConsulted.getSIP()).isEqualTo(skypeProfil.getSIP()),
-
-				() -> assertThat(skypeProfilConsulted.getVoicePolicy()).isEqualTo(skypeProfil.getVoicePolicy()),
-
-				() -> assertThat(skypeProfilConsulted.getCollaborater()).isEqualTo(skypeProfil.getCollaborater())
-				
-				);
-				
-				
-						
-						
- 	}	
 	
 	@Test
 	@DisplayName("Vérifier la suppresion d'un profil")
 	public void verifyProfilDelete () {
-		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
@@ -303,5 +267,42 @@ public class SkypeProfilTest {
 		assertThat(skypeProfilDomain.findSkypeProfileBySip("aaa-bbb@gmail.com")).isEqualTo(null);
 
  	}
+
+	@Test
+	//@Rollback(false)
+	@DisplayName("Vérifier l'authenticité d'un profil suite à consultation")
+	public void verifyProfilAuthenticity() {
+		Collaborater collab = new Collaborater("Doe", "John", "112115", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		collaboraterDomain.create(collab);
+		
+		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
+	
+		skypeProfilDomain.create(skypeProfil);
+		
+		SkypeProfile skypeProfilConsulted = skypeProfilDomain.consultSkypeProfile("aaa-bbb@gmail.com",StatusSkypeProfileEnum.ENABLED)  ;
+	
+		//assertThat(skypeProfilDomain.consultSkypeProfile("aaa-bbb@gmail.com",StatusSkypeProfileEnum.ENABLED)).isEqualTo(skypeProfil);
+				
+		assertAll(
+				() -> assertThat(skypeProfilConsulted.getDialPlan()).isEqualTo(skypeProfil.getDialPlan()),
+				
+				() -> assertThat(skypeProfilConsulted.getExchUser()).isEqualTo(skypeProfil.getExchUser()),
+				
+				() -> assertThat(skypeProfilConsulted.getObjectClass()).isEqualTo(skypeProfil.getObjectClass()),
+	
+				() -> assertThat(skypeProfilConsulted.getSamAccountName()).isEqualTo(skypeProfil.getSamAccountName()),
+				
+				() -> assertThat(skypeProfilConsulted.getSIP()).isEqualTo(skypeProfil.getSIP()),
+	
+				() -> assertThat(skypeProfilConsulted.getVoicePolicy()).isEqualTo(skypeProfil.getVoicePolicy()),
+	
+				() -> assertThat(skypeProfilConsulted.getCollaborater()).isEqualTo(skypeProfil.getCollaborater())
+				
+				);
+				
+				
+						
+						
+	}
 	
 }
