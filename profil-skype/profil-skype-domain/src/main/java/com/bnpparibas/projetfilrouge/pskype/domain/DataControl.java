@@ -17,8 +17,10 @@ public class DataControl {
 	/**
 	 * cette méthode permet de vérifier la validité d'une adresse mail selon la norme RFC 2822
 	 * 
+	 * @param adresse mail
+	 * @return un boolean true/false
 	 */
-		private static boolean isValidEmailAddress(String email) {
+		public static boolean isValidEmailAddress(String email) {
 			   boolean result = true;
 			   try {
 			      InternetAddress emailAddr = new InternetAddress(email);

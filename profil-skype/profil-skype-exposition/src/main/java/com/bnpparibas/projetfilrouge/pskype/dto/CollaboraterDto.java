@@ -2,8 +2,6 @@
 package com.bnpparibas.projetfilrouge.pskype.dto;
 
 import javax.validation.constraints.Size;
-
-import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.control.EmailControl;
 import com.bnpparibas.projetfilrouge.pskype.domain.control.PhoneControl;
 

@@ -2,6 +2,10 @@ package com.bnpparibas.projetfilrouge.pskype.domain.exception;
 
 public abstract class BusinessException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ExceptionListEnum code;
 
 	public BusinessException(final ExceptionListEnum code, final String message) {

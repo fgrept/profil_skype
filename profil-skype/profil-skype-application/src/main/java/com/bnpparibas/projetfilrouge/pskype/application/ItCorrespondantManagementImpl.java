@@ -18,7 +18,6 @@ import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
-import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.NotFoundException;
 

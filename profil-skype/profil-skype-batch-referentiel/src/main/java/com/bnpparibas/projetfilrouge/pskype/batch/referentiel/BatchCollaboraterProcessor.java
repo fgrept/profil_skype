@@ -13,7 +13,6 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.CollaboraterDtoBatch;
-import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.ItCorrespondantDto;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ICollaboraterRepository;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.IOrganizationUnityRepository;

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
-import com.bnpparibas.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
 

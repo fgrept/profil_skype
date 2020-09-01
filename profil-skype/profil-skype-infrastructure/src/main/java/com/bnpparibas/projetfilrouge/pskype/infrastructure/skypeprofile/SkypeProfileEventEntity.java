@@ -18,7 +18,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bnpparibas.projetfilrouge.pskype.domain.TypeEventEnum;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
-
+/**
+ * 
+ * Entité du Profil Skype événement
+ * @author 479680
+ *
+ */
 @Entity
 public class SkypeProfileEventEntity {
 	

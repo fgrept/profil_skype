@@ -159,6 +159,11 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 		
 		listCollaborater = collaboraterRepository.findAll(new Specification<CollaboraterEntity>() {
 			
+		/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 		@Override
 		public Predicate toPredicate(Root<CollaboraterEntity> root, CriteriaQuery<?> query,
 				CriteriaBuilder criteriaBuilder) {

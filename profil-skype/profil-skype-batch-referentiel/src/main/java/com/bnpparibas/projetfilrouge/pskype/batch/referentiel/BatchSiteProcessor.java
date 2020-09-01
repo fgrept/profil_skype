@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bnpparibas.projetfilrouge.pskype.batch.referentiel.dto.ItCorrespondantDto;
 import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ISiteEntity;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.SiteEntity;

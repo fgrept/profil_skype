@@ -8,14 +8,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
-
-import com.bnpparibas.projetfilrouge.pskype.domain.Collaborater;
 import com.bnpparibas.projetfilrouge.pskype.domain.IItCorrespondantDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.RoleTypeEnum;
@@ -44,8 +41,6 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 	@Autowired
 	private ItCorrespondantEntityMapper entityMapper;
 	
-	@Autowired
-	private CollaboraterEntityMapper collabMapper;
 	
 	@Autowired
 	private IItCorrespondantRepository itCorrespondantRepository;
@@ -176,6 +171,11 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 		List<ItCorrespondantEntity> listItCorrespondantEntity = new ArrayList<ItCorrespondantEntity>();
 		listItCorrespondantEntity = itCorrespondantRepository.findAll(new Specification<ItCorrespondantEntity>() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Predicate toPredicate(Root<ItCorrespondantEntity> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {

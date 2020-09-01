@@ -1,6 +1,5 @@
 package com.bnpparibas.projetfilrouge.pskype.domain;
 
-import org.assertj.core.api.AbstractBooleanAssert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;

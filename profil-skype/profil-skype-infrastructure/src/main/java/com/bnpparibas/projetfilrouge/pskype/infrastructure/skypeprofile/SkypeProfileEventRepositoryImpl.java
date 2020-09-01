@@ -1,20 +1,23 @@
 package com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.bnpparibas.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
 import com.bnpparibas.projetfilrouge.pskype.domain.ItCorrespondant;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.IItCorrespondantRepository;
 import com.bnpparibas.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
-
+/**
+ * Dédiée au profil Skype Elle assure la correspondance entre les méthodes
+ * exposées de la couche domaine et celles da la couche infrastructure. 
+ * 
+ * @author la fabrique
+ *
+ */
 @Repository
 public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain {
 	
@@ -23,8 +26,6 @@ public class SkypeProfileEventRepositoryImpl implements ISkypeProfileEventDomain
 	@Autowired
 	private SkypeProfileEventEntityMapper entityMapper;
 	
-	@Autowired
-	private SkypeProfileEntityMapper entityMapperSkypeProfile;
 	
 	@Autowired
 	private ISkypeProfileEventRepository skypeProfileEventRepository;
