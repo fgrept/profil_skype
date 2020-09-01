@@ -272,6 +272,11 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
 		profilEntity = skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Predicate toPredicate(Root<SkypeProfileEntity> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {
@@ -357,6 +362,11 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
 		profilEntity = skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Predicate toPredicate(Root<SkypeProfileEntity> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {

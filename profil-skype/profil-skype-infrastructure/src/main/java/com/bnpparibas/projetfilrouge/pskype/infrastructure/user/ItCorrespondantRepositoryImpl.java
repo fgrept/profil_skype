@@ -171,6 +171,11 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 		List<ItCorrespondantEntity> listItCorrespondantEntity = new ArrayList<ItCorrespondantEntity>();
 		listItCorrespondantEntity = itCorrespondantRepository.findAll(new Specification<ItCorrespondantEntity>() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Predicate toPredicate(Root<ItCorrespondantEntity> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {
