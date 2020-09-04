@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.example.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEntity;
 
 /**
@@ -136,7 +137,7 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 	public JpaPagingItemReader<SkypeProfileEntity> batchReader() throws Exception {
 		JpaPagingItemReader<SkypeProfileEntity> databaseReader = new JpaPagingItemReader<>();
 		databaseReader.setEntityManagerFactory(entityManagerFactory);
-		databaseReader.setQueryString("SELECT u FROM SkypeProfileEntity u WHERE u.statusProfile=com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum.ENABLED");
+		databaseReader.setQueryString("SELECT u FROM SkypeProfileEntity u WHERE u.statusProfile=" + StatusSkypeProfileEnum.ENABLED);
 		databaseReader.setPageSize(1000);
 		databaseReader.afterPropertiesSet();
 		return databaseReader;
