@@ -10,7 +10,7 @@
         <version>2.3.1.RELEASE</version>
     </parent>
   
-  <groupId>com.bnpparibas.projetfilrouge</groupId>
+  <groupId>com.example.projetfilrouge</groupId>
   <artifactId>profil-skype</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
