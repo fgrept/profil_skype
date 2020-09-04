@@ -164,35 +164,35 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 				CriteriaBuilder criteriaBuilder) {
 			
 			List<Predicate> predicates = new ArrayList<>();
-			if(collaborater.getCollaboraterId()!=null) {
+			if ((collaborater.getCollaboraterId()!=null) && (collaborater.getCollaboraterId()!="")){
 				predicates.add(criteriaBuilder.equal(root.get("collaboraterId"),collaborater.getCollaboraterId()));
 				logger.info("recherche par collaboraterId");
 			}
-			if(collaborater.getFirstNamePerson()!=null) {
+			if ((collaborater.getFirstNamePerson()!=null) && (collaborater.getFirstNamePerson()!="")) {
 				predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")),"%"+collaborater.getFirstNamePerson().toLowerCase()+"%"));
 				logger.info("recherche par firstName "+collaborater.getFirstNamePerson());
 			}
-			if (collaborater.getLastNamePerson()!=null){
+			if ((collaborater.getLastNamePerson()!=null) && (collaborater.getLastNamePerson()!="")) {
 				predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")),"%"+collaborater.getLastNamePerson().toLowerCase()+"%"));
 				logger.info("recherche par lastName "+collaborater.getLastNamePerson());
 			}
-			if (collaborater.getDeskPhoneNumber()!= null) {
+			if ((collaborater.getDeskPhoneNumber()!= null) && (collaborater.getDeskPhoneNumber()!= "")){
 				logger.info("recherche par deskPhoneNumber "+ collaborater.getDeskPhoneNumber());
 				predicates.add(criteriaBuilder.equal(root.get("deskPhoneNumber"),collaborater.getDeskPhoneNumber()));
 			}
-			if (collaborater.getMobilePhoneNumber()!= null) {
+			if ((collaborater.getMobilePhoneNumber()!= null) && (collaborater.getMobilePhoneNumber()!= "")){
 				logger.info("recherche par mobilePhone "+ collaborater.getMobilePhoneNumber());
 				predicates.add(criteriaBuilder.equal(root.get("mobilePhoneNumber"),collaborater.getMobilePhoneNumber()));
 			}
-			if (collaborater.getMailAdress()!= null) {
+			if ((collaborater.getMailAdress()!= null) && (collaborater.getMailAdress()!= "")){
 				logger.info("recherche par mailAddress "+ collaborater.getMailAdress());
 				predicates.add(criteriaBuilder.equal(root.get("mailAdress"),collaborater.getMailAdress()));
 			}
-			if ((collaborater.getOrgaUnit()!=null) && (collaborater.getOrgaUnit().getOrgaUnityCode()!=null)){
+			if ((collaborater.getOrgaUnit()!=null) && (collaborater.getOrgaUnit().getOrgaUnityCode()!=null) && (collaborater.getOrgaUnit().getOrgaUnityCode()!="")){
 				logger.info("recherche par code UO "+ collaborater.getOrgaUnit().getOrgaUnityCode());
 				predicates.add(criteriaBuilder.equal(root.get("orgaUnit").get("orgaUnityCode"),collaborater.getOrgaUnit().getOrgaUnityCode()));
 			}
-			if ((collaborater.getOrgaUnit().getOrgaSite()!=null) && ((collaborater.getOrgaUnit().getOrgaSite().getSiteCode()!=null))) {
+			if ((collaborater.getOrgaUnit().getOrgaSite()!=null) && (collaborater.getOrgaUnit().getOrgaSite().getSiteCode()!=null) && (collaborater.getOrgaUnit().getOrgaSite().getSiteCode()!="")) {
 				logger.info("recherche par code Site "+ collaborater.getOrgaUnit().getOrgaSite().getSiteCode());
 				predicates.add(criteriaBuilder.equal(root.get("orgaUnit").get("orgaSite").get("siteCode"),collaborater.getOrgaUnit().getOrgaSite().getSiteCode()));
 			}
