@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,8 @@ import com.bnpparibas.projetfilrouge.pskype.domain.Site;
 import com.bnpparibas.projetfilrouge.pskype.domain.SkypeProfile;
 import com.bnpparibas.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.bnpparibas.projetfilrouge.pskype.domain.exception.AllReadyExistException;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.ISkypeProfileEventRepository;
+import com.bnpparibas.projetfilrouge.pskype.infrastructure.skypeprofile.ISkypeProfileRepository;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -42,6 +46,20 @@ public class SkypeProfilTest {
 	
 	@Autowired
 	private IItCorrespondantDomain itCorrespondantDomain;
+	
+	// pour le vidage des profils avant les tests auto
+	@Autowired
+	private ISkypeProfileRepository repoSkypeProfil;
+	@Autowired
+	private ISkypeProfileEventRepository repoSkypeProfilEvent;
+	
+	@BeforeAll
+	@DisplayName("Remise à zéro des profils skype avant le début de ces tests")
+	// ou alors basculer sur une base in-memory
+	public static void cleanTables (@Autowired ISkypeProfileRepository repoSkypeProfil, @Autowired ISkypeProfileEventRepository repoSkypeProfilEvent) {
+		repoSkypeProfilEvent.deleteAll();
+		repoSkypeProfil.deleteAll();
+	}
 	
 	@Test
 	//@Rollback(false)

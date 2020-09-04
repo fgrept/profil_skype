@@ -150,7 +150,7 @@ public class SkypeProfilTest {
 
 		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
 		SkypeProfile profileAprès = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-IT", "M002117014", true, "Linked Mailbox", "user", collab);
-
+		
 		SkypeProfileEvent eventAfter = new SkypeProfileEvent(comment, profileAprès, collabCil, TypeEventEnum.MODIFICATION);
 		
 		when(skypeProfilDomain.findSkypeProfileByIdCollab("112114")).thenReturn(profileAvt);
@@ -176,8 +176,10 @@ public class SkypeProfilTest {
 		String comment = "Commentaire utilisateur : <<" + eventComment + ">>" + " - nouveau SIP : " + "sip:stefanieeee.radelle@live.bnpparibas.com";
 		
 		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		profileAvt.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 		SkypeProfile profileAprès = new SkypeProfile("sip:stefanieeee.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
-
+		profileAprès.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
+		
 		SkypeProfileEvent eventAfter = new SkypeProfileEvent(comment, profileAprès, collabCil, TypeEventEnum.CREATION);
 		
 		when(skypeProfilDomain.findSkypeProfileByIdCollab("112114")).thenReturn(profileAvt);
