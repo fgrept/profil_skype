@@ -1,6 +1,6 @@
 package com.example.projetfilrouge.pskype.dto;
 
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
 
 /**
  * Dto de recherche d'un utilisateur à partir de ses données collaborateur et d'un rôle

@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.persistence.EntityManagerFactory;
 
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -25,10 +26,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+
 import com.example.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEntity;
 
 /**
@@ -41,6 +43,7 @@ import com.example.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfil
 @EnableBatchProcessing
 @EnableJpaRepositories(basePackages = {"com.example.projetfilrouge.pskype"})
 @EntityScan("com.example.projetfilrouge.pskype")
+@ComponentScan({"com.example.projetfilrouge.pskype"})
 public class BatchStatutLoaderApplication implements CommandLineRunner{
 
 	@Autowired
@@ -137,7 +140,7 @@ public class BatchStatutLoaderApplication implements CommandLineRunner{
 	public JpaPagingItemReader<SkypeProfileEntity> batchReader() throws Exception {
 		JpaPagingItemReader<SkypeProfileEntity> databaseReader = new JpaPagingItemReader<>();
 		databaseReader.setEntityManagerFactory(entityManagerFactory);
-		databaseReader.setQueryString("SELECT u FROM SkypeProfileEntity u WHERE u.statusProfile=" + StatusSkypeProfileEnum.ENABLED);
+		databaseReader.setQueryString("SELECT u FROM SkypeProfileEntity u WHERE u.statusProfile=com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum.ENABLED");
 		databaseReader.setPageSize(1000);
 		databaseReader.afterPropertiesSet();
 		return databaseReader;

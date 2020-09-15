@@ -7,6 +7,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.ICollaboraterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
@@ -15,16 +18,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.ICollaboraterRepository;
 import com.example.projetfilrouge.pskype.infrastructure.user.IItCorrespondantRepository;
 import com.example.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
 import com.example.projetfilrouge.pskype.batch.referentiel.dto.ItCorrespondantDto;
 
 public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespondantDto, ItCorrespondantEntity> {
 	
-	Logger log = LoggerFactory.getLogger(BatchUoProcessor.class);	
+	Logger log = LoggerFactory.getLogger(BatchItCorrespondantProcessor.class);
 	private int cptLigne = 1;
 	
 	@Autowired
@@ -48,8 +48,9 @@ public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespond
 		
 	    Set<ConstraintViolation<ItCorrespondantDto>> constraintViolations = 
 	    	      validator.validate(item);
-	    if (constraintViolations.size() > 0 ) {
-	    	log.error("Données de l'it correspondant incorrects en ligne : " + cptLigne);
+	    if (constraintViolations.isEmpty() ) {
+	    	String sError = "Données de l'it correspondant incorrects en ligne : " + cptLigne;
+	    	log.error(sError);
 	    	return null;
 	      }
 	    

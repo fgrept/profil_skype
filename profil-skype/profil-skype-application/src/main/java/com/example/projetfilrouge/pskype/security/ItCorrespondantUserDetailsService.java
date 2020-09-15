@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.example.projetfilrouge.pskype.domain.user.IItCorrespondantDomain;
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
 /**
  * Implémentation de l'interface de Spring security
  * @author Judicaël
@@ -39,11 +39,12 @@ public class ItCorrespondantUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String idAnnuaire) throws UsernameNotFoundException {
 		
-		ItCorrespondant itCorrespondant = itCorrespondantDomain.findItCorrespondantByCollaboraterId(idAnnuaire); 
+		ItCorrespondant itCorrespondant = itCorrespondantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
 		if (itCorrespondant ==null) {
 			throw new UsernameNotFoundException("Utilisateur, id annuaire : "+idAnnuaire+" non trouvé");
 		}
-		logger.debug(itCorrespondant.getCollaboraterId()+" , password : "+itCorrespondant.getPassword());
+		String sLogDebug = itCorrespondant.getCollaboraterId()+" , password : "+itCorrespondant.getPassword();
+		logger.debug(sLogDebug);
 		
 		return new User(idAnnuaire, itCorrespondant.getPassword(), getRolesAuthorities(itCorrespondant));
 	}
@@ -60,7 +61,10 @@ public class ItCorrespondantUserDetailsService implements UserDetailsService {
 		if (rolesAuthorities !=null) {
 			for (RoleTypeEnum role : itCorrespondant.getRoles()) {
 				rolesAuthorities.add(new SimpleGrantedAuthority(role.name()));
-				logger.debug(itCorrespondant.getCollaboraterId()+" : ROLE - "+role.name());
+				if (logger.isDebugEnabled()){
+					String sLogDebug = itCorrespondant.getCollaboraterId()+" : ROLE - "+role.name();
+					logger.debug(sLogDebug);
+				}
 			}
 		}
 		return rolesAuthorities;

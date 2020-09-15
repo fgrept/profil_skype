@@ -7,6 +7,10 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +30,7 @@ import org.springframework.security.access.annotation.Secured;
 
 import com.example.projetfilrouge.pskype.application.ICollaboraterManagment;
 import com.example.projetfilrouge.pskype.application.IItCorrespondantManagment;
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
-import com.example.projetfilrouge.pskype.domain.Site;
+
 import com.example.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
 import com.example.projetfilrouge.pskype.dto.CollaboraterDto;
@@ -47,7 +48,7 @@ import io.swagger.annotations.ApiResponses;
  * Spring security : classe correspondant au module de paramétrage, réservée aux administrateurs
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 @Secured("ROLE_ADMIN")
 @Api(value = "It correspondant REST Controller : contient toutes les opérations pour manager un It correspondant")
 public class ItCorrespondantController {
@@ -88,12 +89,12 @@ public class ItCorrespondantController {
 		 try {
 			isCreated = userManagment.createItCorrespondant(dto.getCollaboraterId(), dto.getRoles());
 		} catch (NotFoundException e) {
-			String msg = e.getCode() + " - " + e.getMessage();
-			logger.error("exception déclenchée : " + msg);
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error(msg);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		} catch (AllReadyExistException e) {
-			String msg = e.getCode() + " - " + e.getMessage();
-			logger.error("exception déclenchée : " + msg);
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error(msg);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, msg, e);
 		}
 
@@ -108,30 +109,7 @@ public class ItCorrespondantController {
 		
 	}
 
-	
-	/**
-	 * API dédiée aux tests pour ajouter manuellement un ensemble d'it correspondant
-	 * @return
-	 */
-	@GetMapping("createauto")
-	public String CreateUserAuto() {
-		
-		//ItCorrespondant itCorrespondant = new ItCorrespondant("Grept", "Fabien", "000020", "0140401234", "0640140102", "fabien.toto@gmail.com");
-//		ITCorrespon
-		//correspondantManagement.createCIL("Grept", "Fabien", "000004", "0140401234", "0640140102", "fabien.toto@gmail.com");
-//		correspondantManagement.createCIL("ElOuarak", "Mehdi", "000005", "0140402345", "0640140304", "mehdi.titi@gmail.com");
-//		correspondantManagement.createCIL("Tige", "Judicael", "000006", "0140403456", "0640140405", "judi.tata@gmail.com");	
-		//userManagment.createItCorrespondant("Tige", "Judi", "000020", "0140403456", "0640140405", "judi.tatatoto@gmail.com","000000");
-		//Password associé : $2a$10$mLw0BcfmsIszyoBvIiqTWOcaBW8vc8.VoOZ2u27xroUi638aeUvLO
-//		correspondantManagement.createItCorrespondant("Tige", "Juju", "000021", "0140403456", "0640140405", "judi.tatatiti@gmail.com","000000");
-		//Password associé : $2a$10$zjrjQg24MpCtPxu.ekG4yuv3eJ1tbm9PRPiD7S85w.SEGNJqx1fRy
-//		correspondantManagement.createItCorrespondant("Tige", "Toto", "000022", "0140403456", "0640140405", "judi.tatatutu@gmail.com","000000");
-		//Password associé : $2a$10$3E4JuVZylMiC7uZ9AJSM8uGqYgueyQKrJHjdHYNSw3FrHG.G379y6
-		logger.info("Création automatique effectuée");
-		return "creation effectuée";
-	}
 
-	
 	/**
 	 * API permettant de récupérer l'ensemble des utilisateurs présents en table
 	 * @return Liste des IT Correspondant
@@ -148,10 +126,17 @@ public class ItCorrespondantController {
 		return new ResponseEntity<List<ItCorrespondantDtoResult>>(listDto,HttpStatus.OK);
 	}
 
+	@GetMapping("/count")
+	@ApiOperation("Compte le nombre d'it Correspondant")
+	@ApiResponse(code=200, message = "Nombre retourné")
+	public ResponseEntity<Long> countItCorrespondant(){
+		return new ResponseEntity<Long>(userManagment.countItCorrespondant(),HttpStatus.OK);
+	}
+
 	
 	/**
 	 * Version finale de la recherche d'un CIL (pas de recherche sur l'UO pour le moment)
-	 * @param itCorrespondant
+	 * @param dtoSearch ItCorrespondantDtoSearch
 	 * @return Liste des IT Correspondant
 	 */
 	@GetMapping("/list/criteria")
@@ -180,10 +165,7 @@ public class ItCorrespondantController {
 	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
 
 		boolean isUpdate = false;
-				
-		logger.debug("id en entree " + id);
-		logger.debug("role en entree " + role);
-		
+
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
 		switch (role)
 		{
@@ -211,8 +193,8 @@ public class ItCorrespondantController {
 		try {
 			isUpdate = userManagment.updateRoleItCorrespondant(id, roles);
 		} catch (NotFoundException e) {
-			String msg = e.getCode() + " - " + e.getMessage();
-			logger.error("exception déclenchée : " + msg);
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error(msg);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 
@@ -253,8 +235,8 @@ public class ItCorrespondantController {
 		try {
 			isUpdate = userManagment.updatePasswordItCorrespondant(id, oldPassword, newPassword);
 		} catch (NotFoundException e) {
-			String msg = e.getCode() + " - " + e.getMessage();
-			logger.error("exception déclenchée : " + msg);
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error( msg);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 		
@@ -280,8 +262,8 @@ public class ItCorrespondantController {
 		try {
 			isDeleted = userManagment.deleteItCorrespondant(id);
 		} catch (NotFoundException e) {
-			String msg = e.getCode() + " - " + e.getMessage();
-			logger.error("exception déclenchée : " + msg);
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error(msg);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 		
@@ -306,8 +288,7 @@ public class ItCorrespondantController {
 		
 		Site site = new Site(dto.getSiteCode(),dto.getSiteName(),dto.getSiteAddress(), dto.getSitePostalCode(),dto.getSiteCity());
 		OrganizationUnity orgaUnit = new OrganizationUnity(dto.getOrgaUnitCode(),dto.getOrgaUnityType(),dto.getOrgaShortLabel(),site);
-		ItCorrespondant itCorrespondant = new ItCorrespondant(dto.getLastName(),dto.getFirstName(),dto.getCollaboraterId(),dto.getDeskPhoneNumber(),dto.getMobilePhoneNumber(),dto.getMailAdress(), orgaUnit);
-		return itCorrespondant;
+		return new ItCorrespondant(dto.getLastName(),dto.getFirstName(),dto.getCollaboraterId(),dto.getDeskPhoneNumber(),dto.getMobilePhoneNumber(),dto.getMailAdress(), orgaUnit);
 		}
 	
 	
@@ -318,27 +299,23 @@ public class ItCorrespondantController {
 	 * @return dto ItCorrespondantDtoResult
 	 */
 	private ItCorrespondantDtoResult mapperDomainToDto(ItCorrespondant itCorrespondant) {
-		
-		ItCorrespondantDtoResult dto = new ItCorrespondantDtoResult();
-		dto.setCollaboraterId(itCorrespondant.getCollaboraterId());
-		dto.setDeskPhoneNumber(itCorrespondant.getDeskPhoneNumber());
-		dto.setFirstName(itCorrespondant.getFirstNamePerson());
-		dto.setLastName(itCorrespondant.getLastNamePerson());
-		dto.setMailAdress(itCorrespondant.getMailAdress());
-		dto.setMobilePhoneNumber(itCorrespondant.getMobilePhoneNumber());
-		if (itCorrespondant.getOrgaUnit() !=null) {
-			dto.setOrgaShortLabel(itCorrespondant.getOrgaUnit().getOrgaShortLabel());
-			dto.setOrgaUnitCode(itCorrespondant.getOrgaUnit().getOrgaUnityCode());
-			dto.setOrgaUnityType(itCorrespondant.getOrgaUnit().getOrgaUnityType());
-			if (itCorrespondant.getOrgaUnit().getOrgaSite()!=null) {
-				dto.setSiteAddress(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteAddress());
-				dto.setSiteCity(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteCity());
-				dto.setSiteCode(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteCode());
-				dto.setSiteName(itCorrespondant.getOrgaUnit().getOrgaSite().getSiteName());
-				dto.setSitePostalCode(itCorrespondant.getOrgaUnit().getOrgaSite().getSitePostalCode());
-			}
-		}
-		dto.setRoles(itCorrespondant.getRoles());
+
+		ItCorrespondantDtoResult dto = new ItCorrespondantDtoResult(itCorrespondant.getCollaboraterId(),
+				itCorrespondant.getLastNamePerson(),
+				itCorrespondant.getFirstNamePerson(),
+				itCorrespondant.getDeskPhoneNumber(),
+				itCorrespondant.getMobilePhoneNumber(),
+				itCorrespondant.getMailAdress(),
+				itCorrespondant.getOrgaUnit().getOrgaUnityCode(),
+				itCorrespondant.getOrgaUnit().getOrgaUnityType(),
+				itCorrespondant.getOrgaUnit().getOrgaShortLabel(),
+				itCorrespondant.getOrgaUnit().getOrgaSite().getSiteCode(),
+				itCorrespondant.getOrgaUnit().getOrgaSite().getSiteName(),
+				itCorrespondant.getOrgaUnit().getOrgaSite().getSiteAddress(),
+				itCorrespondant.getOrgaUnit().getOrgaSite().getSitePostalCode(),
+				itCorrespondant.getOrgaUnit().getOrgaSite().getSiteCity(),
+				itCorrespondant.getRoles());
+
 		return dto;
 	}
 }

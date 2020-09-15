@@ -1,9 +1,9 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.projetfilrouge.pskype.domain.Site;
 import com.example.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
 @Component
@@ -28,13 +28,8 @@ public class SiteEntityMapper extends AbstractMapper<Site, SiteEntity>{
 		// on vérifie si l'entité existe en base et on la renvoie tel quel si c'est le cas
 		// (problème de duplication sinon avec le cascade)
 		if (entityRepo == null) {
-			SiteEntity siteEntity = new SiteEntity();
-			siteEntity.setSiteAddress(dto.getSiteAddress());
-			siteEntity.setSiteCity(dto.getSiteCity());
-			siteEntity.setSiteCode(dto.getSiteCode());
-			siteEntity.setSiteName(dto.getSiteName());
-			siteEntity.setSitePostalCode(dto.getSitePostalCode());			
-			return siteEntity;
+			return new SiteEntity(dto.getSiteCode(),dto.getSiteName(),dto.getSiteAddress(),dto.getSitePostalCode(),dto.getSiteCity());
+
 		} else return entityRepo;
 	
 	}

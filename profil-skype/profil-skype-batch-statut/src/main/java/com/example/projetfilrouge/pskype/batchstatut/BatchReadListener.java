@@ -17,8 +17,7 @@ public class BatchReadListener implements ItemReadListener<SkypeProfileEntity> {
 	
 	@Override
 	public void beforeRead() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

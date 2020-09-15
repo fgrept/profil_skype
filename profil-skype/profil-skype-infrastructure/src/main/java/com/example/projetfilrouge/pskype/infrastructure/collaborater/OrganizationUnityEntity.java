@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,7 +32,18 @@ public class OrganizationUnityEntity {
 	@Cascade(CascadeType.PERSIST)
 	private SiteEntity orgaSite;
 	
-	
+	public OrganizationUnityEntity(){
+
+	}
+
+	public OrganizationUnityEntity(String orgaUnityCode, String orgaUnityType, String orgaShortLabel, @NotNull SiteEntity orgaSite) {
+
+		this.orgaUnityCode = orgaUnityCode;
+		this.orgaUnityType = orgaUnityType;
+		this.orgaShortLabel = orgaShortLabel;
+		this.orgaSite = orgaSite;
+	}
+
 	public Long getOrgaUnityId() {
 		return orgaUnityId;
 	}

@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
 import java.util.List;
 

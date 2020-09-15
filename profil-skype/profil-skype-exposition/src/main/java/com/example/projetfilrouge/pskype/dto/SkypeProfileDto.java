@@ -1,11 +1,12 @@
 package com.example.projetfilrouge.pskype.dto;
 
 
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 
 /**
  * Classe exposée à l'utilisateur sur le profil Skype pour toute action de création, mise à jour
@@ -29,7 +30,7 @@ public class SkypeProfileDto {
 	private String exchUser;
 	private String objectClass;
 	//statut du profil : activé, désactivé, expiré
-	private StatusSkypeProfileEnum statusProfile;	
+	private StatusSkypeProfileEnum statusProfile;
 
 
 	// DONNEES DU COLLABORATEUR POSSEDANT CE PROFIL SKYPE
@@ -50,18 +51,7 @@ public class SkypeProfileDto {
 	public SkypeProfileDto() {
 		
 	}
-	
-	public SkypeProfileDto(String SIP, String collaboraterId) {
-		this.SIP=SIP;
-		this.enterpriseVoiceEnabled="true";
-		this.voicePolicy="EMEA-VP-FR_BDDF_NationalOnlyAuthorized";
-		this.dialPlan="DP-EN";
-		this.exchUser="mehdi.el@gmail.com";
-		this.exUmEnabled="false";
-		this.objectClass="user";
-		this.collaboraterId=collaboraterId;
-		this.statusProfile=StatusSkypeProfileEnum.ENABLED;
-	}
+
 	
 	public SkypeProfileDto(String sIP, String enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
 			String samAccountName, String exUmEnabled, String exchUser, String objectClass,

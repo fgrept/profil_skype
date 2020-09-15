@@ -1,8 +1,11 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.user;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
 
 
 /**

@@ -1,4 +1,6 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.skypeprofile;
+
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
 
 import java.util.List;
 /**

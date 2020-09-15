@@ -1,8 +1,9 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.collaborater;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
-import com.example.projetfilrouge.pskype.domain.Person;
+
 import com.example.projetfilrouge.pskype.domain.control.EmailControl;
 import com.example.projetfilrouge.pskype.domain.control.PhoneControl;
 
@@ -14,6 +15,7 @@ import com.example.projetfilrouge.pskype.domain.control.PhoneControl;
  * @version : V0.1
  *
  */
+
 public class Collaborater extends Person {
 	
 	// Seules les annotations personnalisées sont conservées : utilisées par le batch de chargement
@@ -23,6 +25,7 @@ public class Collaborater extends Person {
 	private String deskPhoneNumber;
 	@PhoneControl
 	private String mobilePhoneNumber;
+	@Email
 	@EmailControl
 	private String mailAdress;
 	private OrganizationUnity orgaUnit; 
@@ -47,27 +50,33 @@ public class Collaborater extends Person {
 		this.mailAdress=mailAdress;
 		this.setFirstNamePerson(prenom);
 		this.setLastNamePerson(nom);
-		this.setOrgaUnit(orgaUnit);
+		this.orgaUnit=orgaUnit;
 	}
 	
-	public Collaborater(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,String mailAdress) {
-		this.collaboraterId=id;
-		this.deskPhoneNumber=deskPhoneNumber;
-		this.mobilePhoneNumber=mobilePhoneNumber;
-		this.mailAdress=mailAdress;
-		this.setFirstNamePerson(prenom);
-		this.setLastNamePerson(nom);
-	}
+//	public Collaborater(String nom, String prenom, String id, String deskPhoneNumber, String mobilePhoneNumber,String mailAdress) {
+//		this.collaboraterId=id;
+//		this.deskPhoneNumber=deskPhoneNumber;
+//		this.mobilePhoneNumber=mobilePhoneNumber;
+//		this.mailAdress=mailAdress;
+//		this.setFirstNamePerson(prenom);
+//		this.setLastNamePerson(nom);
+//	}
 	
-	public Collaborater(@Size(max = 17) String collaboraterId, String deskPhoneNumber, String mobilePhoneNumber,
-			String mailAdress) {
-		super();
-		this.collaboraterId = collaboraterId;
-		this.deskPhoneNumber = deskPhoneNumber;
-		this.mobilePhoneNumber = mobilePhoneNumber;
-		this.mailAdress = mailAdress;
-	}
+//	public Collaborater(@Size(max = 17) String collaboraterId, String deskPhoneNumber, String mobilePhoneNumber,
+//			String mailAdress) {
+//		super();
+//		this.collaboraterId = collaboraterId;
+//		this.deskPhoneNumber = deskPhoneNumber;
+//		this.mobilePhoneNumber = mobilePhoneNumber;
+//		this.mailAdress = mailAdress;
+//	}
 
+	public Collaborater(@Size(max = 17) String collaboraterId,String lastName, String firstName, OrganizationUnity organizationUnity){
+		this.collaboraterId=collaboraterId;
+		this.setFirstNamePerson(firstName);
+		this.setLastNamePerson(lastName);
+		this.orgaUnit=organizationUnity;
+	}
 	
 	public String getCollaboraterId() {
 		return collaboraterId;
@@ -76,32 +85,20 @@ public class Collaborater extends Person {
 	public String getDeskPhoneNumber() {
 		return deskPhoneNumber;
 	}
-	public void setDeskPhoneNumber(String deskPhoneNumber) {
-		this.deskPhoneNumber = deskPhoneNumber;
-	}
+
 	public String getMobilePhoneNumber() {
 		return mobilePhoneNumber;
 	}
-	public void setMobilePhoneNumber(String mobilePhoneNumber) {
-		this.mobilePhoneNumber = mobilePhoneNumber;
-	}
+
 	public String getMailAdress() {
 		return mailAdress;
 	}
-	public void setMailAdress(String mailAdress) {
-		this.mailAdress = mailAdress;
-	}
+
 
 	public OrganizationUnity getOrgaUnit() {
 		return orgaUnit;
 	}
-	public void setOrgaUnit(OrganizationUnity orgaUnit) {
-		this.orgaUnit = orgaUnit;
-	}
-	
-	public void setCollaboraterId(String collaboraterId) {
-		this.collaboraterId = collaboraterId;
-	}
+
 
 	@Override
 	public int hashCode() {
@@ -126,22 +123,30 @@ public class Collaborater extends Person {
 		if (collaboraterId == null) {
 			if (other.collaboraterId != null)
 				return false;
-		} else if (!collaboraterId.equals(other.collaboraterId))
-			return false;
+		}
+		else
+			if (!collaboraterId.equals(other.collaboraterId))
+				return false;
 		if (deskPhoneNumber == null) {
 			if (other.deskPhoneNumber != null)
 				return false;
-		} else if (!deskPhoneNumber.equals(other.deskPhoneNumber))
+		}
+		else
+			if (!deskPhoneNumber.equals(other.deskPhoneNumber))
 			return false;
 		if (mailAdress == null) {
 			if (other.mailAdress != null)
 				return false;
-		} else if (!mailAdress.equals(other.mailAdress))
+		}
+		else
+			if (!mailAdress.equals(other.mailAdress))
 			return false;
 		if (mobilePhoneNumber == null) {
 			if (other.mobilePhoneNumber != null)
 				return false;
-		} else if (!mobilePhoneNumber.equals(other.mobilePhoneNumber))
+		}
+		else
+			if (!mobilePhoneNumber.equals(other.mobilePhoneNumber))
 			return false;
 		return true;
 	}

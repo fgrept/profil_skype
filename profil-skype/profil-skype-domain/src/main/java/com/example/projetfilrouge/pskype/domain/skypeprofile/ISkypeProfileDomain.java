@@ -1,4 +1,6 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.skypeprofile;
+
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
 
 import java.util.List;
 
@@ -54,7 +56,7 @@ public interface ISkypeProfileDomain {
 		
 		/**
 		 * Méthode de recherche d'un profil skype à partir d'un objet Collaborater
-		 * @param un collaborater
+		 * @param collaborater un collaborater
 		 * @return un objet profil skype
 		 */
 		SkypeProfile findSkypeProfileByCollaborater(Collaborater collaborater);

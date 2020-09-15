@@ -14,9 +14,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.example.projetfilrouge.pskype.domain.skypeprofile.TypeEventEnum;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.example.projetfilrouge.pskype.domain.TypeEventEnum;
 import com.example.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
 /**
  * 
@@ -40,13 +40,24 @@ public class SkypeProfileEventEntity {
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
-	
 	private SkypeProfileEntity skypeProfile;
 	//Suppression du NotNull
 	//Il est en effet tout à fait possible de supprimer un ItCorrespondant alors que l'event existe toujours.
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ItCorrespondantEntity itCorrespondant;
-	
+
+	public SkypeProfileEventEntity(){
+
+	}
+
+	public SkypeProfileEventEntity(TypeEventEnum typeEvent, String commentEvent, @NotNull SkypeProfileEntity skypeProfile, ItCorrespondantEntity itCorrespondant) {
+		this.typeEvent = typeEvent;
+		this.commentEvent = commentEvent;
+		this.skypeProfile = skypeProfile;
+		this.itCorrespondant = itCorrespondant;
+	}
+
 	public Long getIdSkypeProfileEvent() {
 		return idSkypeProfileEvent;
 	}

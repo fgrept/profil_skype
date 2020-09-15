@@ -19,11 +19,12 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
 /**
  * Entité CIL, créé par l'administrateur
  * @author Judicaël

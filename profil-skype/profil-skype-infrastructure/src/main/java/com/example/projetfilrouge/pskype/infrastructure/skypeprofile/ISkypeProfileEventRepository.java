@@ -14,14 +14,14 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface ISkypeProfileEventRepository extends JpaRepository<SkypeProfileEventEntity, Long>, JpaSpecificationExecutor<SkypeProfileEventEntity> {
 	/**
 	 * Lister tous les événements d'un profil skype
-	 * @param skypeProfile
+	 * @param SIP
 	 * @return une liste d'événements
 	 */
 	List<SkypeProfileEventEntity> findBySkypeProfileSIP(String SIP);
 	
 	/**
 	 * récupérer les événements relatifs à un It Correspondant
-	 * @param collaboraterId
+	 * @param itCorrespondant id annuaire de l'it correspondant
 	 * @return une liste d'événements
 	 */
 	List<SkypeProfileEventEntity> findByItCorrespondantItCorrespondantId(String itCorrespondant);

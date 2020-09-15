@@ -6,7 +6,9 @@ package com.example.projetfilrouge.pskype.domain.exception;
  *
  */
 public enum ExceptionListEnum {
-	
+
+	// il s'agit ci-dessous d'exceptions levées par les packages Collaborater
+	NOTFOUND13("NotFoundException","Collaborater non trouvé, das d'id annuaire en entrée"),
 	// il s'agit ci-dessous d'exceptions levées par les packages Profil Skype
 	ALLREADY1("AllReadyExistException", "Le collaborateur a déjà un profil skype"),
 	ALLREADY2("AllReadyExistException", "L'adresse SIP existe dejà"),
@@ -16,6 +18,7 @@ public enum ExceptionListEnum {
 	NOTFOUND4("NotFoundException", "cil demandant la modif du profil non trouvé"),
 	NOTFOUND10("NotFoundException", "demande de suppression d'un profil skype inexistant"),
 	NOTFOUND11("NotFoundException", "collaborateur inexistant pour la création d'un role cil"),
+	NOTFOUND12("NotFoundException","Pas d'événement trouvé, le profil skype n'existe pas"),
 	NOTAUTHORIZED1("NotAuthorized", "demande de mise à jour du profil à expiré"),
 	NOTAUTHORIZED2("NotAuthorized", "création d'un nouveau profil autrement que actif interdite"),
 	NOTAUTHORIZED3("NotAuthorized", "Modification d'autre champs interdite en cas de désactivation de profil"),
@@ -27,6 +30,7 @@ public enum ExceptionListEnum {
 	NOTFOUND8("NotFoundException", "mot de passe précédent non identique à celui en base"),
 	NOTFOUND9("NotFoundException", "cil dont on supprime les roles n'existe pas en base"),
 	ALLREADY3("AllReadyExistException", "Role CIL deja existant pour ce collaborateur");
+
 
 	private String ExceptionType;
 	private String ExceptionDetail;

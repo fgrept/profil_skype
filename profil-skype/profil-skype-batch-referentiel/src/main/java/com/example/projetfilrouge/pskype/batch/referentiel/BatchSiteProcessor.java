@@ -7,14 +7,14 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.ISiteEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.SiteEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.example.projetfilrouge.pskype.domain.Site;
-import com.example.projetfilrouge.pskype.infrastructure.user.ISiteEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.SiteEntity;
 /**
  * Processor des sites
  * Mise à jour des données si le site est présent
@@ -40,7 +40,10 @@ public class BatchSiteProcessor implements ItemProcessor<Site, SiteEntity>{
 	    Set<ConstraintViolation<Site>> constraintViolations = 
 	    	      validator.validate(site);
 	    if (constraintViolations.size() > 0 ) {
-	    	log.error("Données du site incorrect en ligne : " + cptLigne);
+	    	if (log.isErrorEnabled()){
+	    		String sLogError = "Données du site incorrect en ligne : " + cptLigne;
+				log.error(sLogError);
+			}
 	    	return null;
 	      }
 		

@@ -1,9 +1,9 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
 import com.example.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
 @Component
@@ -12,15 +12,14 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 	@Autowired
 	SiteEntityMapper siteMapper;
 	@Autowired
-	IOrganizationUnityRepository orgaUnityRepo;
+    IOrganizationUnityRepository orgaUnityRepo;
 	
 	@Override
 	public OrganizationUnity mapToDomain(OrganizationUnityEntity entity) {
 		
 		if (entity !=null) {
-			OrganizationUnity uo = new OrganizationUnity(entity.getOrgaUnityCode(),
+			return new OrganizationUnity(entity.getOrgaUnityCode(),
 			entity.getOrgaUnityType(), entity.getOrgaShortLabel(), siteMapper.mapToDomain(entity.getOrgaSite()));
-			return uo;
 		}else {
 			return null;
 		}
@@ -34,14 +33,12 @@ public class OrganizationUnityEntityMapper extends AbstractMapper<OrganizationUn
 		// on vérifie si l'entité existe en base et on la renvoie tel quel si c'est le cas
 		// (problème de duplication sinon avec le cascade)
 		if (uoEntityRepo == null) {
-			OrganizationUnityEntity uoEntity = new OrganizationUnityEntity();
-			uoEntity.setOrgaShortLabel(dto.getOrgaShortLabel());
-			uoEntity.setOrgaUnityCode(dto.getOrgaUnityCode());
-			uoEntity.setOrgaUnityType(dto.getOrgaUnityType());
 			if (dto.getOrgaSite()!=null) {
-				uoEntity.setOrgaSite(siteMapper.mapToEntity(dto.getOrgaSite()));
+				return new OrganizationUnityEntity(dto.getOrgaUnityCode(),dto.getOrgaUnityType(),dto.getOrgaShortLabel(),
+						siteMapper.mapToEntity(dto.getOrgaSite()));
 			}
-			return uoEntity;
+			return new OrganizationUnityEntity(dto.getOrgaUnityCode(),dto.getOrgaUnityType(),dto.getOrgaShortLabel(),
+					null);
 		} else return uoEntityRepo;
 
 	}

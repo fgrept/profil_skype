@@ -9,6 +9,16 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.ISkypeProfileDomain;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
+
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntityMapper;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.ICollaboraterRepository;
+import com.example.projetfilrouge.pskype.infrastructure.exception.JpaExceptionListEnum;
+import com.example.projetfilrouge.pskype.infrastructure.exception.JpaTechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +28,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.ISkypeProfileDomain;
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
 import com.example.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 import com.example.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
 import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntityMapper;
-import com.example.projetfilrouge.pskype.infrastructure.user.ICollaboraterRepository;
+
 
 /**
  * Dédiée au profil Skype Elle assure la correspondance entre les méthodes
@@ -66,51 +70,48 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	 * n'existe pas déjà. - Le collaborateur associé au profil skype n'a pas encore
 	 * de profil.
 	 * 
-	 * @param SkypeProfile skypeProfile
+	 * @param skypeProfile skypeProfile
 	 * @return 
 	 */
 	@Override
 
 	public boolean create(SkypeProfile skypeProfile) {
-	
+
 		logger.trace("SkypeProfileRepositoryImpl : create");
 		SkypeProfileEntity entity = skypeProfileRepository.findBySIP(skypeProfile.getSIP());
-		if (entity==null) {
+		if (entity == null) {
 			entity = entityMapperSkypeProfile.mapToEntity(skypeProfile);
 			entity.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 			CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId());
-			if (collaboraterEntity ==null) { 
+			if (collaboraterEntity == null) {
 				// on cherche a créer un profil skype pour un collaborateur qui n'existe pas encore
 				// par exemple pour les tests
 				skypeProfileRepository.save(entity);
-				return true;
-			}
-			else {
-				if (skypeProfileRepository.findByCollaborater(collaboraterEntity)==null) {
-//				entity.setCollaborater(collaboraterRepository.findDistinctByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
+			} else {
+				if (skypeProfileRepository.findByCollaborater(collaboraterEntity) == null) {//				entity.setCollaborater(collaboraterRepository.findDistinctByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
 					entity.setCollaborater(collaboraterRepository.findByCollaboraterId(skypeProfile.getCollaborater().getCollaboraterId()));
 
 					skypeProfileRepository.save(entity);
-					return true;
-				}
-				else {
-					String msg = skypeProfile.getCollaborater().getCollaboraterId()+" a déjà un profil skype";
+				} else {
+					String msg = skypeProfile.getCollaborater().getCollaboraterId() + " a déjà un profil skype";
 					logger.error(msg);
 					throw new AllReadyExistException(ExceptionListEnum.ALLREADY1, msg);
 				}
 			}
 
-		}else {
-			String msg = "Profil Skype "+skypeProfile.getSIP()+" existe déjà";
+		} else {
+			String msg = "Profil Skype " + skypeProfile.getSIP() + " existe déjà";
 			logger.error(msg);
 			throw new AllReadyExistException(ExceptionListEnum.ALLREADY2, msg);
 		}
+
+		return true;
 	}
 	
 
 	@Override
 	public SkypeProfile consultSkypeProfile(String sip, StatusSkypeProfileEnum status) {
-		// TODO Auto-generated method stub
+
 		return entityMapperSkypeProfile.mapToDomain(skypeProfileRepository.findBySIPAndStatusProfile(sip, status));
 		
 	}
@@ -120,23 +121,22 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	@Override
 
 	public boolean delete(String sip) {
-		
-		//Récupérer le profil Skype à partir de l'identifiant SIP		
+
+		//Récupérer le profil Skype à partir de l'identifiant SIP
 		SkypeProfileEntity skypeProfile = skypeProfileRepository.findBySIP(sip);
 
 		if (skypeProfile == null) {
-			String msg = "Profil skype non trouvé , SIP : "+sip;
+			String msg = "Profil skype non trouvé , SIP : " + sip;
 			logger.error(msg);
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND10, msg);
 		} else {
 
-			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.		
+			//Avant la suppresion du profil Skype, on supprime d'abord les événements correspondant.
 			skypeProfileEventRepository.deleteAll(skypeProfileEventRepository.findBySkypeProfileSIP(sip));
 			skypeProfileRepository.delete(skypeProfile);
 			return true;
 
 		}
-	
 
 	}
 
@@ -144,6 +144,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	public List<SkypeProfile> findAllSkypeProfile() {
 		
 		List<SkypeProfile> listSkypeProfile = new ArrayList<SkypeProfile>();
+
 		for (SkypeProfileEntity entity : skypeProfileRepository.findBySIPNotNull()) {
 			listSkypeProfile.add(entityMapperSkypeProfile.mapToDomain(entity));
 		}
@@ -168,7 +169,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	
 	private boolean verifyCriteriagAttribute(String criteria) {
 		
-		Field[] fields = new SkypeProfileEntity().getClass().getDeclaredFields();
+		Field[] fields = SkypeProfileEntity.class.getDeclaredFields();
 		 
 		for(Field field : fields){
 			if (field.getName().equals(criteria)) {
@@ -193,19 +194,19 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 //US005 Mise à jour d'un profil skype
 	@Override
 	public boolean update(SkypeProfile skypeProfileUpdated) {
-			
-		// Récupérer le SIP à partir de l'Id collaborater		
+
+		// Récupérer le SIP à partir de l'Id collaborater
 		SkypeProfileEntity sp = skypeProfileRepository
-				                .getSkypeProfilByIdCollab(skypeProfileUpdated.getCollaborater().getCollaboraterId()) ;
-				
-		// Récupérer le profil Skype en base de données à partir de l'identifiant SIP		
+				.getSkypeProfilByIdCollab(skypeProfileUpdated.getCollaborater().getCollaboraterId());
+
+		// Récupérer le profil Skype en base de données à partir de l'identifiant SIP
 		SkypeProfileEntity skypeProfileEntityDB = skypeProfileRepository.findBySIP(sp.getSIP());
 
 		if (skypeProfileEntityDB == null) {
 			String msg = "Profil skype non trouvé , SIP : " + skypeProfileUpdated.getSIP();
 			logger.error(msg);
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND2, msg);
-			
+
 		} else {
 
 			// Mapper le skypeProfil Domaine
@@ -220,8 +221,6 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 
 			return true;
 		}
-		
-
 	}
 
 	@Override
@@ -246,9 +245,8 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	public List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
 			String orgaUnityCode, String siteCode) {
-		
-		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
-		profilEntity = findAllSkypeProfileEntityFilters(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile,
+
+		List<SkypeProfileEntity> profilEntity = findAllSkypeProfileFilter(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile,
 				orgaUnityCode, siteCode);
 		
 		return entityMapperSkypeProfile.mapToDomainList(profilEntity);
@@ -265,12 +263,11 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	 * @param exchUser
 	 * @return
 	 */
-	private List<SkypeProfileEntity> findAllSkypeProfileEntityFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
+	private List<SkypeProfileEntity> findAllSkypeProfileFilter(Boolean enterpriseVoiceEnabled, String voicePolicy,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
 			String orgaUnityCode, String siteCode) {
-		
-		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
-		profilEntity = skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
+
+		return skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
 			
 			/**
 			 * 
@@ -283,55 +280,54 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 				
 				List<Predicate> predicates = new ArrayList<>();
 				if (enterpriseVoiceEnabled != null) {
-					logger.debug("recherche par enterpriseVoiceEnabled "+enterpriseVoiceEnabled);
+					logger.debug("recherche par enterpriseVoiceEnabled ");
 					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
 				}
 				
-				if (voicePolicy != null && voicePolicy != "") {
-					logger.debug("recherche par voicePolicy "+voicePolicy);
+				if (voicePolicy != null && !("".equals(voicePolicy))) {
+					logger.debug("recherche par voicePolicy ");
 					predicates.add(criteriaBuilder.equal(root.get("voicePolicy"),voicePolicy));
 				}
 				
-				if (dialPlan != null && dialPlan != "") {
-					logger.debug("recherche par dialPlan "+dialPlan);
+				if (dialPlan != null && !("".equals(dialPlan))) {
+					logger.debug("recherche par dialPlan ");
 					predicates.add(criteriaBuilder.equal(root.get("dialPlan"),dialPlan));
 				}				
 				
-				if (samAccountName != null && samAccountName != "") {
-					logger.debug("recherche par samAccountName "+samAccountName);
+				if (samAccountName != null && !("".equals(samAccountName))) {
+					logger.debug("recherche par samAccountName ");
 					predicates.add(criteriaBuilder.equal(root.get("samAccountName"),samAccountName));
 				}	
 
 				if (exUmEnabled != null) {
-					logger.debug("recherche par exUmEnabled "+exUmEnabled);
+					logger.debug("recherche par exUmEnabled ");
 					predicates.add(criteriaBuilder.equal(root.get("exUmEnabled"),exUmEnabled));
 				}
 				
-				if (exchUser != null && exchUser != "") {
-					logger.debug("recherche par exchUser "+exchUser);
+				if (exchUser != null && !("".equals(exchUser))) {
+					logger.debug("recherche par exchUser ");
 					predicates.add(criteriaBuilder.equal(root.get("exchUser"),exchUser));
 				}
 				
 				if (statusProfile != null) {
-					logger.debug("recherche par statusProfile "+statusProfile);
+					logger.debug("recherche par statusProfile ");
 					predicates.add(criteriaBuilder.equal(root.get("statusProfile"),statusProfile));
 				}
 				
 				if (orgaUnityCode != null) {
-					logger.debug("recherche par orgaUnityCode "+orgaUnityCode);
+					logger.debug("recherche par orgaUnityCode ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaUnityCode"),orgaUnityCode));
 				}
 				
 				if (siteCode != null) {
-					logger.debug("recherche par siteCode "+siteCode);
+					logger.debug("recherche par siteCode ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaSite").get("siteCode"),siteCode));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}
 
 		});
-		
-		return profilEntity;
+
 	}
 
 
@@ -339,28 +335,27 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	public List<SkypeProfile> findAllSkypeProfileFiltersPage(SkypeProfile profilDom, int numberPage, int sizePage,
 			String criteria, boolean sortAscending) {
 
-		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
+		List<SkypeProfileEntity> profilEntity;
 		String sortCriteria="statusProfile";
 		if(verifyCriteriaAttribute(criteria)) {
 			sortCriteria=criteria;
 		}
 		if (sortAscending) {
-			profilEntity=findAllSkypeProfileEntityFiltersPage(profilDom.isEnterpriseVoiceEnabled(),profilDom.getVoicePolicy(),profilDom.getDialPlan(),profilDom.getSamAccountName(),profilDom.isExUmEnabled(),profilDom.getExchUser(),profilDom.getStatusProfile(),
+			profilEntity=findAllSkypeProfilByPage(profilDom.isEnterpriseVoiceEnabled(),profilDom.getVoicePolicy(),profilDom.getDialPlan(),profilDom.getSamAccountName(),profilDom.isExUmEnabled(),profilDom.getExchUser(),profilDom.getStatusProfile(),
 					profilDom.getCollaborater().getOrgaUnit().getOrgaUnityCode(),profilDom.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode(),PageRequest.of(numberPage,sizePage,Sort.by(sortCriteria).ascending()));
 		}else {
-			profilEntity=findAllSkypeProfileEntityFiltersPage(profilDom.isEnterpriseVoiceEnabled(),profilDom.getVoicePolicy(),profilDom.getDialPlan(),profilDom.getSamAccountName(),profilDom.isExUmEnabled(),profilDom.getExchUser(),profilDom.getStatusProfile(),
+			profilEntity=findAllSkypeProfilByPage(profilDom.isEnterpriseVoiceEnabled(),profilDom.getVoicePolicy(),profilDom.getDialPlan(),profilDom.getSamAccountName(),profilDom.isExUmEnabled(),profilDom.getExchUser(),profilDom.getStatusProfile(),
 					profilDom.getCollaborater().getOrgaUnit().getOrgaUnityCode(),profilDom.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode(),PageRequest.of(numberPage,sizePage,Sort.by(sortCriteria).descending()));
 		
 		}
 		return entityMapperSkypeProfile.mapToDomainList(profilEntity);
 	}
 	
-	private List<SkypeProfileEntity> findAllSkypeProfileEntityFiltersPage(Boolean enterpriseVoiceEnabled, String voicePolicy,
+	private List<SkypeProfileEntity> findAllSkypeProfilByPage(Boolean enterpriseVoiceEnabled, String voicePolicy,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
 			String orgaUnityCode, String siteCode, Pageable pageable) {
-		
-		List<SkypeProfileEntity> profilEntity = new ArrayList<SkypeProfileEntity>();
-		profilEntity = skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
+
+		return skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
 			
 			/**
 			 * 
@@ -373,56 +368,54 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 				
 				List<Predicate> predicates = new ArrayList<>();
 				if (enterpriseVoiceEnabled != null) {
-					logger.debug("recherche par enterpriseVoiceEnabled "+enterpriseVoiceEnabled);
+					logger.debug("recherche par enterpriseVoiceEnabled ");
 					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
 				}
 				
-				if (voicePolicy != null && voicePolicy != "") {
-					logger.debug("recherche par voicePolicy "+voicePolicy);
+				if (voicePolicy != null && !("".equals(voicePolicy))) {
+					logger.debug("recherche par voicePolicy");
 					predicates.add(criteriaBuilder.equal(root.get("voicePolicy"),voicePolicy));
 				}
 				
-				if (dialPlan != null && dialPlan != "") {
-					logger.debug("recherche par dialPlan "+dialPlan);
+				if (dialPlan != null && !("".equals(dialPlan))) {
+					logger.debug("recherche par dialPlan ");
 					predicates.add(criteriaBuilder.equal(root.get("dialPlan"),dialPlan));
 				}				
 				
-				if (samAccountName != null && samAccountName != "") {
-					logger.debug("recherche par samAccountName "+samAccountName);
+				if (samAccountName != null && !("".equals(samAccountName))) {
+					logger.debug("recherche par samAccountName ");
 					predicates.add(criteriaBuilder.equal(root.get("samAccountName"),samAccountName));
 				}	
 
 				if (exUmEnabled != null) {
-					logger.debug("recherche par exUmEnabled "+exUmEnabled);
+					logger.debug("recherche par exUmEnabled ");
 					predicates.add(criteriaBuilder.equal(root.get("exUmEnabled"),exUmEnabled));
 				}
 				
-				if (exchUser != null && exchUser != "") {
-					logger.debug("recherche par exchUser "+exchUser);
+				if (exchUser != null && !("".equals(exchUser))) {
+					logger.debug("recherche par exchUser ");
 					predicates.add(criteriaBuilder.equal(root.get("exchUser"),exchUser));
 				}
 				
 				if (statusProfile != null) {
-					logger.debug("recherche par statusProfile "+statusProfile);
+					logger.debug("recherche par statusProfile ");
 					predicates.add(criteriaBuilder.equal(root.get("statusProfile"),statusProfile));
 				}
 				
 				if (orgaUnityCode != null) {
-					logger.debug("recherche par orgaUnityCode "+orgaUnityCode);
+					logger.debug("recherche par orgaUnityCode ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaUnityCode"),orgaUnityCode));
 				}
 				
 				if (siteCode != null) {
-					logger.debug("recherche par siteCode "+siteCode);
+					logger.debug("recherche par siteCode ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaSite").get("siteCode"),siteCode));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}
 
-//		},PageRequest.of(numberPage, sizePage,Sort.by(sortCriteria).ascending())).getContent();
 		},PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),pageable.getSort())).getContent();
-			
-		return profilEntity;
+
 	}
 
 	
@@ -451,9 +444,5 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		
 		return skypeProfileRepository.count();
 	}
-
-
-
-
 
 }

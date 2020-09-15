@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.ICollaboraterDomain;
+import com.example.projetfilrouge.pskype.domain.email.IMailDomain;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.ISkypeProfileEventDomain;
+import com.example.projetfilrouge.pskype.domain.user.IItCorrespondantDomain;
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.projetfilrouge.pskype.application.email.MailSenderProfile;
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.ICollaboraterDomain;
-import com.example.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.example.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
 import com.example.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
 import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
 
@@ -34,7 +34,8 @@ import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
 public class ItCorrespondantManagementImpl implements IItCorrespondantManagment {
 
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
-	
+	Random rand = new Random();
+
 	@Autowired
 	private IItCorrespondantDomain itCorrespodantDomain;
 	
@@ -45,13 +46,14 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	private ISkypeProfileEventDomain eventDomain;
 	
 	@Autowired
-	private MailSenderProfile mailSenderProfile;
+	private IMailDomain mailSenderProfile;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	/**
 	 * Cette méthode permet la création d'un utilisateur avec le rôle ROLE_USER par défaut (US010)
-	 * @param ItCorrespondant itCorrespondant
+	 * @param idAnnuaire
+	 * @param roles
 	 * @return boolean
 	 * @author Judicaël
 	 * @version V0.2
@@ -59,30 +61,34 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	@Override
 	public boolean createItCorrespondant(String idAnnuaire, Set<RoleTypeEnum> roles) {
 
-		Random rand = new Random();
+
 		String passwordBrut = Integer.toString(rand.nextInt(999999)); 
 		String passwordCode = passwordEncoder.encode(passwordBrut);
-		logger.info("création du mot de passe : " + passwordBrut + " pour le collaborateur : " + idAnnuaire);
+
 		
 		Collaborater collab = collaboraterDomain.findByCollaboraterId(idAnnuaire);
 		
 		if (collab == null) {
 			String msg = "collaborateur "  + idAnnuaire + " inexistant pour la création du cil";
-			logger.error(msg);
+			if (logger.isErrorEnabled()){
+				logger.error(msg);
+			}
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND11, msg);
 		}
 		
 		String emailToSend = collab.getMailAdress();
 		
 		try {
-			mailSenderProfile.sendMail("Bonjour," + "\n\n" + "Le mot de passe pour accéder à l'application est : " + "\n\n" + 
+			String subject = "Création de votre accès à l'application 'Gestion des profils Skype'";
+			mailSenderProfile.sendMail(subject, "Bonjour," + "\n\n" + "Le mot de passe pour accéder à l'application est : " + "\n\n" +
 						passwordBrut + "\n\n" +
 						"Merci de le modifier à la première connexion", emailToSend);
 		} catch (Exception e) {
-			logger.error("Procédure d'envoi par mail du mot de passe en échec");
+			if (logger.isErrorEnabled()){
+				logger.error("Procédure d'envoi par mail du mot de passe en échec");
+			}
 			return false;
 		}
-		
 		return itCorrespodantDomain.createRoleCILtoCollab(idAnnuaire, roles, passwordCode);
 	}
 	
@@ -94,7 +100,7 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	 */
 	@Override
 	public boolean createFullItCorrespondant(ItCorrespondant itCorrespondant) {
-		logger.debug("Création full it Correspondant "+itCorrespondant.getCollaboraterId());
+
 		itCorrespondant.addRole(RoleTypeEnum.ROLE_USER);
 		String password = itCorrespondant.getPassword();
 		itCorrespondant.setPassword(passwordEncoder.encode(password));
@@ -118,8 +124,8 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	/**
 	 * Mise à jour du rôle de l'utilisateur (user, resp ou admin)
 	 * L'ajout d'un rôle annule et remplace le précédent
-	 * @param String id annuaire du l'utilisateur
-	 * @param RoleTypeEnum nouveau role de l'utilisateur
+	 * @param idAnnuaire id annuaire du l'utilisateur
+	 * @param roles nouveau role de l'utilisateur
 	 * @return boolean
 	 */
 	@Override
@@ -131,7 +137,7 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 
 	/**
 	 * Suppression d'un CIL (US008)
-	 * @param String idAnnuaire
+	 * @param idAnnuaire
 	 * @return boolean
 	 */
 	@Override
@@ -140,17 +146,18 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
 		if (itCorrespondant == null) {
 			String msg = "Utilisateur non trouvé en base, id "+idAnnuaire;
-			logger.error(msg);
+			if (logger.isErrorEnabled()){
+				logger.error(msg);
+			}
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND9, msg);
-		}else {
-			if (eventDomain.findAllEventByItCorrespondantId(itCorrespondant.getCollaboraterId()) != null) {
-				
-				if (!eventDomain.updateEventItCorrespondant(itCorrespondant,null)) {
+		}else
+			{
+			if ((eventDomain.findAllEventByItCorrespondantId(itCorrespondant.getCollaboraterId()) != null) &&
+			(!eventDomain.updateEventItCorrespondant(itCorrespondant,null))) {
 					return false;
 				}
 			}
-			return itCorrespodantDomain.delete(itCorrespondant);
-		}
+		return itCorrespodantDomain.delete(itCorrespondant);
 	}
 
 
@@ -164,7 +171,8 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	 * Mise à jour du password d'un CIL à partir de son id annuaire
 	 * Dédié à Spring Security
 	 * @param idAnnuaire
-	 * @param password
+	 * @param newPassword
+	 * @param oldPassword
 	 * @return boolean
 	 */
 	@Override
@@ -172,7 +180,10 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 		ItCorrespondant itCorrespondant = itCorrespodantDomain.findItCorrespondantByCollaboraterId(idAnnuaire);
 		if (itCorrespondant == null) {
 			String msg = "Utilisateur non trouvé en base, id "+idAnnuaire;
-			logger.error(msg);
+
+			if (logger.isErrorEnabled()){
+				logger.error(msg);
+			}
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND7, msg);
 		}else {
 			if (passwordEncoder.matches(oldPassword, itCorrespondant.getPassword())) {
@@ -180,9 +191,16 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 				return itCorrespodantDomain.updatePassword(idAnnuaire,newEncryptedPassword);
 			}else {
 				String msg = "ancien mot de passe incorrect : "+oldPassword;
-				logger.error(msg);
+				if (logger.isErrorEnabled()){
+					logger.error(msg);
+				}
 				throw new NotFoundException(ExceptionListEnum.NOTFOUND8, msg);	
 			}
 		}	
+	}
+
+	@Override
+	public Long countItCorrespondant() {
+		return itCorrespodantDomain.countItCorrespondant();
 	}
 }

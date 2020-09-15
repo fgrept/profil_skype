@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.skypeprofile;
 /**
  * Cette énumération contient la liste des événements possibles sur un profil skype
  * CREATION : à la création du profil skype uniquement

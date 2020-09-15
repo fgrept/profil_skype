@@ -1,4 +1,7 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.skypeprofile;
+
+
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
 
 import java.util.Date;
 
@@ -27,6 +30,15 @@ public class SkypeProfileEvent {
 		this.typeEvent=typeEvent;
 	}
 
+	public SkypeProfileEvent(Date dateEvent, String comment,SkypeProfile profile,ItCorrespondant CIL, TypeEventEnum typeEvent) {
+
+		this.dateEvent=dateEvent;
+		this.commentEvent=comment;
+		this.skypeProfile=profile;
+		this.itCorrespondant=CIL;
+		this.typeEvent=typeEvent;
+	}
+
 	public TypeEventEnum getTypeEvent() {
 		return typeEvent;
 	}
@@ -47,21 +59,7 @@ public class SkypeProfileEvent {
 	public ItCorrespondant getItCorrespondant() {
 		return itCorrespondant;
 	}
-	public void setDateEvent(Date dateEvent) {
-		this.dateEvent = dateEvent;
-	}
-	public void setTypeEvent(TypeEventEnum typeEvent) {
-		this.typeEvent = typeEvent;
-	}
-	public void setCommentEvent(String commentEvent) {
-		this.commentEvent = commentEvent;
-	}
-	public void setSkypeProfile(SkypeProfile skypeProfile) {
-		this.skypeProfile = skypeProfile;
-	}
-	public void setItCorrespondant(ItCorrespondant itCorrespondant) {
-		this.itCorrespondant = itCorrespondant;
-	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -82,11 +80,13 @@ public class SkypeProfileEvent {
 		if (commentEvent == null) {
 			if (other.commentEvent != null)
 				return false;
-		} else if (!commentEvent.equals(other.commentEvent))
-			return false;
+		}
+		else
+			if (!commentEvent.equals(other.commentEvent))
+				return false;
 		if (typeEvent != other.typeEvent)
 			return false;
 		return true;
 	}
-	
+
 }

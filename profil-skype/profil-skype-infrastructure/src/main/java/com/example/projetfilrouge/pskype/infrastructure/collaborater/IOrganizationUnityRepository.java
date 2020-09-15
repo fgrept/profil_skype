@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

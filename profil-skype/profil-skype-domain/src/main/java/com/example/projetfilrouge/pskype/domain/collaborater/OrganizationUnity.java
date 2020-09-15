@@ -1,11 +1,11 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.collaborater;
 
 /**
  * Contient la liste des UO d'appartenance aux collaborateurs avec le site associé.
  * Ces UO représentent une vision logique
  * Les informations de cette classe sont issues d'un référentiel externe et ne sont pas modifiables par la transaction.
  * @author Judicaël
- * @version : V0.1
+ * @version : V0.2
  *
  */
 public class OrganizationUnity {
@@ -25,6 +25,11 @@ public class OrganizationUnity {
 		this.orgaSite=site;
 	}
 
+	public OrganizationUnity(String code, Site site){
+		this.orgaUnityCode=code;
+		this.orgaSite=site;
+	}
+
 	public String getOrgaUnityCode() {
 		return orgaUnityCode;
 	}
@@ -41,20 +46,5 @@ public class OrganizationUnity {
 		return orgaSite;
 	}
 
-	public void setOrgaUnityCode(String orgaUnityCode) {
-		this.orgaUnityCode = orgaUnityCode;
-	}
-
-	public void setOrgaUnityType(String orgaUnityType) {
-		this.orgaUnityType = orgaUnityType;
-	}
-
-	public void setOrgaShortLabel(String orgaShortLabel) {
-		this.orgaShortLabel = orgaShortLabel;
-	}
-
-	public void setOrgaSite(Site orgaSite) {
-		this.orgaSite = orgaSite;
-	}
 
 }

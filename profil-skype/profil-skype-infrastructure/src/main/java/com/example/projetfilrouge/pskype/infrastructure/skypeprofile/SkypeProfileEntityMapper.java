@@ -1,14 +1,17 @@
 package com.example.projetfilrouge.pskype.infrastructure.skypeprofile;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
+
 import com.example.projetfilrouge.pskype.infrastructure.AbstractMapper;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntityMapper;
-import com.example.projetfilrouge.pskype.infrastructure.user.ItCorrespondantRepositoryImpl;
+
 
 /**
  * 
@@ -19,58 +22,64 @@ import com.example.projetfilrouge.pskype.infrastructure.user.ItCorrespondantRepo
 @Component
 public class SkypeProfileEntityMapper extends AbstractMapper<SkypeProfile, SkypeProfileEntity> {
 	
-	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantRepositoryImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEntityMapper.class);
 	
 	@Autowired
 	CollaboraterEntityMapper colloraterEntityMapper;
 	
 	/**
 	 * Cette méthode récupère le contenu de la couche infra vers la classe ItCorrespondant de la classe Domaine
-	 * @param L'entité SkypeProfileEntity de la couche de persistance
+	 * @param entity L'entité SkypeProfileEntity de la couche de persistance
 	 * @return l'objet SkypeProfile de la classe de la couche Domain
 	 */	
 	@Override
 	public SkypeProfile mapToDomain(SkypeProfileEntity entity) {
 		
 		logger.debug("SkypeProfileEntityMapper : mapToDomain");
-		
-		SkypeProfile skypeProfile = new SkypeProfile();
-		skypeProfile.setSIP(entity.getSIP());
-		skypeProfile.setDialPlan(entity.getDialPlan());
-		skypeProfile.setEnterpriseVoiceEnabled(entity.isEnterpriseVoiceEnabled());
-		skypeProfile.setExchUser(entity.getExchUser());
-	//	skypeProfile.setExpirationDate(entity.getExpirationDate());
-		skypeProfile.setExUmEnabled(entity.isExUmEnabled());
-		skypeProfile.setObjectClass(entity.getObjectClass());
-		skypeProfile.setSamAccountName(entity.getSamAccountName());
-		skypeProfile.setStatusProfile(entity.getStatusProfile());
-		skypeProfile.setVoicePolicy(entity.getVoicePolicy());
-		skypeProfile.setCollaborater(colloraterEntityMapper.mapToDomain(entity.getCollaborater()));
-		return skypeProfile;
+		Collaborater collaborater=null;
+		if (entity.getCollaborater()!=null) {
+			collaborater = colloraterEntityMapper.mapToDomain(entity.getCollaborater());
+		}
+
+		return new SkypeProfile(entity.getSIP(),
+				entity.isEnterpriseVoiceEnabled(),
+				entity.getVoicePolicy(),
+				entity.getDialPlan(),
+				entity.getSamAccountName(),
+				entity.isExUmEnabled(),
+				entity.getExchUser(),
+				entity.getObjectClass(),
+				collaborater,
+				entity.getStatusProfile(),
+				entity.getExpirationDate());
 	}
 	
 	/**
 	 * Cette méthode récupère le contenu de la classe SkypeProfile de la classe Domain vers l'entité persistance de la couche infra  
-	 * @param l'objet SkypeProfile de la classe de la couche Domain
-	 * @return L'entité SkypeProfileEntity de la couche de persistance
+	 * @param dto l'objet SkypeProfile de la classe de la couche Domain
+	 * @return SkypeProfileEntity L'entité SkypeProfileEntity de la couche de persistance
 	 */
 	@Override
 	public SkypeProfileEntity mapToEntity(SkypeProfile dto) {
 		
 		logger.debug("SkypeProfileEntityMapper : mapToEntity");
-		SkypeProfileEntity skypeProfileEntity = new SkypeProfileEntity();
-		skypeProfileEntity.setCollaborater(colloraterEntityMapper.mapToEntity(dto.getCollaborater()));
-		skypeProfileEntity.setDialPlan(dto.getDialPlan());
-		skypeProfileEntity.setEnterpriseVoiceEnabled(dto.isEnterpriseVoiceEnabled());
-		skypeProfileEntity.setExchUser(dto.getExchUser());
-		skypeProfileEntity.setExpirationDate(dto.getExpirationDate());
-		skypeProfileEntity.setExUmEnabled(dto.isExUmEnabled());
-		skypeProfileEntity.setObjectClass(dto.getObjectClass());
-		skypeProfileEntity.setSamAccountName(dto.getSamAccountName());
-		skypeProfileEntity.setSIP(dto.getSIP());
-		skypeProfileEntity.setStatusProfile(dto.getStatusProfile());
-		skypeProfileEntity.setVoicePolicy(dto.getVoicePolicy());
-		return skypeProfileEntity;
+		CollaboraterEntity collaboraterEntity=null;
+		if (dto.getCollaborater()!=null){
+			collaboraterEntity = colloraterEntityMapper.mapToEntity(dto.getCollaborater());
+		}
+
+		return new SkypeProfileEntity(dto.getSIP(),
+				dto.isEnterpriseVoiceEnabled(),
+				dto.getVoicePolicy(),
+				dto.getDialPlan(),
+				dto.getSamAccountName(),
+				dto.isExUmEnabled(),
+				dto.getExchUser(),
+				dto.getObjectClass(),
+				dto.getStatusProfile(),
+				dto.getExpirationDate(),
+				collaboraterEntity);
+
 	}
 
 }

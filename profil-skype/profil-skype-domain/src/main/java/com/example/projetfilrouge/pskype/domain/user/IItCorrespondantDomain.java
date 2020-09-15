@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.user;
 
 import java.util.List;
 import java.util.Set;
@@ -75,4 +75,10 @@ public interface IItCorrespondantDomain {
  * @param newPassword
  */
 	boolean updatePassword(String idAnnuaire, String newPassword);
+
+	/**
+	 * Retourne le nombre d'it correspondant
+	 * @return
+	 */
+    Long countItCorrespondant();
 }

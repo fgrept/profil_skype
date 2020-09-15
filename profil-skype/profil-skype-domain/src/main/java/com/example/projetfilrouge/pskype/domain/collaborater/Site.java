@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.collaborater;
 
 import javax.validation.constraints.Size;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
  * Liste des sites physiques avec leur adresse
  * Cette classe permet de situer physiquement un collaborateur
  * @author Judicaël
- * @version V0.1
+ * @version V0.2
  *
  */
 public class Site {
@@ -35,6 +35,10 @@ public class Site {
 		this.siteCity=city;
 	}
 
+	public Site(String code){
+		this.siteCode=code;
+	}
+
 	public String getSiteCode() {
 		return siteCode;
 	}
@@ -59,20 +63,4 @@ public class Site {
 		this.siteCode = siteCode;
 	}
 
-	public void setSiteName(String siteName) {
-		this.siteName = siteName;
-	}
-
-	public void setSiteAddress(String siteAddress) {
-		this.siteAddress = siteAddress;
-	}
-
-	public void setSitePostalCode(String sitePostalCode) {
-		this.sitePostalCode = sitePostalCode;
-	}
-
-	public void setSiteCity(String siteCity) {
-		this.siteCity = siteCity;
-	}
-	
 }

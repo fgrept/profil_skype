@@ -25,9 +25,15 @@ public class BatchStepListener implements StepExecutionListener {
 
 	@Override
 	public ExitStatus afterStep(StepExecution stepExecution) {
-		
-		log.info("Nb enregistrements mis à jour : "+stepExecution.getWriteCount());
-		log.info("Nb enregistrements écartés : "+stepExecution.getWriteSkipCount());
+
+		if (log.isInfoEnabled()){
+			String sLogNbUpdate = "Nb enregistrements mis à jour : "+stepExecution.getWriteCount();
+			String sLogNbError = "Nb enregistrements écartés : "+stepExecution.getWriteSkipCount();
+			log.info(sLogNbUpdate);
+			log.info(sLogNbError);
+		}
+
+
 
 		return ExitStatus.COMPLETED;
 	}

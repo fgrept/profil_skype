@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,8 +23,20 @@ public class SiteEntity {
 	private String siteAddress;
 	private String sitePostalCode;
 	private String siteCity;
-	
-	
+
+	public SiteEntity(){
+
+	}
+
+	public SiteEntity(String siteCode, String siteName, String siteAddress, String sitePostalCode, String siteCity) {
+
+		this.siteCode = siteCode;
+		this.siteName = siteName;
+		this.siteAddress = siteAddress;
+		this.sitePostalCode = sitePostalCode;
+		this.siteCity = siteCity;
+	}
+
 	public Long getSiteId() {
 		return siteId;
 	}

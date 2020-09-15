@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.projetfilrouge.pskype.application.ICollaboraterManagment;
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
-import com.example.projetfilrouge.pskype.domain.Site;
+
 import com.example.projetfilrouge.pskype.dto.CollaboraterDto;
 
 import io.swagger.annotations.Api;
@@ -36,7 +37,7 @@ import io.swagger.annotations.ApiResponses;
  * Spring security : classe correspondant au module de paramétrage, réservée aux administrateurs
  */
 @RestController
-@RequestMapping("/collaborater")
+@RequestMapping("/v1/collaborater")
 @Secured({"ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "Collaborater REST Controller : contient toutes les opérations pour manager un collaborateur")
 public class CollaboraterController {
@@ -58,7 +59,13 @@ public class CollaboraterController {
 		}
 		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
-	
+
+	@GetMapping("/count")
+	@ApiOperation("Compte le nombre de collaborateurs")
+	@ApiResponse(code=200, message = "Nombre de collaborateurs retourné")
+	public ResponseEntity<Long> countCollaborater(){
+		return new ResponseEntity<Long>(collaboraterManagment.countCollaborater(),HttpStatus.OK);
+	}
 	
 	@GetMapping("/list/{numberPage}/{sizePage}/{criteria}")
 	@ApiOperation(value = "Récupère un ensemble de collaborateurs stockés selon des critères de pagination")
@@ -148,38 +155,34 @@ public class CollaboraterController {
 		
 		Site site = new Site(dto.getSiteCode(),dto.getSiteName(),dto.getSiteAddress(), dto.getSitePostalCode(),dto.getSiteCity());
 		OrganizationUnity orgaUnit = new OrganizationUnity(dto.getOrgaUnitCode(),dto.getOrgaUnityType(),dto.getOrgaShortLabel(),site);
-		Collaborater collaborater = new Collaborater(dto.getLastName(),dto.getFirstName(),dto.getCollaboraterId(),dto.getDeskPhoneNumber(),dto.getMobilePhoneNumber(),dto.getMailAdress(), orgaUnit);
-		return collaborater;
+		return new Collaborater(dto.getLastName(),dto.getFirstName(),dto.getCollaboraterId(),dto.getDeskPhoneNumber(),dto.getMobilePhoneNumber(),dto.getMailAdress(), orgaUnit);
+
 		}
 	
 	
 	/**
 	 * Mapper de type It Correspondant vers collaborater(données de niveau collaborateur)
 	 * A voir si dans un second, ce mapper n'est pas externalisé dans une classe dédiée afin de ne pas exposer les objets de niveau domaine
-	 * @param itCorrespondant
+	 * @param collaborater
 	 * @return dto ItCorrespondantDtoResult
 	 */
 	private CollaboraterDto mapperDomainToDto(Collaborater collaborater) {
 		
-		CollaboraterDto dto = new CollaboraterDto();
-		dto.setCollaboraterId(collaborater.getCollaboraterId());
-		dto.setDeskPhoneNumber(collaborater.getDeskPhoneNumber());
-		dto.setFirstName(collaborater.getFirstNamePerson());
-		dto.setLastName(collaborater.getLastNamePerson());
-		dto.setMailAdress(collaborater.getMailAdress());
-		dto.setMobilePhoneNumber(collaborater.getMobilePhoneNumber());
-		if (collaborater.getOrgaUnit() !=null) {
-			dto.setOrgaShortLabel(collaborater.getOrgaUnit().getOrgaShortLabel());
-			dto.setOrgaUnitCode(collaborater.getOrgaUnit().getOrgaUnityCode());
-			dto.setOrgaUnityType(collaborater.getOrgaUnit().getOrgaUnityType());
-			if (collaborater.getOrgaUnit().getOrgaSite()!=null) {
-				dto.setSiteAddress(collaborater.getOrgaUnit().getOrgaSite().getSiteAddress());
-				dto.setSiteCity(collaborater.getOrgaUnit().getOrgaSite().getSiteCity());
-				dto.setSiteCode(collaborater.getOrgaUnit().getOrgaSite().getSiteCode());
-				dto.setSiteName(collaborater.getOrgaUnit().getOrgaSite().getSiteName());
-				dto.setSitePostalCode(collaborater.getOrgaUnit().getOrgaSite().getSitePostalCode());
-			}
-		}
+		CollaboraterDto dto = new CollaboraterDto(collaborater.getCollaboraterId(),
+				collaborater.getLastNamePerson(),
+				collaborater.getFirstNamePerson(),
+				collaborater.getDeskPhoneNumber(),
+				collaborater.getMobilePhoneNumber(),
+				collaborater.getMailAdress(),
+				collaborater.getOrgaUnit().getOrgaUnityCode(),
+				collaborater.getOrgaUnit().getOrgaUnityType(),
+				collaborater.getOrgaUnit().getOrgaShortLabel(),
+				collaborater.getOrgaUnit().getOrgaSite().getSiteCode(),
+				collaborater.getOrgaUnit().getOrgaSite().getSiteName(),
+				collaborater.getOrgaUnit().getOrgaSite().getSiteAddress(),
+				collaborater.getOrgaUnit().getOrgaSite().getSitePostalCode(),
+				collaborater.getOrgaUnit().getOrgaSite().getSiteCity());
+
 		return dto;
 	}
 }

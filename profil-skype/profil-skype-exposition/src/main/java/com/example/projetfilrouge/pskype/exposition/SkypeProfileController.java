@@ -3,6 +3,11 @@ package com.example.projetfilrouge.pskype.exposition;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.projetfilrouge.pskype.application.ICollaboraterManagment;
 import com.example.projetfilrouge.pskype.application.ISkypeProfileManagement;
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
-import com.example.projetfilrouge.pskype.domain.Site;
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
+
 import com.example.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 import com.example.projetfilrouge.pskype.domain.exception.NotAuthorizedException;
 import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
@@ -34,7 +36,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-//import jdk.internal.net.http.common.Log;
 
 /**
  * Classe exposant des API rest dédiées à profil Skype
@@ -42,7 +43,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/v1/profile")
 @Secured({"ROLE_USER","ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "Skype profile REST Controller : contient toutes les opérations pour manager profil skype")
 public class SkypeProfileController {
@@ -83,8 +84,8 @@ public class SkypeProfileController {
 		try {
 			isCreated = skypeProfileManagement.addNewSkypeProfile (profilWithCollab,idAnnuaireCIL,comment);
 		} catch (AllReadyExistException e) {
-			String msg = e.getCode() + " - " + e.getMessage();
-			logger.error("exception déclenchée : " + msg);
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error(msg);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, msg, e);
 		}
 		
@@ -109,13 +110,12 @@ public class SkypeProfileController {
 	public ResponseEntity<String> deleteSkypeProfil(@PathVariable("sip") String sip) {
 		
 		boolean isDeleted = false;
-		
-		logger.debug("sip en entrée : " + sip);
+
 		try {
 			isDeleted = skypeProfileManagement.deleteSkypeProfile(sip);	
 		} catch (NotFoundException e) {
-			String msg = e.getCode() + " - " + e.getMessage();
-			logger.error("exception déclenchée : " + msg);
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error(msg);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 		}
 
@@ -161,13 +161,13 @@ public class SkypeProfileController {
 				isModified = skypeProfileManagement.updateSkypeProfile(profilToChange, idAnnuaireCIL,comment);
 
 			} catch (NotFoundException e) {
-				String msg = e.getCode() + " - " + e.getMessage();
-				logger.error("exception déclenchée : " + msg);
+				String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+				logger.error(msg);
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
 				
 			} catch (NotAuthorizedException e) {
-				String msg = e.getCode() + " - " + e.getMessage();
-				logger.error("exception déclenchée : " + msg);
+				String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+				logger.error(msg);
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg, e);
 			}
 			
@@ -262,8 +262,7 @@ public class SkypeProfileController {
 			@ApiResponse(code = 304,message = "Critères de pagination incorrects"),
 	})
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
-		
-		logger.debug("numberPage : "+numberPage+" sizePage : "+sizePage+" criteria : "+criteria);
+
 		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
 		if (numberPage<0) {
 			logger.error("numéro de page négatif");
@@ -292,13 +291,20 @@ public class SkypeProfileController {
 	private SkypeProfile mapDtoToDomain (SkypeProfileDtoCreate profilDto, Collaborater collab) {
 		
 		// la date d'expiration est calculée par le domain
-		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(), Boolean.valueOf(profilDto.getEnterpriseVoiceEnabled()),
-				profilDto.getVoicePolicy(), profilDto.getDialPlan(), profilDto.getSamAccountName(),
-				Boolean.valueOf(profilDto.getExUmEnabled()),profilDto.getExchUser(),profilDto.getObjectClass(),
-				collab);
+		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(),
+				Boolean.valueOf(profilDto.getEnterpriseVoiceEnabled()),
+				profilDto.getVoicePolicy(),
+				profilDto.getDialPlan(),
+				profilDto.getSamAccountName(),
+				Boolean.valueOf(profilDto.getExUmEnabled()),
+				profilDto.getExchUser(),
+				profilDto.getObjectClass(),
+				collab,
+				profilDto.getStatusProfile());
 		
 		profilDom.setStatusProfile(profilDto.getStatusProfile());
-		logger.info(profilDom.toString());
+		String sLogInfo = profilDom.toString();
+		logger.info(sLogInfo);
 		return profilDom;
 		
 	}
@@ -306,19 +312,21 @@ public class SkypeProfileController {
 	private SkypeProfile mapDtoSearchToDomain (SkypeProfileDtoSearch profilDto) {
 		
 		// création d'un "collaborateur" fictif pour les critères de recherches
-		Collaborater collab = new Collaborater();
-		OrganizationUnity uo = new OrganizationUnity();
-		uo.setOrgaUnityCode(profilDto.getOrgaUnityCode());
-		Site site = new Site();
-		site.setSiteCode(profilDto.getSiteCode());
-		uo.setOrgaSite(site);
-		collab.setOrgaUnit(uo);
-		
+		Site site = new Site(profilDto.getSiteCode());
+		OrganizationUnity uo = new OrganizationUnity(profilDto.getOrgaUnityCode(), site);
+		Collaborater collab = new Collaborater(profilDto.getCollaboraterId(), profilDto.getLastName(),profilDto.getFirstName(),uo);
+
 		// suite du mapper pour les attributs de recherche du profil
-		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(), Boolean.valueOf(profilDto.getEnterpriseVoiceEnabled()),
-				profilDto.getVoicePolicy(), profilDto.getDialPlan(), profilDto.getSamAccountName(),
-				Boolean.valueOf(profilDto.getExUmEnabled()),profilDto.getExchUser(),profilDto.getObjectClass(),
-				collab);
+		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(),
+				Boolean.valueOf(profilDto.getEnterpriseVoiceEnabled()),
+				profilDto.getVoicePolicy(),
+				profilDto.getDialPlan(),
+				profilDto.getSamAccountName(),
+				Boolean.valueOf(profilDto.getExUmEnabled()),
+				profilDto.getExchUser(),profilDto.getObjectClass(),
+				collab,
+				profilDto.getStatusProfile(),
+				profilDto.getExpirationDate());
 		
 		return profilDom;
 		

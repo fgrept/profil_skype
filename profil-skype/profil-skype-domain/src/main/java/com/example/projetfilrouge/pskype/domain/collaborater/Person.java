@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.collaborater;
 
 /**
  * Classe abstraite d'une personne
@@ -45,13 +45,17 @@ public abstract class Person {
 		if (firstNamePerson == null) {
 			if (other.firstNamePerson != null)
 				return false;
-		} else if (!firstNamePerson.equals(other.firstNamePerson))
-			return false;
+		}
+		else
+			if (!firstNamePerson.equals(other.firstNamePerson))
+				return false;
 		if (lastNamePerson == null) {
 			if (other.lastNamePerson != null)
 				return false;
-		} else if (!lastNamePerson.equals(other.lastNamePerson))
-			return false;
+		}
+		else
+			if (!lastNamePerson.equals(other.lastNamePerson))
+				return false;
 		return true;
 	}
 	

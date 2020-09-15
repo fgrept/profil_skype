@@ -1,5 +1,12 @@
 package com.example.projetfilrouge.pskype.application;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.ICollaboraterDomain;
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.*;
+import com.example.projetfilrouge.pskype.domain.user.IItCorrespondantDomain;
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,26 +18,16 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import com.example.projetfilrouge.pskype.infrastructure.*;
 import com.example.projetfilrouge.pskype.application.ISkypeProfileManagement;
 import com.example.projetfilrouge.pskype.application.SkypeProfileManagmentImpl;
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.ICollaboraterDomain;
-import com.example.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.example.projetfilrouge.pskype.domain.ISkypeProfileDomain;
-import com.example.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
-import com.example.projetfilrouge.pskype.domain.Site;
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
-import com.example.projetfilrouge.pskype.domain.SkypeProfileEvent;
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
-import com.example.projetfilrouge.pskype.domain.TypeEventEnum;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest (classes = {SkypeProfileManagmentImpl.class})
-
+@Import(TestConfig.class)
 /**
  * Dans cette classe de test, deux évènements sont identiques si le commentaire et le type sont identiques (cf méthode equals)
  *  
@@ -57,6 +54,9 @@ public class SkypeProfilTest {
 	@MockBean
 	private ISkypeProfileEventDomain eventDomain;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 
 	@Test
 	@DisplayName("Vérifier que l'on crée un évènement quand on crée un profil")
@@ -64,7 +64,7 @@ public class SkypeProfilTest {
 
 		//Given
 		Collaborater collab = new Collaborater("McEnroe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
-		SkypeProfile skypeProfile = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		SkypeProfile skypeProfile = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		ItCorrespondant collabCil = new ItCorrespondant("Power", "Monsieur", "212114", "01-45-34-45-56", "07-12-13-14-15", "mr.power@gmail.com",uo);
 		String eventComment = "c'est mon premier test";
 
@@ -91,9 +91,9 @@ public class SkypeProfilTest {
 		String eventComment = "c'est mon premier test";
 		String comment = "Commentaire utilisateur : <<" + eventComment + ">>";
 
-		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		profileAvt.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
-		SkypeProfile profileAprès = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		SkypeProfile profileAprès = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		profileAprès.setStatusProfile(StatusSkypeProfileEnum.DISABLED);
 
 		SkypeProfileEvent eventAfter = new SkypeProfileEvent(comment, profileAprès, collabCil, TypeEventEnum.DESACTIVATION);
@@ -121,9 +121,9 @@ public class SkypeProfilTest {
 		String eventComment = "c'est mon premier test";
 		String comment = "Commentaire utilisateur : <<" + eventComment + ">>";
 
-		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		profileAvt.setStatusProfile(StatusSkypeProfileEnum.DISABLED);
-		SkypeProfile profileAprès = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		SkypeProfile profileAprès = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		profileAprès.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 
 		SkypeProfileEvent eventAfter = new SkypeProfileEvent(comment, profileAprès, collabCil, TypeEventEnum.ACTIVATION);
@@ -151,8 +151,8 @@ public class SkypeProfilTest {
 		String eventComment = "c'est mon premier test";
 		String comment = "Commentaire utilisateur : <<c'est mon premier test>> - Champs modifiés : dialPlan : DP-IT, exUmEnabled : true";
 
-		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
-		SkypeProfile profileAprès = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-IT", "M002117014", true, "Linked Mailbox", "user", collab);
+		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile profileAprès = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-IT", "M002117014", true, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		
 		SkypeProfileEvent eventAfter = new SkypeProfileEvent(comment, profileAprès, collabCil, TypeEventEnum.MODIFICATION);
 		
@@ -178,9 +178,9 @@ public class SkypeProfilTest {
 		String eventComment = "c'est mon premier test";
 		String comment = "Commentaire utilisateur : <<" + eventComment + ">>" + " - nouveau SIP : " + "sip:stefanieeee.radelle@live.bnpparibas.com";
 		
-		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		SkypeProfile profileAvt = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		profileAvt.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
-		SkypeProfile profileAprès = new SkypeProfile("sip:stefanieeee.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab);
+		SkypeProfile profileAprès = new SkypeProfile("sip:stefanieeee.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", "user", collab,StatusSkypeProfileEnum.ENABLED);
 		profileAprès.setStatusProfile(StatusSkypeProfileEnum.ENABLED);
 		
 		SkypeProfileEvent eventAfter = new SkypeProfileEvent(comment, profileAprès, collabCil, TypeEventEnum.CREATION);

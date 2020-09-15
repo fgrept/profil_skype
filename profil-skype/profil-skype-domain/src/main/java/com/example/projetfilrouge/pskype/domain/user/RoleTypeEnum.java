@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.user;
 /**
  * Liste des rôles dans l'application :
  * ROLE_USER : permet uniquement la consultation d'un collaborateur du profil skype et des événements associés.

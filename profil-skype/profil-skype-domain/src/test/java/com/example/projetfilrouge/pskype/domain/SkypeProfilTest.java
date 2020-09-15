@@ -1,12 +1,13 @@
 package com.example.projetfilrouge.pskype.domain;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
-import com.example.projetfilrouge.pskype.domain.Site;
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;

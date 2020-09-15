@@ -1,7 +1,7 @@
 package com.example.projetfilrouge.pskype.application;
 import java.util.List;
 
-import com.example.projetfilrouge.pskype.domain.Collaborater;;
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
 
 /**
  * 
@@ -36,7 +36,7 @@ public interface ICollaboraterManagment {
 	 * Methode findAllCollaboraterPage permettant de gérer la pagination
 	 * @param numberPage
 	 * @param sizePage
-	 * @param criteria
+	 * @param attribute attribut pour le critère de tri
 	 * @param sortAscending
 	 * @return une liste de collaborateurs
 	 */
@@ -44,13 +44,19 @@ public interface ICollaboraterManagment {
 	
 	/**
 	 * Methode findAllCollaboraterCriteriaPage permettant de récuperer une liste de collaborateur par critère de recherche
-	 * @param collaborater
+	 * @param mapperDtoToDomain collaborater
 	 * @param numberPage
 	 * @param sizePage
-	 * @param attribute
-	 * @param sortAscending
-	 * @return
+	 * @param criteria attribut pour le tri
+	 * @param b sortAscending
+	 * @return une liste de collaborateurs
 	 */
 	List<Collaborater> listCollaboraterCriteriaSortByPage(Collaborater mapperDtoToDomain, int numberPage, int sizePage,
-			String criteria, boolean b);	
+			String criteria, boolean b);
+
+	/**
+	 * Méthode qui retourne le nombre de collaborateurs en table
+	 * @return Long nb de collaborateurs
+	 */
+    Long countCollaborater();
 }

@@ -2,7 +2,8 @@ package com.example.projetfilrouge.pskype.application;
 
 import java.util.List;
 
-import com.example.projetfilrouge.pskype.domain.SkypeProfileEvent;
+
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfileEvent;
 
 /**
  * 

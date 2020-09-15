@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.ICollaboraterDomain;
+import com.example.projetfilrouge.pskype.infrastructure.exception.JpaExceptionListEnum;
+import com.example.projetfilrouge.pskype.infrastructure.exception.JpaTechnicalException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +22,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.ICollaboraterDomain;
 
-//import jdk.internal.org.jline.utils.Log;
+
 
 import java.lang.reflect.*;
 
@@ -36,8 +39,9 @@ import java.lang.reflect.*;
 @Repository
 public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 
-	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantRepositoryImpl.class);
-	
+	private static Logger logger = LoggerFactory.getLogger(CollaboraterRepositoryImpl.class);
+	private String attributeCriteria = "collaboraterId";
+
 	@Autowired
 	CollaboraterEntityMapper mapperCollab;
 	
@@ -46,23 +50,25 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 	
 	@Override
 	public boolean create(Collaborater collaborater) {
-		
-		CollaboraterEntity entity = collaboraterRepository.save(mapperCollab.mapToEntity(collaborater));
-		if (entity !=null) {
-			return true;
-		}else {
-			return false;
+		CollaboraterEntity entity;
+		try{
+			entity = collaboraterRepository.save(mapperCollab.mapToEntity(collaborater));
+		}catch (Exception e){
+			throw new JpaTechnicalException(JpaExceptionListEnum.WRITE_ACCESS,"Pb lors de la création d'un collaborater");
 		}
+		return (entity !=null);
+
 	}
 
 	@Override
 	public Collaborater findByCollaboraterId(String idAnnuaire) {
-		// TODO Auto-generated method stub
-//		CollaboraterEntity entity = collaboraterRepository.findByCollaboraterId(idAnnuaire);
-//		CollaboraterEntity entity = collaboraterRepository.findDistinctByCollaboraterId(idAnnuaire);
+
 		CollaboraterEntity entity = collaboraterRepository.findByCollaboraterId(idAnnuaire);
 		if (entity == null) {
-			logger.info("Pas de collaborateur pour id :"+logger);
+			if (logger.isInfoEnabled()){
+				String sLogInfo = "Pas de collaborateur pour id :"+idAnnuaire;
+				logger.info(sLogInfo);
+			}
 			return null;
 		}else {
 			return mapperCollab.mapToDomain(entity);
@@ -78,18 +84,6 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 			listCollaborater.add(mapperCollab.mapToDomain(entity));
 		}
 		
-	//	List<CollaboraterEntity> list = collaboraterRepositoryPage.findAll(PageRequest.of(0, 10)).get;
-		List<CollaboraterEntity> list = collaboraterRepository.findByCollaboraterIdNotNull(PageRequest.of(0, 5,Sort.by("CollaboraterId").descending()));
-		for (CollaboraterEntity entity : list) {
-			logger.info(entity.toString());
-		}
-		
-		Field[] fields = new CollaboraterEntity().getClass().getDeclaredFields();
- 
-		for(Field f : fields){
-			logger.info(f.getName());
-		}
-		
 		return listCollaborater;
 	}
 
@@ -98,7 +92,7 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 			boolean sortAscending) {
 		List<CollaboraterEntity> listEntity;
 		boolean sortCriteria = verifyCriteriaAttribute(criteria);
-		String attributeCriteria = "collaboraterId";
+
 		if (sortCriteria) {
 			attributeCriteria=criteria;
 		}
@@ -134,14 +128,14 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 			String attribute, boolean sortAscending) {
 		
 		List<CollaboraterEntity> listEntity;
-		String attributeCriteria = "collaboraterId";
+
 		if (verifyCriteriaAttribute(attribute)) {
 			attributeCriteria=attribute;
 		}
 		if (sortAscending) {
-			listEntity = findAllCollaboraterEntityCriteriaPage(collaborater,PageRequest.of(numberPage,sizePage,Sort.by(attributeCriteria).ascending()));
+			listEntity = findAllCollaboraterByPage(collaborater,PageRequest.of(numberPage,sizePage,Sort.by(attributeCriteria).ascending()));
 		}else {
-			listEntity = findAllCollaboraterEntityCriteriaPage(collaborater,PageRequest.of(numberPage,sizePage,Sort.by(attributeCriteria).descending()));
+			listEntity = findAllCollaboraterByPage(collaborater,PageRequest.of(numberPage,sizePage,Sort.by(attributeCriteria).descending()));
 		}
 		
 		List<Collaborater> listCollaborater = new ArrayList<Collaborater>();
@@ -152,12 +146,16 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 		return listCollaborater;
 	}
 
-	private List<CollaboraterEntity> findAllCollaboraterEntityCriteriaPage(Collaborater collaborater, Pageable pageable) {
-		// TODO Auto-generated method stub
+	@Override
+	public Long countCollarater() {
+		return collaboraterRepository.count();
+	}
+
+	private List<CollaboraterEntity> findAllCollaboraterByPage(Collaborater collaborater, Pageable pageable) {
+
 		
-		List<CollaboraterEntity> listCollaborater = new ArrayList<CollaboraterEntity>();
-		
-		listCollaborater = collaboraterRepository.findAll(new Specification<CollaboraterEntity>() {
+
+		return collaboraterRepository.findAll(new Specification<CollaboraterEntity>() {
 			
 		/**
 			 * 
@@ -167,45 +165,45 @@ public class CollaboraterRepositoryImpl implements ICollaboraterDomain {
 		@Override
 		public Predicate toPredicate(Root<CollaboraterEntity> root, CriteriaQuery<?> query,
 				CriteriaBuilder criteriaBuilder) {
-			
+
 			List<Predicate> predicates = new ArrayList<>();
-			if ((collaborater.getCollaboraterId()!=null) && (collaborater.getCollaboraterId()!="")){
-				predicates.add(criteriaBuilder.equal(root.get("collaboraterId"),collaborater.getCollaboraterId()));
+			if ((collaborater.getCollaboraterId()!=null) && !("".equals(collaborater.getCollaboraterId()))){
+				predicates.add(criteriaBuilder.equal(root.get(attributeCriteria),collaborater.getCollaboraterId()));
 				logger.info("recherche par collaboraterId");
 			}
-			if ((collaborater.getFirstNamePerson()!=null) && (collaborater.getFirstNamePerson()!="")) {
+			if ((collaborater.getFirstNamePerson()!=null) && !("".equals(collaborater.getFirstNamePerson()))) {
 				predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")),"%"+collaborater.getFirstNamePerson().toLowerCase()+"%"));
-				logger.info("recherche par firstName "+collaborater.getFirstNamePerson());
+				logger.info("recherche par firstName ");
 			}
-			if ((collaborater.getLastNamePerson()!=null) && (collaborater.getLastNamePerson()!="")) {
+			if ((collaborater.getLastNamePerson()!=null) && !("".equals(collaborater.getLastNamePerson()))) {
 				predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")),"%"+collaborater.getLastNamePerson().toLowerCase()+"%"));
-				logger.info("recherche par lastName "+collaborater.getLastNamePerson());
+				logger.info("recherche par lastName ");
 			}
-			if ((collaborater.getDeskPhoneNumber()!= null) && (collaborater.getDeskPhoneNumber()!= "")){
-				logger.info("recherche par deskPhoneNumber "+ collaborater.getDeskPhoneNumber());
+			if ((collaborater.getDeskPhoneNumber()!= null) && !("".equals(collaborater.getDeskPhoneNumber()))){
+				logger.info("recherche par deskPhoneNumber ");
 				predicates.add(criteriaBuilder.equal(root.get("deskPhoneNumber"),collaborater.getDeskPhoneNumber()));
 			}
-			if ((collaborater.getMobilePhoneNumber()!= null) && (collaborater.getMobilePhoneNumber()!= "")){
-				logger.info("recherche par mobilePhone "+ collaborater.getMobilePhoneNumber());
+			if ((collaborater.getMobilePhoneNumber()!= null) && !("".equals(collaborater.getMobilePhoneNumber()))){
+				logger.info("recherche par mobilePhone ");
 				predicates.add(criteriaBuilder.equal(root.get("mobilePhoneNumber"),collaborater.getMobilePhoneNumber()));
 			}
-			if ((collaborater.getMailAdress()!= null) && (collaborater.getMailAdress()!= "")){
-				logger.info("recherche par mailAddress "+ collaborater.getMailAdress());
+			if ((collaborater.getMailAdress()!= null) && !("".equals(collaborater.getMailAdress()))){
+				logger.info("recherche par mailAddress ");
 				predicates.add(criteriaBuilder.equal(root.get("mailAdress"),collaborater.getMailAdress()));
 			}
-			if ((collaborater.getOrgaUnit()!=null) && (collaborater.getOrgaUnit().getOrgaUnityCode()!=null) && (collaborater.getOrgaUnit().getOrgaUnityCode()!="")){
-				logger.info("recherche par code UO "+ collaborater.getOrgaUnit().getOrgaUnityCode());
+			if ((collaborater.getOrgaUnit()!=null) && (collaborater.getOrgaUnit().getOrgaUnityCode()!=null) && !("".equals(collaborater.getOrgaUnit().getOrgaUnityCode()))){
+				logger.info("recherche par code UO ");
 				predicates.add(criteriaBuilder.equal(root.get("orgaUnit").get("orgaUnityCode"),collaborater.getOrgaUnit().getOrgaUnityCode()));
 			}
-			if ((collaborater.getOrgaUnit().getOrgaSite()!=null) && (collaborater.getOrgaUnit().getOrgaSite().getSiteCode()!=null) && (collaborater.getOrgaUnit().getOrgaSite().getSiteCode()!="")) {
-				logger.info("recherche par code Site "+ collaborater.getOrgaUnit().getOrgaSite().getSiteCode());
+			if ((collaborater.getOrgaUnit().getOrgaSite()!=null) && (collaborater.getOrgaUnit().getOrgaSite().getSiteCode()!=null) && !("".equals(collaborater.getOrgaUnit().getOrgaSite().getSiteCode()))) {
+				logger.info("recherche par code Site ");
 				predicates.add(criteriaBuilder.equal(root.get("orgaUnit").get("orgaSite").get("siteCode"),collaborater.getOrgaUnit().getOrgaSite().getSiteCode()));
 			}
 			
 			return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 		}
 		},PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),pageable.getSort()));
-		return listCollaborater;
+
 	}
 
 

@@ -1,4 +1,4 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.collaborater;
 
 import java.util.List;
 
@@ -51,4 +51,9 @@ public interface ICollaboraterDomain {
 	List<Collaborater> findAllCollaboraterCriteriaPage(Collaborater collaborater, int numberPage, int sizePage,
 			String attribute, boolean sortAscending);
 
+	/**
+	 *
+	 * @return nb de collaborateurs
+	 */
+    Long countCollarater();
 }

@@ -1,7 +1,10 @@
 package com.example.projetfilrouge.pskype.batch.referentiel.dto;
 
+import org.springframework.data.annotation.Immutable;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 
 public class OrganizationUnityDtoBatch {
 	
@@ -55,5 +58,4 @@ public class OrganizationUnityDtoBatch {
 	public void setSiteCode(String siteCode) {
 		this.siteCode = siteCode;
 	}
-
 }

@@ -1,9 +1,11 @@
-package com.example.projetfilrouge.pskype.infrastructure.user;
+package com.example.projetfilrouge.pskype.infrastructure.collaborater;
 
+
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.projetfilrouge.pskype.domain.Collaborater;
+
 import com.example.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
 
@@ -19,27 +21,26 @@ import com.example.projetfilrouge.pskype.infrastructure.AbstractMapper;
 public class CollaboraterEntityMapper extends AbstractMapper<Collaborater, CollaboraterEntity> {
 	
 	@Autowired
-	OrganizationUnityEntityMapper orgaMapper;
+    OrganizationUnityEntityMapper orgaMapper;
 	
 	/**
 	 * Cette méthode récupère le contenu de la couche infra vers la classe Collaborater de la classe Domaine
-	 * @param L'entité Collaborateur de la couche de persistance
-	 * @return l'objet Collaborateur de la classe de la couche Domain
+	 * @param entity L'entité Collaborateur de la couche de persistance
+	 * @return Collaborater l'objet Collaborateur de la classe de la couche Domain
 	 */
 	@Override
 	public Collaborater mapToDomain(CollaboraterEntity entity) {
 		
-		Collaborater collaborater = new Collaborater(entity.getLastName(), 
+		return new Collaborater(entity.getLastName(),
 				entity.getFirstName(), entity.getCollaboraterId(), 
 				entity.getDeskPhoneNumber(), entity.getMobilePhoneNumber(), 
 				entity.getMailAdress(), orgaMapper.mapToDomain(entity.getOrgaUnit()));
-		
-		return collaborater;
+
 	}
 
 	/**
 	 * Cette méthode récupère le contenu de la classe Collaborater de la classe Domain vers l'entité persistance de la couche infra  
-	 * @param l'objet Collaborateur de la classe de la couche Domain
+	 * @param dto l'objet Collaborateur de la classe de la couche Domain
 	 * @return L'entité Collaborateur de la couche de persistance
 	 */
 	@Override

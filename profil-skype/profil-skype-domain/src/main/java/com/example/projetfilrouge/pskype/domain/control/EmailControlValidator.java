@@ -7,9 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class EmailControlValidator implements ConstraintValidator<EmailControl, String> {
 
-	public void initialize(EmailControl constraintAnnotation) {
-		
-	}
+
 	@Override
 	public boolean isValid(String email, ConstraintValidatorContext context) {
 		

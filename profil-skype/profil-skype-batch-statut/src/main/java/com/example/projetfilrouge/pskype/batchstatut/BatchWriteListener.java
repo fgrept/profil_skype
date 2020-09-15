@@ -22,7 +22,7 @@ public class BatchWriteListener implements ItemWriteListener<SkypeProfileEntity>
 
 	@Override
 	public void beforeWrite(List<? extends SkypeProfileEntity> items) {
-		// TODO Auto-generated method stub
+
 		
 	}
 

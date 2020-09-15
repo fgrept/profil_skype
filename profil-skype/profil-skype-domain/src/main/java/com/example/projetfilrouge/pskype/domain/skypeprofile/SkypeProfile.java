@@ -1,5 +1,7 @@
-package com.example.projetfilrouge.pskype.domain;
+package com.example.projetfilrouge.pskype.domain.skypeprofile;
 
+
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -8,8 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * Cette classe contient les informations d'un profil Skype.
@@ -19,9 +20,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SkypeProfile {
-	
-	private static Logger logger = LoggerFactory.getLogger(SkypeProfile.class);
-	
+
 	//SIP : adresse mail skype. Ex : judicael.tige@live.bnpparibas.com
 	private String SIP;
 	
@@ -87,7 +86,7 @@ public class SkypeProfile {
 	}
 
 	public SkypeProfile(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
-			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass, Collaborater collaborater) {
+			String samAccountName, boolean exUmEnabled, String exchUser, String objectClass, Collaborater collaborater, StatusSkypeProfileEnum status) {
 		super();
 		SIP = sIP;
 		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
@@ -99,85 +98,61 @@ public class SkypeProfile {
 		this.objectClass = objectClass;
 		this.collaborater = collaborater;
 		this.expirationDate = calcDateExpiration();
+		this.statusProfile=status;
+	}
+	public SkypeProfile(String sIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
+				 String samAccountName, boolean exUmEnabled, String exchUser, String objectClass,
+				 Collaborater collaborater, StatusSkypeProfileEnum status, Date expirationDate)
+	{
+		SIP = sIP;
+		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
+		this.voicePolicy = voicePolicy;
+		this.dialPlan = dialPlan;
+		this.samAccountName = samAccountName;
+		this.exUmEnabled = exUmEnabled;
+		this.exchUser = exchUser;
+		this.objectClass = objectClass;
+		this.collaborater = collaborater;
+		this.expirationDate = expirationDate;
+		this.statusProfile=status;
 	}
 
 	public String getSIP() {
 		return SIP;
 	}
 
-	/**
-	 * 
-	 * @param sIP : il s'agit d'une adresse email.
-	 * L'adresse mail fera l'objet d'un contrôle en respect de la RFC822
-	 */
-	public void setSIP(String sIP) {
-		SIP = sIP;
-	}
-	
 	public boolean isEnterpriseVoiceEnabled() {
 		return enterpriseVoiceEnabled;
-	}
-
-	public void setEnterpriseVoiceEnabled(boolean enterpriseVoiceEnabled) {
-		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
 	}
 
 	public String getVoicePolicy() {
 		return voicePolicy;
 	}
 
-	public void setVoicePolicy(String voicePolicy) {
-		this.voicePolicy = voicePolicy;
-	}
-
 	public String getDialPlan() {
 		return dialPlan;
-	}
-
-	public void setDialPlan(String dialPlan) {
-		this.dialPlan = dialPlan;
 	}
 
 	public String getSamAccountName() {
 		return samAccountName;
 	}
 
-	public void setSamAccountName(String samAccountName) {
-		this.samAccountName = samAccountName;
-	}
-
 	public boolean isExUmEnabled() {
 		return exUmEnabled;
-	}
-
-	public void setExUmEnabled(boolean exUmEnabled) {
-		this.exUmEnabled = exUmEnabled;
 	}
 
 	public String getExchUser() {
 		return exchUser;
 	}
 
-	public void setExchUser(String exchUser) {
-		this.exchUser = exchUser;
-	}
-
 	public String getObjectClass() {
 		return objectClass;
-	}
-
-	public void setObjectClass(String objectClass) {
-		this.objectClass = objectClass;
 	}
 
 	public Collaborater getCollaborater() {
 		return collaborater;
 	}
 
-	public void setCollaborater(Collaborater collaborater) {
-		this.collaborater = collaborater;
-	}
-	
 	private Date calcDateExpiration () {
 		// La date d'expiration du profil skype est de 2 ans à partir de sa date de création 
 		Calendar cal = Calendar.getInstance();
@@ -189,10 +164,10 @@ public class SkypeProfile {
 	/**
 	 * Méthode permettant de détecter les différences entre deux profils skype
 	 * sur tous les champs de classe
-	 * @param profil skype avant
-	 * @param profil skype apres
+	 * @param avant profil skype avant
+	 * @param apres profil skype apres
 	 * @return Liste des attributs modifiés
-	 * @throws retourner une exception du type IllegalAccessException
+	 * @throws IllegalAccessException retourner une exception du type IllegalAccessException
 	 */
 	
 	public static List<String> difference(SkypeProfile avant, SkypeProfile apres) throws IllegalAccessException {
@@ -203,13 +178,13 @@ public class SkypeProfile {
 	        Object value1 = field.get(avant);
 	        Object value2 = field.get(apres); 
 	        if ( (value1 != null && value2 != null) 
-	        		&& (field.getName() != "SIP")
-	        		&& (field.getName() != "collaborater")) {
-	            logger.debug(field.getName() + "=" + value1);
-	            logger.debug(field.getName() + "=" + value2);
-	            if (!Objects.equals(value1, value2)) {
+	        		&& !("SIP".equals(field.getName()))
+	        		&& !("collaborater".equals(field.getName()))
+
+					&& !Objects.equals(value1, value2)) {
+
 	                changedProperties.add(field.getName()+ " : " + value2);
-	            }
+
 	        }
 	    }
 	    return changedProperties;
