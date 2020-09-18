@@ -3,12 +3,13 @@ package com.example.projetfilrouge.pskype.batchstatut;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+
 import com.example.projetfilrouge.pskype.infrastructure.skypeprofile.SkypeProfileEntity;
 /**
  * Classe processor où sont implémentées les règles de gestion
@@ -29,9 +30,10 @@ public class BatchProcessor implements ItemProcessor<SkypeProfileEntity, SkypePr
 		log.info("Date avec 7 jours : "+ajouterJour(date,nbDaysExpired).toString());
 		if (item.getExpirationDate() ==null ||(item.getExpirationDate().compareTo(ajouterJour(date,nbDaysExpired)))<0) {
 			item.setStatusProfile(StatusSkypeProfileEnum.EXPIRED);
+			return item;
 		}
 
-		return item;
+		return null;
 	}
 
 	/**

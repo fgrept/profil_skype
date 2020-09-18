@@ -7,15 +7,15 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.IOrganizationUnityRepository;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.ISiteEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.OrganizationUnityEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.SiteEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.example.projetfilrouge.pskype.infrastructure.user.IOrganizationUnityRepository;
-import com.example.projetfilrouge.pskype.infrastructure.user.ISiteEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.OrganizationUnityEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.SiteEntity;
 import com.example.projetfilrouge.pskype.batch.referentiel.dto.OrganizationUnityDtoBatch;
 
 
@@ -41,7 +41,11 @@ public class BatchUoProcessor implements ItemProcessor<OrganizationUnityDtoBatch
 	    Set<ConstraintViolation<OrganizationUnityDtoBatch>> constraintViolations = 
 	    	      validator.validate(item);
 	    if (constraintViolations.size() > 0 ) {
-	    	log.error("Données de l'uo incorrects en ligne : " + cptLigne);
+	    	if (log.isErrorEnabled()){
+	    		String sLogError = "Données de l'uo incorrects en ligne : " + cptLigne;
+				log.error(sLogError);
+			}
+
 	    	return null;
 	      }
 	    
@@ -51,7 +55,10 @@ public class BatchUoProcessor implements ItemProcessor<OrganizationUnityDtoBatch
 			entity.setOrgaUnityCode(item.getOrgaUnityCode());
 			SiteEntity siteEntity = siteRepository.findBySiteCode(item.getSiteCode());
 			if (siteEntity ==null) {
-				log.error("Pas de code site "+item.getSiteCode()+" pour uo "+item.getOrgaUnityCode());
+				if (log.isErrorEnabled()) {
+					String sLogError = "Pas de code site " + item.getSiteCode() + " pour uo " + item.getOrgaUnityCode();
+					log.error(sLogError);
+				}
 				return null;
 			}
 			entity.setOrgaSite(siteEntity);

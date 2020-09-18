@@ -2,7 +2,7 @@ package com.example.projetfilrouge.pskype.dto;
 
 import java.util.Date;
 
-import com.example.projetfilrouge.pskype.domain.TypeEventEnum;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.TypeEventEnum;
 
 /**
  * Classe exposée à l'utilisateur sur les évènements
@@ -19,6 +19,10 @@ public class SkypeProfileEventDto {
 	private String itCorrespondantFirstName;
 	private String itCorrespondantLastName;
 
+	public SkypeProfileEventDto(){
+
+	}
+
 	public SkypeProfileEventDto(Date dateEvent, TypeEventEnum typeEvent, String commentEvent, String itCorrespondantId,
 			String itCorrespondantFirstName, String itCorrespondantLastName) {
 		super();
@@ -34,49 +38,25 @@ public class SkypeProfileEventDto {
 		return itCorrespondantId;
 	}
 
-	public void setItCorrespondantId(String itCorrespondantId) {
-		this.itCorrespondantId = itCorrespondantId;
-	}
-	
 	
 	public Date getDateEvent() {
 		return dateEvent;
-	}
-
-	public void setDateEvent(Date dateEvent) {
-		this.dateEvent = dateEvent;
 	}
 
 	public TypeEventEnum getTypeEvent() {
 		return typeEvent;
 	}
 
-	public void setTypeEvent(TypeEventEnum typeEvent) {
-		this.typeEvent = typeEvent;
-	}
-
 	public String getCommentEvent() {
 		return commentEvent;
-	}
-
-	public void setCommentEvent(String commentEvent) {
-		this.commentEvent = commentEvent;
 	}
 
 	public String getItCorrespondantFirstName() {
 		return itCorrespondantFirstName;
 	}
 
-	public void setItCorrespondantFirstName(String itCorrespondantFirstName) {
-		this.itCorrespondantFirstName = itCorrespondantFirstName;
-	}
-
 	public String getItCorrespondantLastName() {
 		return itCorrespondantLastName;
-	}
-
-	public void setItCorrespondantLastName(String itCorrespondantLastName) {
-		this.itCorrespondantLastName = itCorrespondantLastName;
 	}
 
 }

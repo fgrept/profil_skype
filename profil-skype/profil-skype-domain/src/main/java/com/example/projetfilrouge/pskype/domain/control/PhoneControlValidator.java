@@ -15,10 +15,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
  */
 public class PhoneControlValidator implements ConstraintValidator<PhoneControl, String> {
 
-	public void initialize(PhoneControl constraintAnnotation) {
-		//Variable à initialiser
-	}
-	
 	@Override
 	public boolean isValid(String phoneNumber, ConstraintValidatorContext context) {
 

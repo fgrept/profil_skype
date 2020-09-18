@@ -1,6 +1,7 @@
 
 package com.example.projetfilrouge.pskype.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 import com.example.projetfilrouge.pskype.domain.control.EmailControl;
@@ -25,6 +26,7 @@ public class CollaboraterDto {
 	@PhoneControl
 	private String mobilePhoneNumber;
 	@EmailControl
+	@Email
 	private String mailAdress;
 	@Size(min = 1)
 	private String orgaUnitCode;
@@ -36,55 +38,60 @@ public class CollaboraterDto {
 	private String siteAddress;
 	private String sitePostalCode;
 	private String siteCity;
-	
+
+	public CollaboraterDto(){
+
+	}
+
+	public CollaboraterDto(@Size(min = 1, max = 17) String collaboraterId, @Size(min = 1, max = 50) String lastName, @Size(min = 1, max = 50) String firstName, String deskPhoneNumber, String mobilePhoneNumber, @Email String mailAdress, @Size(min = 1) String orgaUnitCode, String orgaUnityType, String orgaShortLabel, @Size(min = 1) String siteCode, String siteName, String siteAddress, String sitePostalCode, String siteCity) {
+		this.collaboraterId = collaboraterId;
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.deskPhoneNumber = deskPhoneNumber;
+		this.mobilePhoneNumber = mobilePhoneNumber;
+		this.mailAdress = mailAdress;
+		this.orgaUnitCode = orgaUnitCode;
+		this.orgaUnityType = orgaUnityType;
+		this.orgaShortLabel = orgaShortLabel;
+		this.siteCode = siteCode;
+		this.siteName = siteName;
+		this.siteAddress = siteAddress;
+		this.sitePostalCode = sitePostalCode;
+		this.siteCity = siteCity;
+	}
+
 	public String getOrgaUnityType() {
 		return orgaUnityType;
 	}
-	public void setOrgaUnityType(String orgaUnityType) {
-		this.orgaUnityType = orgaUnityType;
-	}
+
 	public String getOrgaShortLabel() {
 		return orgaShortLabel;
 	}
-	public void setOrgaShortLabel(String orgaShortLabel) {
-		this.orgaShortLabel = orgaShortLabel;
-	}
+
 	public String getSiteCode() {
 		return siteCode;
 	}
-	public void setSiteCode(String siteCode) {
-		this.siteCode = siteCode;
-	}
+
 	public String getSiteName() {
 		return siteName;
 	}
-	public void setSiteName(String siteName) {
-		this.siteName = siteName;
-	}
+
 	public String getSiteAddress() {
 		return siteAddress;
 	}
-	public void setSiteAddress(String siteAddress) {
-		this.siteAddress = siteAddress;
-	}
+
 	public String getSitePostalCode() {
 		return sitePostalCode;
 	}
-	public void setSitePostalCode(String sitePostalCode) {
-		this.sitePostalCode = sitePostalCode;
-	}
+
 	public String getSiteCity() {
 		return siteCity;
 	}
-	public void setSiteCity(String siteCity) {
-		this.siteCity = siteCity;
-	}
+
 	public String getOrgaUnitCode() {
 		return orgaUnitCode;
 	}
-	public void setOrgaUnitCode(String orgaUnitCode) {
-		this.orgaUnitCode = orgaUnitCode;
-	}
+
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}
@@ -103,23 +110,5 @@ public class CollaboraterDto {
 	public String getMailAdress() {
 		return mailAdress;
 	}
-	public void setCollaboraterId(String collaboraterId) {
-		this.collaboraterId = collaboraterId;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public void setDeskPhoneNumber(String deskPhoneNumber) {
-		this.deskPhoneNumber = deskPhoneNumber;
-	}
-	public void setMobilePhoneNumber(String mobilePhoneNumber) {
-		this.mobilePhoneNumber = mobilePhoneNumber;
-	}
-	public void setMailAdress(String mailAdress) {
-		this.mailAdress = mailAdress;
-	}
-	
+
 }

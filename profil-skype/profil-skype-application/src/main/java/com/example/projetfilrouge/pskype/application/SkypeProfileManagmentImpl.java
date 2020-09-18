@@ -6,21 +6,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.ICollaboraterDomain;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.*;
+import com.example.projetfilrouge.pskype.domain.user.IItCorrespondantDomain;
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.projetfilrouge.pskype.domain.ICollaboraterDomain;
-import com.example.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.example.projetfilrouge.pskype.domain.ISkypeProfileDomain;
-import com.example.projetfilrouge.pskype.domain.ISkypeProfileEventDomain;
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
-import com.example.projetfilrouge.pskype.domain.SkypeProfileEvent;
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
-import com.example.projetfilrouge.pskype.domain.TypeEventEnum;
+
 import com.example.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
 import com.example.projetfilrouge.pskype.domain.exception.NotAuthorizedException;
 import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
@@ -36,7 +32,7 @@ import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
 public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkypeProfileEventManagement {
 
 	
-	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantManagementImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(SkypeProfileManagmentImpl.class);
 	
 	@Autowired
 	private ISkypeProfileDomain repositorySkypeProfile;
@@ -66,16 +62,22 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 			 
 		if (itCorrespondant != null) {
 			// création de l'évènement associé
-			if (repositorySkypeProfile.create(skypeProfile) == true) {
+			if (repositorySkypeProfile.create(skypeProfile)) {
 				 SkypeProfileEvent event = new SkypeProfileEvent(eventComment, skypeProfile, itCorrespondant, TypeEventEnum.CREATION);
 				 repositorySkypeProfileEvent.create(event);
 				 return true;
 			}else {
-				logger.error("Profil skype non créé :"+skypeProfile.getSIP());
+				if (logger.isErrorEnabled()){
+					String msg = "Profil skype non créé :"+skypeProfile.getSIP();
+					logger.error(msg);
+				}
 				return false;
 			}
 		}else {
-			logger.error("Pas d'it correspondant trouvé pour id annuaire :"+idAnnuaireCIL);
+			if (logger.isErrorEnabled()){
+				String msg = "Pas d'it correspondant trouvé pour id annuaire :"+idAnnuaireCIL;
+				logger.error(msg);
+			}
 			return false;
 		}
 	}
@@ -104,12 +106,15 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 	@Override
 	public List<SkypeProfileEvent> getAllEventFromSkypeProfil(String SIP) {
 		
-		List<SkypeProfileEvent> listEvents = new ArrayList<SkypeProfileEvent>();
+		List<SkypeProfileEvent> listEvents;
 		
 		SkypeProfile profil = repositorySkypeProfile.findSkypeProfileBySip(SIP);
 		if (profil == null) {
 			String msg = "Profil Skype : " + SIP + " non trouvé en base";
-			logger.info(msg);
+			if (logger.isErrorEnabled()){
+				logger.error(msg);
+			}
+			throw new NotFoundException(ExceptionListEnum.NOTFOUND12, msg);
 		} 
 		else {
 			listEvents = repositorySkypeProfileEvent.findAllEventBySkypeProfile(profil);
@@ -139,7 +144,7 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 	public boolean updateSkypeProfile(SkypeProfile skypeProfile, String idAnnuaireCIL, String eventComment) {
 		
 		boolean isUpdatedProfil = false;
-		List<String> changedFields = new ArrayList<String>();
+		List<String> changedFields;
 		String comment = "Commentaire utilisateur : <<" + eventComment + ">>";
 		
 		// Lors de la mise à jour d'un profil : tous les champs peuvent être modifiés
@@ -181,7 +186,10 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 			skypeProfile.setExpirationDateWhenReCreated();
 			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
 			if (!isUpdatedProfil) {
-				logger.error("profil non mis à jour : "+skypeProfile.getSIP());
+				if (logger.isErrorEnabled()){
+					String msg = "profil non mis à jour : "+skypeProfile.getSIP();
+					logger.error(msg);
+				}
 				return false;
 			} else {
 				SkypeProfileEvent event = new SkypeProfileEvent(comment + 
@@ -251,54 +259,54 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		
 		// - Champs modifiés : 
 		// 4) Autres cas de mises à jour : on trace les champs qui ont été modifiés
-		if (!isUpdatedProfil) {
-			// on récupère la date d'expiration existante car elle est non modifiable de l'ext.
-			skypeProfile.setExpirationDate(profilExisting.getExpirationDate());
-			isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
-			if (!isUpdatedProfil) {
-				return false;
-			} else {
-				try {
-					changedFields = SkypeProfile.difference(profilExisting, skypeProfile);				
-				} catch (IllegalAccessException e) {
-					String msg = "Il est impossible d'accéder au contenu de la classe SkypeProfil";
-					logger.error(msg);
-					return false;
-				}
 
-				for (int i = 0; i < changedFields.size(); i++) {
-					if (i==0) comment += " - Champs modifiés : ";
-					comment += changedFields.get(i);
-					if (i < changedFields.size()-1) comment += ", ";
-				}
-			
-				SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
-						cilRequester, TypeEventEnum.MODIFICATION);
-				repositorySkypeProfileEvent.create(event);
-				return true;
-			}			
+		// on récupère la date d'expiration existante car elle est non modifiable de l'ext.
+		skypeProfile.setExpirationDate(profilExisting.getExpirationDate());
+		isUpdatedProfil = repositorySkypeProfile.update(skypeProfile);
+		if (!isUpdatedProfil) {
+			return false;
+		} else {
+			try {
+				changedFields = SkypeProfile.difference(profilExisting, skypeProfile);
+			} catch (IllegalAccessException e) {
+				String msg = "Il est impossible d'accéder au contenu de la classe SkypeProfil";
+				logger.error(msg);
+				return false;
+			}
+
+			for (int i = 0; i < changedFields.size(); i++) {
+				if (i==0) comment += " - Champs modifiés : ";
+				comment += changedFields.get(i);
+				if (i < changedFields.size()-1) comment += ", ";
+			}
+
+			SkypeProfileEvent event = new SkypeProfileEvent(comment, skypeProfile,
+					cilRequester, TypeEventEnum.MODIFICATION);
+			repositorySkypeProfileEvent.create(event);
+			return true;
 		}
-		
-		return true;
 	}
 
 
 	private boolean verifyDifference(SkypeProfile profilExisting, SkypeProfile skypeProfile) throws IllegalAccessException {
 				
  	     for (Field field : profilExisting.getClass().getDeclaredFields()) {
-	        // You might want to set modifier to public first (if it is not public yet)
-	        field.setAccessible(true);
-	        Object value1 = field.get(profilExisting);
-	        Object value2 = field.get(skypeProfile); 
-	        if ( (value1 != null && value2 != null) 
-	        		&& (field.getName() != "collaborater") && (field.getName() != "statusProfile") && (field.getName()!="expirationDate") ) {
-	            if (!Objects.equals(value1, value2)) {
-	               return true;
-	            }
-	        }
+			// You might want to set modifier to public first (if it is not public yet)
+			field.setAccessible(true);
+			Object value1 = field.get(profilExisting);
+			Object value2 = field.get(skypeProfile);
+			if ( (value1 != null && value2 != null)
+					&& !("collaborater".equals(field.getName()))
+					&& !("statusProfile".equals(field.getName()))
+					&& !("expirationDate".equals(field.getName()))
+					&& !Objects.equals(value1, value2)) {
+
+				   return true;
+			}
 	    }	    	    
 		return false;
 	}
+
 
 	@Override
 	public SkypeProfile findSkypeProfilFromCollab(String idAnnuaire) {

@@ -1,5 +1,12 @@
 package com.example.projetfilrouge.pskype.infrastructure;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.ICollaboraterDomain;
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.domain.email.IMailDomain;
+import com.example.projetfilrouge.pskype.domain.user.IItCorrespondantDomain;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -15,17 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.ICollaboraterDomain;
-import com.example.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
-import com.example.projetfilrouge.pskype.domain.Site;
+
 import com.example.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Import(TestConfigForMail.class)
 public class UserTest {
 	
 	private static final Site site = new Site("8802", "Valmy 2", "41 rue de Valmy", "93100", "Montreuil");
@@ -37,7 +42,8 @@ public class UserTest {
 	private static final Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
 	private static final Collaborater collab4 = new Collaborater("McEnroe", "John", "112119", "01-43-34-45-57", "06-12-13-14-20", "john.tennis@gmail.com",uo2);
 
-
+	@Autowired
+	private IMailDomain mailDomain;
 	
 	@Autowired
 	private IItCorrespondantDomain itCorrespondantDomain;
@@ -45,7 +51,7 @@ public class UserTest {
 	@Autowired
 	private ICollaboraterDomain collaboraterDomain;
 
-	
+
 	@Test
 	@DisplayName("Vérifier la présence d'un CIL après sa création,"
 			+ " lorsque le collaborateur existe déjà")

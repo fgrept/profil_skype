@@ -7,26 +7,35 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
+import com.example.projetfilrouge.pskype.domain.collaborater.ICollaboraterDomain;
+import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.domain.email.IMailDomain;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.ISkypeProfileDomain;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
+import com.example.projetfilrouge.pskype.domain.user.IItCorrespondantDomain;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
+import com.example.projetfilrouge.pskype.infrastructure.email.MailSenderProfile;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.example.projetfilrouge.pskype.domain.Collaborater;
-import com.example.projetfilrouge.pskype.domain.ICollaboraterDomain;
-import com.example.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.example.projetfilrouge.pskype.domain.ISkypeProfileDomain;
-import com.example.projetfilrouge.pskype.domain.OrganizationUnity;
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
-import com.example.projetfilrouge.pskype.domain.Site;
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+
 import com.example.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 import com.example.projetfilrouge.pskype.infrastructure.skypeprofile.ISkypeProfileEventRepository;
 import com.example.projetfilrouge.pskype.infrastructure.skypeprofile.ISkypeProfileRepository;
@@ -34,6 +43,8 @@ import com.example.projetfilrouge.pskype.infrastructure.skypeprofile.ISkypeProfi
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Import(TestConfigForMail.class)
+
 public class SkypeProfilTest {
 	
 	private static final Site site = new Site("8802", "Valmy 2", "41 rue de Valmy", "93100", "Montreuil");
@@ -53,7 +64,8 @@ public class SkypeProfilTest {
 	private ISkypeProfileRepository repoSkypeProfil;
 	@Autowired
 	private ISkypeProfileEventRepository repoSkypeProfilEvent;
-	
+
+/*
 	@BeforeAll
 	@DisplayName("Remise à zéro des profils skype avant le début de ces tests")
 	// ou alors basculer sur une base in-memory
@@ -61,12 +73,12 @@ public class SkypeProfilTest {
 		repoSkypeProfilEvent.deleteAll();
 		repoSkypeProfil.deleteAll();
 	}
-	
+	*/
 	@Test
 	//@Rollback(false)
 	@DisplayName("Vérifier la consultation possible d'un profil après sa création")
 	public void verifyProfilAfterCreation () {
-		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);		
+		Collaborater collab = new Collaborater("Doe", "John", "112114", "01-43-34-45-56", "06-12-13-14-15", "john.doe@gmail.com",uo);
 		collaboraterDomain.create(collab);
 		
 		SkypeProfile skypeProfil = new SkypeProfile("aaa-bbb@gmail.com", collab);
@@ -76,7 +88,7 @@ public class SkypeProfilTest {
 			.isEqualTo(collab);
 
 	}
-	
+
 	@Test
 	@DisplayName("Vérifier qu'il n'est pas possible de créer un 2ème profil skype"
 			+ "pour le même collaborateur")
@@ -159,10 +171,10 @@ public class SkypeProfilTest {
 		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo3);
 		Collaborater collab4 = new Collaborater("McEnroe", "John", "112119", "01-43-34-45-57", "06-12-13-14-20", "john.tennis@gmail.com",uo2);
 
-		SkypeProfile skypeProfil1 = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", null, collab1);
-		SkypeProfile skypeProfil2 = new SkypeProfile("sip:paulo.radelle@live.bnpparibas.com", true, "InternationalAuthorized", "DP-IT", "M002117015", false, "Linked Google", null, collab2);
-		SkypeProfile skypeProfil3 = new SkypeProfile("sip:fabian.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-IT", "M002117016", true, null, null, collab3);
-		SkypeProfile skypeProfil4 = new SkypeProfile("sip:anabella.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-US", "M002117016", false, "Linked Mailbox", null, collab4);
+		SkypeProfile skypeProfil1 = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", null, collab1,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil2 = new SkypeProfile("sip:paulo.radelle@live.bnpparibas.com", true, "InternationalAuthorized", "DP-IT", "M002117015", false, "Linked Google", null, collab2,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil3 = new SkypeProfile("sip:fabian.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-IT", "M002117016", true, null, null, collab3,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil4 = new SkypeProfile("sip:anabella.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-US", "M002117016", false, "Linked Mailbox", null, collab4,StatusSkypeProfileEnum.ENABLED);
 
 		skypeProfilDomain.create(skypeProfil1);
 		skypeProfilDomain.create(skypeProfil2);
@@ -191,10 +203,10 @@ public class SkypeProfilTest {
 		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo);
 		Collaborater collab4 = new Collaborater("Christ", "Jesus", "118119", "01-43-34-45-58", "06-12-13-14-17", "jesus.auciel@gmail.com",uo);
 		
-		SkypeProfile skypeProfil1 = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", null, collab1);
-		SkypeProfile skypeProfil2 = new SkypeProfile("sip:paulo.radelle@live.bnpparibas.com", true, "InternationalAuthorized", "DP-IT", "M002117015", false, "Linked Google", null, collab2);
-		SkypeProfile skypeProfil3 = new SkypeProfile("sip:fabian.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-IT", "M002117016", true, null, null, collab3);
-		SkypeProfile skypeProfil4 = new SkypeProfile("sip:anabella.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-US", "M002117016", false, "Linked Mailbox", null, collab4);
+		SkypeProfile skypeProfil1 = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", null, collab1,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil2 = new SkypeProfile("sip:paulo.radelle@live.bnpparibas.com", true, "InternationalAuthorized", "DP-IT", "M002117015", false, "Linked Google", null, collab2,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil3 = new SkypeProfile("sip:fabian.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-IT", "M002117016", true, null, null, collab3,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil4 = new SkypeProfile("sip:anabella.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-US", "M002117016", false, "Linked Mailbox", null, collab4,StatusSkypeProfileEnum.ENABLED);
 
 		skypeProfilDomain.create(skypeProfil1);
 		skypeProfilDomain.create(skypeProfil2);
@@ -248,10 +260,10 @@ public class SkypeProfilTest {
 		Collaborater collab3 = new Collaborater("King", "Stephen", "118116", "01-43-34-45-58", "06-12-13-14-17", "stephen.horror@gmail.com",uo);
 		Collaborater collab4 = new Collaborater("Christ", "Jesus", "118119", "01-43-34-45-58", "06-12-13-14-17", "jesus.auciel@gmail.com",uo);
 		
-		SkypeProfile skypeProfil1 = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", null, collab1);
-		SkypeProfile skypeProfil2 = new SkypeProfile("sip:paulo.radelle@live.bnpparibas.com", true, "InternationalAuthorized", "DP-IT", "M002117015", false, "Linked Google", null, collab2);
-		SkypeProfile skypeProfil3 = new SkypeProfile("sip:fabian.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-IT", "M002117016", true, null, null, collab3);
-		SkypeProfile skypeProfil4 = new SkypeProfile("sip:anabella.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-US", "M002117016", false, "Linked Mailbox", null, collab4);
+		SkypeProfile skypeProfil1 = new SkypeProfile("sip:stefan.radelle@live.bnpparibas.com", false, "InternationalNonAuthorized", "DP-FR", "M002117014", false, "Linked Mailbox", null, collab1,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil2 = new SkypeProfile("sip:paulo.radelle@live.bnpparibas.com", true, "InternationalAuthorized", "DP-IT", "M002117015", false, "Linked Google", null, collab2,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil3 = new SkypeProfile("sip:fabian.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-IT", "M002117016", true, null, null, collab3,StatusSkypeProfileEnum.ENABLED);
+		SkypeProfile skypeProfil4 = new SkypeProfile("sip:anabella.radelle@live.bnpparibas.com", true, "InternationalNonAuthorized", "DP-US", "M002117016", false, "Linked Mailbox", null, collab4,StatusSkypeProfileEnum.ENABLED);
 		
 		skypeProfilDomain.create(skypeProfil1);
 		skypeProfilDomain.create(skypeProfil2);
@@ -281,7 +293,7 @@ public class SkypeProfilTest {
 		
 		skypeProfilDomain.delete("aaa-bbb@gmail.com");
 		
-		assertThat(skypeProfilDomain.findSkypeProfileBySip("aaa-bbb@gmail.com")).isEqualTo(null);
+		assertThat(skypeProfilDomain.findSkypeProfileBySip("aaa-bbb@gmail.com")).isNull();
 
  	}
 
@@ -321,5 +333,5 @@ public class SkypeProfilTest {
 						
 						
 	}
-	
+
 }

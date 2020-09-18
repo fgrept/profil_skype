@@ -36,5 +36,6 @@ public class ProfilSkypeApplication {
 	public static void main(final String[] args) {
 		SpringApplication.run(ProfilSkypeApplication.class, args);
 		LOG.info("Application is running!\n look at http://localhost:8181/swagger-ui.html");
+
 	}
 }

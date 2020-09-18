@@ -2,8 +2,7 @@ package com.example.projetfilrouge.pskype.application;
 
 import java.util.List;
 
-import com.example.projetfilrouge.pskype.domain.SkypeProfile;
-
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
 
 
 /**
@@ -87,7 +86,7 @@ public interface ISkypeProfileManagement {
 	 * @param numberPage
 	 * @param sizePage
 	 * @param criteria
-	 * @param boolean sort ascending
+	 * @param b boolean sort ascending
 	 * @return List<SkypeProfile>
 	 */
 	List<SkypeProfile> findAllSkypeProfilePage(int numberPage, int sizePage, String criteria, boolean b);

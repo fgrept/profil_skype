@@ -4,7 +4,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
 
 /**
  * Classe exposée à l'utilisateur sur le profil Skype pour toute action de création, mise à jour
@@ -27,15 +28,12 @@ public class SkypeProfileDtoCreate extends SkypeProfileDto{
 		
 	}
 	
-	public SkypeProfileDtoCreate(String SIP, String collaboraterId, String itCorrespondantId) {
 
-		this.itCorrespondantId=itCorrespondantId;
-	}
 	
 	public SkypeProfileDtoCreate(String sIP, String enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
-			String samAccountName, String exUmEnabled, String exchUser, String objectClass,
-			@Size(max = 17) String collaboraterId, @Size(max = 17) String itCorrespondantId,
-			StatusSkypeProfileEnum statusProfile, String eventComment) {
+								 String samAccountName, String exUmEnabled, String exchUser, String objectClass,
+								 @Size(max = 17) String collaboraterId, @Size(max = 17) String itCorrespondantId,
+								 StatusSkypeProfileEnum statusProfile, String eventComment) {
 		super(sIP, enterpriseVoiceEnabled, voicePolicy, dialPlan,
 				samAccountName, exUmEnabled, exchUser, objectClass,
 				collaboraterId, statusProfile);

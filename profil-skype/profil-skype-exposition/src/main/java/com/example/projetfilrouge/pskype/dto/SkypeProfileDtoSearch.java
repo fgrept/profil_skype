@@ -1,8 +1,8 @@
 package com.example.projetfilrouge.pskype.dto;
 
-import java.util.Date;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
 
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
+import java.util.Date;
 
 /**
  * Classe de résultats sur les Profils
@@ -25,9 +25,9 @@ public class SkypeProfileDtoSearch extends SkypeProfileDto {
 	private String siteCode;
 	
 	public SkypeProfileDtoSearch(String sIP, String enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
-			String samAccountName, String exUmEnabled, String exchUser, String objectClass,
-			StatusSkypeProfileEnum statusProfile, Date expirationDate, String collaboraterId, String firstName,
-			String lastName, String orgaUnityCode, String siteCode) {
+								 String samAccountName, String exUmEnabled, String exchUser, String objectClass,
+								 StatusSkypeProfileEnum statusProfile, Date expirationDate, String collaboraterId, String firstName,
+								 String lastName, String orgaUnityCode, String siteCode) {
 		super(sIP, enterpriseVoiceEnabled, voicePolicy, dialPlan,
 				samAccountName, exUmEnabled, exchUser, objectClass,
 				collaboraterId, statusProfile);

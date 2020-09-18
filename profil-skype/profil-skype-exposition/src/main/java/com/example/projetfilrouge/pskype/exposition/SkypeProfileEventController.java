@@ -2,6 +2,9 @@ package com.example.projetfilrouge.pskype.exposition;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
+import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfileEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.projetfilrouge.pskype.application.ISkypeProfileEventManagement;
-import com.example.projetfilrouge.pskype.domain.SkypeProfileEvent;
 import com.example.projetfilrouge.pskype.dto.SkypeProfileEventDto;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Classe exposant les API rest sur les évènements associés au profils Skype
@@ -31,7 +34,7 @@ import io.swagger.annotations.ApiResponse;
  */
 
 @RestController
-@RequestMapping("/events")
+@RequestMapping("/v1/events")
 @Secured("ROLE_USER")
 @Api(value = "Skype profile event REST Controller : contient toutes les opérations pour manager les événements d'un profil skype")
 @CrossOrigin(origins="http://localhost:4200")
@@ -46,8 +49,15 @@ public class SkypeProfileEventController {
 	@ApiOperation(value = "Récupère l'ensemble des événements d'un profil skype")
 	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<SkypeProfileEventDto>> getEventsFromProfil (@PathVariable("sip") String SIP) {
-		
-		List<SkypeProfileEvent> listEvents = skypeProfileEventManagement.getAllEventFromSkypeProfil(SIP);
+		List<SkypeProfileEvent> listEvents;
+		try {
+			listEvents = skypeProfileEventManagement.getAllEventFromSkypeProfil(SIP);
+		}
+	 	catch (NotFoundException e) {
+			String msg = "exception déclenchée : " + e.getCode() + " - " + e.getMessage();
+			logger.error(msg);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg, e);
+		}
 		List<SkypeProfileEventDto> listEventsDto = new ArrayList<SkypeProfileEventDto>();
 		
 		if (listEvents == null) {
@@ -81,13 +91,12 @@ public class SkypeProfileEventController {
 			lastName=eventDom.getItCorrespondant().getLastNamePerson();
 			collaboraterId=eventDom.getItCorrespondant().getCollaboraterId();
 		}
-		SkypeProfileEventDto profilDto = new SkypeProfileEventDto(
+		return new SkypeProfileEventDto(
 				eventDom.getDateEvent(), eventDom.getTypeEvent(), eventDom.getCommentEvent(),
 				collaboraterId,
 				firstName,
 				lastName);
 
-		return profilDto;
 	}
 
 }

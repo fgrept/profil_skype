@@ -3,10 +3,13 @@
 
 package com.example.projetfilrouge.pskype.infrastructure.user;
 
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.OrganizationUnityEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
+
 import com.example.projetfilrouge.pskype.infrastructure.AbstractMapper;
 
 /**
@@ -24,7 +27,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 	
 	/**
 	 * Cette méthode récupère le contenu de la couche infra vers la classe ItCorrespondant de la classe Domaine
-	 * @param L'entité ItCorrespondantEntity de la couche de persistance
+	 * @param entity L'entité ItCorrespondantEntity de la couche de persistance
 	 * @return l'objet ItCorrespondant de la classe de la couche Domain
 	 */
 	
@@ -43,7 +46,7 @@ public class ItCorrespondantEntityMapper extends AbstractMapper<ItCorrespondant,
 
 	/**
 	 * Cette méthode récupère le contenu de la classe ItCorrespondant de la classe Domain vers l'entité persistance de la couche infra  
-	 * @param l'objet ItCorrespondant de la classe de la couche Domain
+	 * @param dto l'objet ItCorrespondant de la classe de la couche Domain
 	 * @return L'entité ItCorrespondantEntity de la couche de persistance
 	 */
 	@Override

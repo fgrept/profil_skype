@@ -3,8 +3,9 @@ package com.example.projetfilrouge.pskype.application;
 import java.util.List;
 import java.util.Set;
 
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
+
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
 
 
 /**
@@ -58,4 +59,10 @@ public interface IItCorrespondantManagment {
  * @return boolean
  */
 	boolean updatePasswordItCorrespondant(String idAnnuaire, String oldPassword, String newPassword);
+
+	/**
+	 * Retourne le nombre d'it correspondant
+	 * @return Long
+	 */
+    Long countItCorrespondant();
 }

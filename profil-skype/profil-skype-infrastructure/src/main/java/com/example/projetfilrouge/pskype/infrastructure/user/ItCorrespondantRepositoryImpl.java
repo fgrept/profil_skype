@@ -8,15 +8,21 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import com.example.projetfilrouge.pskype.domain.user.IItCorrespondantDomain;
+import com.example.projetfilrouge.pskype.domain.user.ItCorrespondant;
+import com.example.projetfilrouge.pskype.domain.user.RoleTypeEnum;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.ICollaboraterRepository;
+import com.example.projetfilrouge.pskype.infrastructure.exception.JpaExceptionListEnum;
+import com.example.projetfilrouge.pskype.infrastructure.exception.JpaTechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
-import com.example.projetfilrouge.pskype.domain.IItCorrespondantDomain;
-import com.example.projetfilrouge.pskype.domain.ItCorrespondant;
-import com.example.projetfilrouge.pskype.domain.RoleTypeEnum;
+
 import com.example.projetfilrouge.pskype.domain.exception.AllReadyExistException;
 import com.example.projetfilrouge.pskype.domain.exception.ExceptionListEnum;
 import com.example.projetfilrouge.pskype.domain.exception.NotFoundException;
@@ -52,21 +58,28 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 	/**
 	 * US010
 	 * Création complète en base d'un ItCorrespondant 
-	 * @param ItCorrespondant
+	 * @param itCorrespondant
 	 * @return booléen
 	 * 
 	 */
 	@Override
 	public boolean createFull(ItCorrespondant itCorrespondant) {
-		logger.debug("create full repository, id annuaire : "+itCorrespondant.getCollaboraterId());
+
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(itCorrespondant.getCollaboraterId());
 		if (entity==null) {
 			entity = entityMapper.mapToEntity(itCorrespondant);
-			itCorrespondantRepository.save(entity);
+			try {
+				itCorrespondantRepository.save(entity);
+			}catch (Exception e){
+				throw new JpaTechnicalException(JpaExceptionListEnum.WRITE_ACCESS,"Pb JPA lors de la création d'un utilisateur");
+			}
 			return true;
 		}else {
-			logger.error("It correspondant "+itCorrespondant.getCollaboraterId()+" existe déjà");
-//			throw new RuntimeException("It correspondant "+itCorrespondant.getCollaboraterId()+" existe déjà");
+			if (logger.isErrorEnabled()){
+				String sLogError = "It correspondant "+itCorrespondant.getCollaboraterId()+" existe déjà";
+				logger.error(sLogError);
+			}
+
 			return false;
 		}
 	}
@@ -74,20 +87,28 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 	/**
 	 * US021
 	 * Création de l'it correspondant à partif du collaborater
-	 * @param ItCorrespondant
+	 * @param itCorrespondant
 	 * @return booléen
 	 */
 	@Override
 	public boolean create(ItCorrespondant itCorrespondant) {
-		
-		CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(itCorrespondant.getCollaboraterId());
-		if (collaboraterEntity ==null) {
-			logger.error("Collaborater "+itCorrespondant.getCollaboraterId()+" non trouvé");
-			return false;
+
+		try {
+			CollaboraterEntity collaboraterEntity = collaboraterRepository.findByCollaboraterId(itCorrespondant.getCollaboraterId());
+			if (collaboraterEntity == null) {
+				if (logger.isErrorEnabled()) {
+					String sLogError = "Collaborater " + itCorrespondant.getCollaboraterId() + " non trouvé";
+					logger.error(sLogError);
+				}
+
+				return false;
+			}
+			ItCorrespondantEntity entity = new ItCorrespondantEntity(collaboraterEntity, itCorrespondant.getCollaboraterId(), itCorrespondant.getPassword());
+			entity.setRoles(itCorrespondant.getRoles());
+			itCorrespondantRepository.save(entity);
+		}catch (Exception e){
+			throw new JpaTechnicalException(JpaExceptionListEnum.WRITE_ACCESS,"Pb JPA lors de la création d'un utilisateur");
 		}
-		ItCorrespondantEntity entity = new ItCorrespondantEntity(collaboraterEntity, itCorrespondant.getCollaboraterId(),itCorrespondant.getPassword());
-		entity.setRoles(itCorrespondant.getRoles());
-		itCorrespondantRepository.save(entity);
 		return true;
 	}
 	
@@ -99,25 +120,23 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 	 */
 	@Override
 	public boolean update(String idAnnuaire, Set<RoleTypeEnum> roles) {
-		
-		logger.debug("Mise à jour du rôle It Correspondant");
+
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(idAnnuaire);
 		if (entity == null) {
-			String msg = "Mise à jour impossible, id : "+idAnnuaire+" non trouvé";
+			String msg = "Mise à jour impossible, id : " + idAnnuaire + " non trouvé";
 			logger.error(msg);
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND6, msg);
-		}else {
+		} else {
 			entity.setRoles(roles);
 			itCorrespondantRepository.save(entity);
 			return true;
 		}
-		
 	}
 
 	/**
 	 * US007
 	 * Récupération de l'ensemble des ItCorrespondant tous rôles confondus
-	 * @param null
+	 * @param
 	 * @return List<ItCorrespondant>
 	 * 
 	 */
@@ -161,16 +180,16 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 	 * @param id
 	 * @param lastName
 	 * @param firstName
-	 * @param deskPhone
-	 * @param mobilePhone
-	 * @param mailAddress
+	 * @param deskPhoneNumber
+	 * @param mobilePhoneNumber
+	 * @param mailAdress
 	 * @return List<ItCorrespondantEntity>
 	 * @author Judicaël
 	 */
 	private List<ItCorrespondantEntity> findAllItCorrespondantEntityFilters(String id, String lastName, String firstName, String deskPhoneNumber, String mobilePhoneNumber, String mailAdress) {
 		
-		List<ItCorrespondantEntity> listItCorrespondantEntity = new ArrayList<ItCorrespondantEntity>();
-		listItCorrespondantEntity = itCorrespondantRepository.findAll(new Specification<ItCorrespondantEntity>() {
+
+		return itCorrespondantRepository.findAll(new Specification<ItCorrespondantEntity>() {
 			
 			/**
 			 * 
@@ -181,32 +200,32 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 			public Predicate toPredicate(Root<ItCorrespondantEntity> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {
 				List<Predicate> predicates = new ArrayList<>();
-				if (id!= null && id != "") {
-					logger.debug("recherche par id "+id);
+				if (id!= null && !("".equals(id))) {
+					logger.debug("recherche par id ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("collaboraterId"),id));
 				}
 				//Pour le nom, on permet la recherche partielle.
 				//Non sensible à la casse
-				if (lastName!= null && lastName != "") {
-					logger.debug("recherche par lastName "+ lastName);
+				if (lastName!= null && !("".equals(lastName))) {
+					logger.debug("recherche par lastName ");
 					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("collaborater").get("lastName")),"%"+lastName.toLowerCase()+"%"));
 				}
 				//Pour le prénom, on permet la recherche partielle.
 				//Non sensible à la casse
-				if (firstName!= null && firstName != "") {
-					logger.debug("recherche par firstName "+ firstName);
+				if (firstName!= null && !("".equals(firstName))) {
+					logger.debug("recherche par firstName ");
 					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("collaborater").get("firstName")),"%"+firstName.toLowerCase()+"%"));
 				}
-				if (deskPhoneNumber!= null && deskPhoneNumber != "") {
-					logger.debug("recherche par deskPhoneNumber "+ deskPhoneNumber);
+				if (deskPhoneNumber!= null && !("".equals(deskPhoneNumber))) {
+					logger.debug("recherche par deskPhoneNumber ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("deskPhoneNumber"),deskPhoneNumber));
 				}
-				if (mobilePhoneNumber!= null && mobilePhoneNumber != "") {
-					logger.debug("recherche par mobilePhone "+ mobilePhoneNumber);
+				if (mobilePhoneNumber!= null && !("".equals(mobilePhoneNumber))) {
+					logger.debug("recherche par mobilePhone ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("mobilePhoneNumber"),mobilePhoneNumber));
 				}
-				if (mailAdress!= null && mailAdress != "") {
-					logger.debug("recherche par mailAddress "+ mailAdress);
+				if (mailAdress!= null && !("".equals(mailAdress))) {
+					logger.debug("recherche par mailAddress ");
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("mailAdress"),mailAdress));
 				}
 				
@@ -214,19 +233,13 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 			}
 			
 		});
-		for (ItCorrespondantEntity entity :listItCorrespondantEntity) {
-			logger.debug("nom "+entity.getCollaborater().getLastName());
-			logger.debug("prénom "+entity.getCollaborater().getFirstName());
-			logger.debug("--------");
-		}
-		return listItCorrespondantEntity;
 
 	}
 	
 
 
 	/**
-	 * @param String id annuaire du CIL
+	 * @param id id annuaire du CIL
 	 * @return l'objet CIL correspondant
 	 * @author Judicaël
 	 * @version V0.1
@@ -236,8 +249,11 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 		
 		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(id);
 		if (entity == null) {
-			logger.error("Pas de colaborateur trouvé pour id : "+id);
-//			throw new RuntimeException("Pas de colaborateur trouvé pour id : "+id);
+			if (logger.isErrorEnabled()){
+				String sLogError = "Pas de colaborateur trouvé pour id : "+id;
+				logger.error(sLogError);
+			}
+
 			return null;
 		}
 		else {
@@ -248,29 +264,40 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 
 	/**
 	 * Suppression d'un CIL en base (US008)
-	 * @param ItCorrespondant CIL
+	 * @param itCorrespondant CIL
 	 */
 	@Override
 	public boolean delete(ItCorrespondant itCorrespondant) {
 		
-		logger.debug("Suppression it correspondant, id annuaire "+itCorrespondant.getCollaboraterId());
-		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(itCorrespondant.getCollaboraterId());
-		logger.debug("Suppression  entity it correspondant, id "+entity.getIdUser());
-		itCorrespondantRepository.delete(entity);
+		try {
+			ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(itCorrespondant.getCollaboraterId());
+			itCorrespondantRepository.delete(entity);
+		}catch (Exception e){
+			throw new JpaTechnicalException(JpaExceptionListEnum.WRITE_ACCESS,"Pb JPA lors de la suppression d'un utilisateur");
+		}
 		return true;
 	}
 	/**
 	 * Spring Security : mise à jour du mot de passe encodé
-	 * @param String idAnnuaire
-	 * @param String newEncryptedPassword
+	 * @param  idAnnuaire
+	 * @param  newEncryptedPassword
 	 */
 	@Override
 	public boolean updatePassword(String idAnnuaire, String newEncryptedPassword) {
-		
-		ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(idAnnuaire);
-		entity.setEncryptedPassword(newEncryptedPassword);
-		itCorrespondantRepository.save(entity);
+
+		try {
+			ItCorrespondantEntity entity = itCorrespondantRepository.findByCollaboraterCollaboraterId(idAnnuaire);
+			entity.setEncryptedPassword(newEncryptedPassword);
+			itCorrespondantRepository.save(entity);
+		}catch (Exception e){
+			throw new JpaTechnicalException(JpaExceptionListEnum.WRITE_ACCESS,"Pb JPA lors de la mise à jour du mot de passe d'un utilisateur");
+		}
 		return true;
+	}
+
+	@Override
+	public Long countItCorrespondant() {
+		return itCorrespondantRepository.count();
 	}
 
 	@Override
@@ -281,8 +308,7 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 			String msg = "Pas de colaborateur trouvé pour id : " + idAnnuaire;
 			logger.error(msg);
 			throw new NotFoundException(ExceptionListEnum.NOTFOUND5, msg);
-		}
-		else {
+		} else {
 			ItCorrespondantEntity entityRepo = itCorrespondantRepository.findByCollaboraterCollaboraterId(idAnnuaire);
 			if (entityRepo != null) {
 				String msg = "Le rôle cil existe déjà pour ce collaborateur : " + idAnnuaire;
@@ -293,11 +319,12 @@ public class ItCorrespondantRepositoryImpl implements IItCorrespondantDomain {
 				itCorrespEntity.setCollaborater(collabEntity);
 				itCorrespEntity.setEncryptedPassword(password);
 				itCorrespEntity.setRoles(roles);
-				itCorrespEntity.setItCorrespondantId(idAnnuaire);			
+				itCorrespEntity.setItCorrespondantId(idAnnuaire);
 				itCorrespondantRepository.save(itCorrespEntity);
 				return true;
 			}
-		}		
+		}
+
 	}
 }
 

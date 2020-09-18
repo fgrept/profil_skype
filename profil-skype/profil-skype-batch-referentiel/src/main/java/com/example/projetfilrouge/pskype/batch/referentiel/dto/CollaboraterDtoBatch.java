@@ -5,6 +5,8 @@ import javax.validation.constraints.Size;
 
 import com.example.projetfilrouge.pskype.domain.control.EmailControl;
 import com.example.projetfilrouge.pskype.domain.control.PhoneControl;
+import org.springframework.data.annotation.Immutable;
+
 
 public class CollaboraterDtoBatch {
 	
@@ -28,47 +30,70 @@ public class CollaboraterDtoBatch {
 	public CollaboraterDtoBatch() {
 		
 	}
+
+	public CollaboraterDtoBatch(@Size(min = 1, max = 17) String collaboraterId, @Size(min = 1, max = 50) String lastName, @Size(min = 1, max = 50) String firstName, String deskPhoneNumber, String mobilePhoneNumber, String mailAdress, @NotNull @Size(min = 1) String orgaUnitCode) {
+		this.collaboraterId = collaboraterId;
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.deskPhoneNumber = deskPhoneNumber;
+		this.mobilePhoneNumber = mobilePhoneNumber;
+		this.mailAdress = mailAdress;
+		this.orgaUnitCode = orgaUnitCode;
+	}
+
 	public String getCollaboraterId() {
 		return collaboraterId;
 	}
+
 	public void setCollaboraterId(String collaboraterId) {
 		this.collaboraterId = collaboraterId;
 	}
+
 	public String getLastName() {
 		return lastName;
 	}
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	public String getDeskPhoneNumber() {
 		return deskPhoneNumber;
 	}
+
 	public void setDeskPhoneNumber(String deskPhoneNumber) {
 		this.deskPhoneNumber = deskPhoneNumber;
 	}
+
 	public String getMobilePhoneNumber() {
 		return mobilePhoneNumber;
 	}
+
 	public void setMobilePhoneNumber(String mobilePhoneNumber) {
 		this.mobilePhoneNumber = mobilePhoneNumber;
 	}
+
 	public String getMailAdress() {
 		return mailAdress;
 	}
+
 	public void setMailAdress(String mailAdress) {
 		this.mailAdress = mailAdress;
 	}
+
 	public String getOrgaUnitCode() {
 		return orgaUnitCode;
 	}
+
 	public void setOrgaUnitCode(String orgaUnitCode) {
 		this.orgaUnitCode = orgaUnitCode;
 	}
-	
 }

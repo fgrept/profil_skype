@@ -2,6 +2,8 @@ package com.example.projetfilrouge.pskype.infrastructure.skypeprofile;
 
 import java.util.List;
 
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -9,8 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
+
 
 /**
  * 
@@ -52,7 +53,7 @@ public interface ISkypeProfileRepository extends JpaRepository<SkypeProfileEntit
 	
 	/**
 	 * Méthode de recherche d'un profil skype à partir d'un objet Collaborater
-	 * @param un collaborater
+	 * @param collaboraterEntity un collaborater
 	 * @return un objet profil skype
 	 */
 	SkypeProfileEntity findByCollaborater(CollaboraterEntity collaboraterEntity);

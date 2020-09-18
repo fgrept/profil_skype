@@ -15,14 +15,16 @@ public class BatchJobListener implements JobExecutionListener {
 	
 	@Override
 	public void beforeJob(JobExecution jobExecution) {
-		log.info("Job "+jobExecution.getJobInstance().getJobName()+" date de début : "+jobExecution.getStartTime());
+		String sLogInfo = "Job "+jobExecution.getJobInstance().getJobName()+" date de début : "+jobExecution.getStartTime();
+		log.info(sLogInfo);
 
 	}
 
 	@Override
 	public void afterJob(JobExecution jobExecution) {
-		
-		log.info("Job "+jobExecution.getJobInstance().getJobName()+" date de fin : "+jobExecution.getEndTime()+" code retour"+jobExecution.getExitStatus());
+
+		String sLogInfo = "Job "+jobExecution.getJobInstance().getJobName()+" date de fin : "+jobExecution.getEndTime()+" code retour"+jobExecution.getExitStatus();
+		log.info(sLogInfo);
 
 	}
 

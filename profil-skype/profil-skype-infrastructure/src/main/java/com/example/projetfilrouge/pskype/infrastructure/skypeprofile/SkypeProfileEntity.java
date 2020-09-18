@@ -13,11 +13,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.example.projetfilrouge.pskype.domain.skypeprofile.StatusSkypeProfileEnum;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import com.example.projetfilrouge.pskype.domain.StatusSkypeProfileEnum;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
 
 
 /**
@@ -68,7 +68,21 @@ public class SkypeProfileEntity {
 		this.exUmEnabled=false;
 		this.statusProfile = StatusSkypeProfileEnum.ENABLED;
 	}
-	
+
+	public SkypeProfileEntity(String SIP, boolean enterpriseVoiceEnabled, String voicePolicy, String dialPlan, String samAccountName, boolean exUmEnabled, String exchUser, String objectClass, StatusSkypeProfileEnum statusProfile, Date expirationDate, CollaboraterEntity collaborater) {
+		this.SIP = SIP;
+		this.enterpriseVoiceEnabled = enterpriseVoiceEnabled;
+		this.voicePolicy = voicePolicy;
+		this.dialPlan = dialPlan;
+		this.samAccountName = samAccountName;
+		this.exUmEnabled = exUmEnabled;
+		this.exchUser = exchUser;
+		this.objectClass = objectClass;
+		this.statusProfile = statusProfile;
+		this.expirationDate = expirationDate;
+		this.collaborater = collaborater;
+	}
+
 	public StatusSkypeProfileEnum getStatusProfile() {
 		return statusProfile;
 	}

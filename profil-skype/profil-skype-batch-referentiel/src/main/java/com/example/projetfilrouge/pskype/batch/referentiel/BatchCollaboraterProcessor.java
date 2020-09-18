@@ -7,15 +7,16 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.ICollaboraterRepository;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.IOrganizationUnityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.projetfilrouge.pskype.batch.referentiel.dto.CollaboraterDtoBatch;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.ICollaboraterRepository;
-import com.example.projetfilrouge.pskype.infrastructure.user.IOrganizationUnityRepository;
+
 
 /**
  * Processor des collaborater
@@ -45,8 +46,9 @@ public class BatchCollaboraterProcessor implements ItemProcessor<CollaboraterDto
 		
 	    Set<ConstraintViolation<CollaboraterDtoBatch>> constraintViolations = 
 	    	      validator.validate(item);
-	    if (constraintViolations.size() > 0 ) {
-	    	log.error("Données du collaborateur incorrects en ligne : " + cptLigne);
+	    if (constraintViolations.isEmpty() ) {
+	    	String sError = "Données du collaborateur incorrects en ligne : " + cptLigne;
+	    	log.error(sError);
 	    	return null;
 	      }
 		
@@ -55,7 +57,8 @@ public class BatchCollaboraterProcessor implements ItemProcessor<CollaboraterDto
 			entity = new CollaboraterEntity();
 			entity.setCollaboraterId(item.getCollaboraterId());
 			if (item.getOrgaUnitCode()==null) {
-				log.error("Pas de code uo "+item.getOrgaUnitCode()+" pour le collaborateur "+item.getCollaboraterId());
+				String sError = "Pas de code uo "+item.getOrgaUnitCode()+" pour le collaborateur "+item.getCollaboraterId();
+				log.error(sError);
 				return null;
 			}
 			entity.setOrgaUnit(uoRepository.findByOrgaUnityCode(item.getOrgaUnitCode()));

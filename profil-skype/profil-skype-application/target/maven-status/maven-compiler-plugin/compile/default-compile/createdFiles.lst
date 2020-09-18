@@ -1,0 +1,8 @@
+com\example\projetfilrouge\pskype\security\ItCorrespondantUserDetailsService.class
+com\example\projetfilrouge\pskype\application\ICollaboraterManagment.class
+com\example\projetfilrouge\pskype\application\IItCorrespondantManagment.class
+com\example\projetfilrouge\pskype\application\ISkypeProfileManagement.class
+com\example\projetfilrouge\pskype\application\CollaboraterManagementImpl.class
+com\example\projetfilrouge\pskype\application\ISkypeProfileEventManagement.class
+com\example\projetfilrouge\pskype\application\ItCorrespondantManagementImpl.class
+com\example\projetfilrouge\pskype\application\SkypeProfileManagmentImpl.class

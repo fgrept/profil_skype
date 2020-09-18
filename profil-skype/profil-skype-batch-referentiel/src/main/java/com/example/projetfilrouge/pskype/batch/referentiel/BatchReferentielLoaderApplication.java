@@ -6,6 +6,10 @@ import java.util.Date;
 
 import javax.persistence.EntityManagerFactory;
 
+import com.example.projetfilrouge.pskype.domain.collaborater.Site;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.CollaboraterEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.OrganizationUnityEntity;
+import com.example.projetfilrouge.pskype.infrastructure.collaborater.SiteEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -32,11 +36,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.example.projetfilrouge.pskype.domain.Site;
-import com.example.projetfilrouge.pskype.infrastructure.user.CollaboraterEntity;
+
 import com.example.projetfilrouge.pskype.infrastructure.user.ItCorrespondantEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.OrganizationUnityEntity;
-import com.example.projetfilrouge.pskype.infrastructure.user.SiteEntity;
+
 import com.example.projetfilrouge.pskype.batch.referentiel.dto.CollaboraterDtoBatch;
 import com.example.projetfilrouge.pskype.batch.referentiel.dto.ItCorrespondantDto;
 import com.example.projetfilrouge.pskype.batch.referentiel.dto.OrganizationUnityDtoBatch;
@@ -77,8 +79,10 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 		
 		
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
-		Date date = new Date();
-		log.info(format.format(date));
+		if (log.isInfoEnabled()){
+			String sLogInfo = format.format(new Date());
+			log.info(sLogInfo);
+		}
 		SpringApplication.run(BatchReferentielLoaderApplication.class,args);
 
 	}
@@ -90,7 +94,10 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 		JobParameters parameters = new JobParametersBuilder()
 				.addString("JOBID", String.valueOf(System.currentTimeMillis()))
 				.toJobParameters();
-		log.debug("chunsize : "+chunkSize);
+		if (log.isDebugEnabled()) {
+			String sLogDebug = "chunsize : " + chunkSize;
+			log.debug(sLogDebug);
+		}
 		jobLauncher.run(loadReferentiel(),parameters);
 
 	}
@@ -143,22 +150,22 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 
 	@Bean
 	public BatchSiteProcessor batchSiteProcessor() {
-		// TODO Auto-generated method stub
+
 		return new BatchSiteProcessor();
 	}
 	
 	@Bean
 	public BatchItCorrespondantProcessor batchItCorrespondantProcessor() {
-		// TODO Auto-generated method stub
+
 		return new BatchItCorrespondantProcessor();
 	}
 
 	@Bean
 	public FlatFileItemReader<Site> batchSiteReader() {
-		// TODO Auto-generated method stub
+
 		FlatFileItemReaderBuilder<Site> fileReaderBuilder = new FlatFileItemReaderBuilder<Site>();
 		fileReaderBuilder.name("siteItemReader")
-		.resource(new FileSystemResource("src/main/resources/input/site.csv"))
+		.resource(new FileSystemResource("profil-skype-batch-referentiel/src/main/resources/input/site.csv"))
 		.delimited()
 		.delimiter(";")
 		.names(new String[] {"siteCode","siteName","siteAddress","sitePostalCode","siteCity"})
@@ -173,10 +180,10 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 	
 	@Bean
 	public FlatFileItemReader<ItCorrespondantDto> batchItCorrespondantReader() {
-		// TODO Auto-generated method stub
+
 		FlatFileItemReaderBuilder<ItCorrespondantDto> fileReaderBuilder = new FlatFileItemReaderBuilder<ItCorrespondantDto>();
 		fileReaderBuilder.name("siteItCorrespondantReader")
-		.resource(new FileSystemResource("src/main/resources/input/itcorrespondant.csv"))
+		.resource(new FileSystemResource("profil-skype-batch-referentiel/src/main/resources/input/itcorrespondant.csv"))
 		.delimited()
 		.delimiter(";")
 		.names(new String[] {"idAnnuaire","password","role"})
@@ -214,7 +221,7 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 		
 		FlatFileItemReaderBuilder<OrganizationUnityDtoBatch> fileReaderBuilder = new FlatFileItemReaderBuilder<OrganizationUnityDtoBatch>();
 		fileReaderBuilder.name("uoItemReader")
-		.resource(new FileSystemResource("src/main/resources/input/uo.csv"))
+		.resource(new FileSystemResource("profil-skype-batch-referentiel/src/main/resources/input/uo.csv"))
 		.delimited()
 		.delimiter(";")
 		.names(new String[] {"orgaUnityCode","orgaUnityType","orgaShortLabel","siteCode"})
@@ -228,7 +235,7 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 	}
 	@Bean
 	public BatchUoProcessor batchUoProcessor() {
-		// TODO Auto-generated method stub
+
 		return new BatchUoProcessor();
 	}
 	@Bean
@@ -259,7 +266,7 @@ public class BatchReferentielLoaderApplication implements CommandLineRunner {
 		
 		FlatFileItemReaderBuilder<CollaboraterDtoBatch> fileReaderBuilder = new FlatFileItemReaderBuilder<CollaboraterDtoBatch>();
 		fileReaderBuilder.name("collaboraterItemReader")
-		.resource(new FileSystemResource("src/main/resources/input/collaborater.csv"))
+		.resource(new FileSystemResource("profil-skype-batch-referentiel/src/main/resources/input/collaborater.csv"))
 		.delimited()
 		.delimiter(";")
 		.names(new String[] {"collaboraterId","lastName","firstName","deskPhoneNumber","mobilePhoneNumber","mailAdress", "orgaUnityCode"})
