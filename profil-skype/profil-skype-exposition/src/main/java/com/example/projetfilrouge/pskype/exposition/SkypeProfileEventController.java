@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ import io.swagger.annotations.ApiResponse;
 @RequestMapping("/events")
 @Secured("ROLE_USER")
 @Api(value = "Skype profile event REST Controller : contient toutes les opérations pour manager les événements d'un profil skype")
+@CrossOrigin(origins="http://localhost:4200")
 public class SkypeProfileEventController {
 	
 	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEventController.class);
