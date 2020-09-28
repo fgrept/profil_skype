@@ -30,6 +30,7 @@ public class SkypeProfileDto {
 	private String exchUser;
 	private String objectClass;
 	//statut du profil : activé, désactivé, expiré
+	@NotNull
 	private StatusSkypeProfileEnum statusProfile;
 
 

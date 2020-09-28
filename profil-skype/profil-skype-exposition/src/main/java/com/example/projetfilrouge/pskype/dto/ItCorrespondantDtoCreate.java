@@ -29,5 +29,20 @@ public class ItCorrespondantDtoCreate {
 	public Set<RoleTypeEnum> getRoles() {
 		return roles;
 	}
-	
+
+	public void setCollaboraterId(String collaboraterId) {
+		this.collaboraterId = collaboraterId;
+	}
+
+	public void setRoles(Set<RoleTypeEnum> roles) {
+		this.roles = roles;
+	}
+
+	@Override
+	public String toString() {
+		return "ItCorrespondantDtoCreate{" +
+				"collaboraterId='" + collaboraterId + '\'' +
+				", roles=" + roles +
+				'}';
+	}
 }

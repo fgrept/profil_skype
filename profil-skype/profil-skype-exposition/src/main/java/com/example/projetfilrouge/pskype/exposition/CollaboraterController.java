@@ -97,7 +97,7 @@ public class CollaboraterController {
 	}
 	
 	
-	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
+	@PostMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
 	@ApiOperation(value = "Récupère un ensemble de collaborateurs stockés selon des critères de pagination et des critères de recherches")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, liste retournée"),

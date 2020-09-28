@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiResponses;
  * Spring security : classe correspondant au module de paramétrage, réservée aux administrateurs
  */
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping("/v1/user")
 @Secured("ROLE_ADMIN")
 @Api(value = "It correspondant REST Controller : contient toutes les opérations pour manager un It correspondant")
 @CrossOrigin(origins="http://localhost:4200")
@@ -84,7 +84,8 @@ public class ItCorrespondantController {
 	public ResponseEntity<String> createItCorrespondantFromCollab(@Valid @RequestBody ItCorrespondantDtoCreate dto) {
 		
 		boolean isCreated = false;
-	
+
+		logger.info("it correspondant DTO" +dto.toString());
 		//La création d'un it correspondant se fait suite à une recherche en base des collaborateurs
 		//Donc on reçoit juste l'id du collaborateur et les rôles que l'on souhaite lui donner.
 		//Les données sont controllés via le valideur de bean dto
@@ -164,34 +165,48 @@ public class ItCorrespondantController {
 			@ApiResponse(code = 404,message = "it correspondant non trouvé en base oub pb lors de la mise à jour"),
 			@ApiResponse(code = 400,message = "syntaxe incorrect de la requête")
 	})
-	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String role) {
+	public ResponseEntity<String> updateRoleItCorrespondant(@PathVariable("id") String id, @PathVariable("role") String[] roleInput) {
 
 		boolean isUpdate = false;
 
 		Set<RoleTypeEnum> roles = new HashSet<RoleTypeEnum>();
-		switch (role)
-		{
-			case "admin":
-				logger.debug("Passage à role ADMIN");
+		for (String role : roleInput) {
+			if ("ROLE_ADMIN".equals(role)){
 				roles.add(RoleTypeEnum.ROLE_ADMIN);
+				logger.info("ajout du role admin");
+			}
+			if ("ROLE_RESP".equals(role)){
 				roles.add(RoleTypeEnum.ROLE_RESP);
+				logger.info("ajout du role resp");
+			}
+			if ("ROLE_USER".equals(role)){
 				roles.add(RoleTypeEnum.ROLE_USER);
-				break;
-			case "resp":
-				logger.debug("Passage à role RESP");
-				roles.add(RoleTypeEnum.ROLE_RESP);
-				roles.add(RoleTypeEnum.ROLE_USER);
-				break;
-			case "user":
-				logger.debug("Passage à role USER");
-				roles.add(RoleTypeEnum.ROLE_USER);
-				break;
-			default:
-				String msg = "Le role demandé n'existe pas";
-				logger.error(msg);
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
+				logger.info("ajout du role user");
+			}
 		}
-		
+//		switch (role)
+//		{
+//			case "admin":
+//				logger.debug("Passage à role ADMIN");
+//				roles.add(RoleTypeEnum.ROLE_ADMIN);
+//				roles.add(RoleTypeEnum.ROLE_RESP);
+//				roles.add(RoleTypeEnum.ROLE_USER);
+//				break;
+//			case "resp":
+//				logger.debug("Passage à role RESP");
+//				roles.add(RoleTypeEnum.ROLE_RESP);
+//				roles.add(RoleTypeEnum.ROLE_USER);
+//				break;
+//			case "user":
+//				logger.debug("Passage à role USER");
+//				roles.add(RoleTypeEnum.ROLE_USER);
+//				break;
+//			default:
+//				String msg = "Le role demandé n'existe pas";
+//				logger.error(msg);
+//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
+//		}
+//
 		try {
 			isUpdate = userManagment.updateRoleItCorrespondant(id, roles);
 		} catch (NotFoundException e) {
