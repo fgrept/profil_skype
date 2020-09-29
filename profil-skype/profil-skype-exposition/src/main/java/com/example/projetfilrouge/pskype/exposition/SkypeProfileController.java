@@ -265,6 +265,7 @@ public class SkypeProfileController {
 	})
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
 
+		logger.info("profil DTO "+searchCriteria.toString());
 		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
 		if (numberPage<0) {
 			logger.error("numéro de page négatif");
@@ -278,6 +279,7 @@ public class SkypeProfileController {
 			criteria="";
 		}
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
+		logger.info("profil domaine "+profilDom.toString());
 		
 		List<SkypeProfile> profilListDom = skypeProfileManagement.findSkypeProfileWithCriteriaPage(profilDom,numberPage,sizePage,criteria,true);
 		

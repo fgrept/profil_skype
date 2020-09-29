@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
  *
  */
 public class SkypeProfileDto {
-	
+
 	// DONNEES DU PROFIL
 	// ******************************************************************************
 	//syntaxe d'un SIP (RFC 3261) : URI = sip:x@y:Port x=nom d’utilisateur et y=hôte (domaine ou IP)
@@ -124,5 +124,21 @@ public class SkypeProfileDto {
 	}
 	public void setCollaboraterId(String collaboraterId) {
 		this.collaboraterId = collaboraterId;
+	}
+
+	@Override
+	public String toString() {
+		return "SkypeProfileDto{" +
+				"SIP='" + SIP + '\'' +
+				", enterpriseVoiceEnabled='" + enterpriseVoiceEnabled + '\'' +
+				", voicePolicy='" + voicePolicy + '\'' +
+				", dialPlan='" + dialPlan + '\'' +
+				", samAccountName='" + samAccountName + '\'' +
+				", exUmEnabled='" + exUmEnabled + '\'' +
+				", exchUser='" + exchUser + '\'' +
+				", objectClass='" + objectClass + '\'' +
+				", statusProfile=" + statusProfile +
+				", collaboraterId='" + collaboraterId + '\'' +
+				'}';
 	}
 }
