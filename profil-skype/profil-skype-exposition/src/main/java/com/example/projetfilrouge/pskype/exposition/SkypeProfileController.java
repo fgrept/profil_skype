@@ -239,7 +239,7 @@ public class SkypeProfileController {
 	}	
 
 
-	@GetMapping("/list/criteria")
+	@PostMapping("/list/criteria")
 	@ApiOperation(value = "Récupère l'ensemble des profils skype stockés en fonction de critères de recherche")
 	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteria(@RequestBody SkypeProfileDtoSearch searchCriteria){
@@ -257,7 +257,7 @@ public class SkypeProfileController {
 	}
 
 	
-	@GetMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
+	@PostMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
 	@ApiOperation(value = "Récupère un ensemble de profils skype stockés selon des critères de pagination et des critères de recherches")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, liste retournée"),
