@@ -11,6 +11,7 @@ import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -265,7 +266,7 @@ public class SkypeProfileController {
 	})
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
 
-		logger.info("profil DTO "+searchCriteria.toString());
+//		logger.info("profil DTO "+searchCriteria.toString());
 		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
 		if (numberPage<0) {
 			logger.error("numéro de page négatif");
@@ -279,16 +280,17 @@ public class SkypeProfileController {
 			criteria="";
 		}
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
-		logger.info("profil domaine "+profilDom.toString());
+//		logger.info("profil domaine "+profilDom.toString());
 		
 		List<SkypeProfile> profilListDom = skypeProfileManagement.findSkypeProfileWithCriteriaPage(profilDom,numberPage,sizePage,criteria,true);
-		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("count", String.valueOf(profilListDom.size()));
 		
 		for (SkypeProfile skypeProfile : profilListDom) {
 			profilListDto.add(mapDomainToDtoSearch(skypeProfile));
-		}		
-		
-		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
+		}
+	//	return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK).;
+		return ResponseEntity.ok().headers(responseHeaders).body(profilListDto);
 	}
 	
 	
