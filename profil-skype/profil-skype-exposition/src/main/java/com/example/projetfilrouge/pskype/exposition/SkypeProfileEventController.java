@@ -37,7 +37,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/v1/event")
 @Secured("ROLE_USER")
 @Api(value = "Skype profile event REST Controller : contient toutes les opérations pour manager les événements d'un profil skype")
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"} )
 public class SkypeProfileEventController {
 	
 	private static Logger logger = LoggerFactory.getLogger(SkypeProfileEventController.class);
@@ -62,13 +62,15 @@ public class SkypeProfileEventController {
 		
 		if (listEvents == null) {
 			logger.debug("aucun évènement trouvé pour le profil skype demandé");
-			return new ResponseEntity<List<SkypeProfileEventDto>>(listEventsDto, HttpStatus.OK);
+			return ResponseEntity.ok().header("count", "0").body(listEventsDto);
+//			return new ResponseEntity<List<SkypeProfileEventDto>>(listEventsDto, HttpStatus.OK);
 		}
 
 		for (SkypeProfileEvent skypeProfileEvent : listEvents) {
 			listEventsDto.add(mapperDomaintoDto(skypeProfileEvent));
 		}
-		return new ResponseEntity<List<SkypeProfileEventDto>>(listEventsDto, HttpStatus.OK);
+		return ResponseEntity.ok().header("count", String.valueOf(listEventsDto.size())).body(listEventsDto);
+//		return new ResponseEntity<List<SkypeProfileEventDto>>(listEventsDto, HttpStatus.OK);
 		
 	}
 	

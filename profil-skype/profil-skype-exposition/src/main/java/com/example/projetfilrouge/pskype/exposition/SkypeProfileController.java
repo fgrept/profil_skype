@@ -48,7 +48,7 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/v1/profile")
 @Secured({"ROLE_USER","ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "Skype profile REST Controller : contient toutes les opérations pour manager profil skype")
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
 public class SkypeProfileController {
 	
 	private static Logger logger = LoggerFactory.getLogger(SkypeProfileController.class);
@@ -196,9 +196,11 @@ public class SkypeProfileController {
 		
 		for (SkypeProfile skypeProfile : profilListDom) {
 			profilListDto.add(mapDomainToDtoSearch(skypeProfile));
-		}		
-		
-		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
+		}
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.set("count",String.valueOf(profilListDto.size()));
+		return ResponseEntity.ok().header("count", String.valueOf(profilListDto.size())).body(profilListDto);
+//		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
 	
 	
@@ -226,9 +228,9 @@ public class SkypeProfileController {
 		
 		for (SkypeProfile skypeProfile : profilListDom) {
 			profilListDto.add(mapDomainToDtoSearch(skypeProfile));
-		}		
-		
-		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
+		}
+		return ResponseEntity.ok().header("count", String.valueOf(profilListDto.size())).body(profilListDto);
+//		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
 	
 	
@@ -252,9 +254,9 @@ public class SkypeProfileController {
 		
 		for (SkypeProfile skypeProfile : profilListDom) {
 			profilListDto.add(mapDomainToDtoSearch(skypeProfile));
-		}		
-		
-		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
+		}
+		return ResponseEntity.ok().header("count", String.valueOf(profilListDto.size())).body(profilListDto);
+//		return new ResponseEntity<List<SkypeProfileDtoSearch>>(profilListDto, HttpStatus.OK);
 	}
 
 	

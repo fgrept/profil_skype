@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/v1/collaborater")
 @Secured({"ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "Collaborater REST Controller : contient toutes les opérations pour manager un collaborateur")
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
 public class CollaboraterController {
 	
 	private static Logger logger = LoggerFactory.getLogger(CollaboraterController.class);
@@ -93,7 +93,8 @@ public class CollaboraterController {
 		for (Collaborater collaborater:list) {
 			dto.add(mapperDomainToDto(collaborater));
 		}
-		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
+		return ResponseEntity.ok().header("count", String.valueOf(dto.size())).body(dto);
+//		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
 	
 	
@@ -122,8 +123,8 @@ public class CollaboraterController {
 		for (Collaborater collaborater:list) {
 			dto.add(mapperDomainToDto(collaborater));
 		}
-		
-		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
+		return ResponseEntity.ok().header("count", String.valueOf(dto.size())).body(dto);
+//		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
 	
 	

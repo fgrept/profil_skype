@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +53,7 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/v1/user")
 @Secured("ROLE_ADMIN")
 @Api(value = "It correspondant REST Controller : contient toutes les opérations pour manager un It correspondant")
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
 public class ItCorrespondantController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantController.class);
@@ -126,7 +127,9 @@ public class ItCorrespondantController {
 		for(ItCorrespondant itCorrespondant:userManagment.listItCorrespondant()) {
 			listDto.add(mapperDomainToDto(itCorrespondant));
 		}
-		return new ResponseEntity<List<ItCorrespondantDtoResult>>(listDto,HttpStatus.OK);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("count",String.valueOf(listDto.size()));
+		return ResponseEntity.ok().header("count", String.valueOf(listDto.size())).body(listDto);
 	}
 
 	@GetMapping("/count")
@@ -153,8 +156,9 @@ public class ItCorrespondantController {
 		for(ItCorrespondant itCorrespondantResult:userManagment.listItCorrespondantFilters(itCorrespondant)) {
 			listDto.add(mapperDomainToDto(itCorrespondantResult));
 		}
-		return new ResponseEntity<List<ItCorrespondantDtoResult>>(listDto,HttpStatus.OK);
-		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("count",String.valueOf(listDto.size()));
+		return ResponseEntity.ok().header("count", String.valueOf(listDto.size())).body(listDto);
 	}
 
 	
@@ -184,29 +188,6 @@ public class ItCorrespondantController {
 				logger.info("ajout du role user");
 			}
 		}
-//		switch (role)
-//		{
-//			case "admin":
-//				logger.debug("Passage à role ADMIN");
-//				roles.add(RoleTypeEnum.ROLE_ADMIN);
-//				roles.add(RoleTypeEnum.ROLE_RESP);
-//				roles.add(RoleTypeEnum.ROLE_USER);
-//				break;
-//			case "resp":
-//				logger.debug("Passage à role RESP");
-//				roles.add(RoleTypeEnum.ROLE_RESP);
-//				roles.add(RoleTypeEnum.ROLE_USER);
-//				break;
-//			case "user":
-//				logger.debug("Passage à role USER");
-//				roles.add(RoleTypeEnum.ROLE_USER);
-//				break;
-//			default:
-//				String msg = "Le role demandé n'existe pas";
-//				logger.error(msg);
-//				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
-//		}
-//
 		try {
 			isUpdate = userManagment.updateRoleItCorrespondant(id, roles);
 		} catch (NotFoundException e) {
