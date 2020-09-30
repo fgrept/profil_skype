@@ -260,13 +260,14 @@ public class SkypeProfileController {
 	}
 
 	
-	@PostMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
+	@PostMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}/{sortAsc}")
 	@ApiOperation(value = "Récupère un ensemble de profils skype stockés selon des critères de pagination et des critères de recherches")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, liste retournée"),
 			@ApiResponse(code = 304,message = "Critères de pagination incorrects"),
 	})
-	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage, @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria){
+	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage,
+																				   @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria, @PathVariable("sortAsc") String sortAsc){
 
 //		logger.info("profil DTO "+searchCriteria.toString());
 		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
@@ -283,8 +284,13 @@ public class SkypeProfileController {
 		}
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
 //		logger.info("profil domaine "+profilDom.toString());
-		
-		List<SkypeProfile> profilListDom = skypeProfileManagement.findSkypeProfileWithCriteriaPage(profilDom,numberPage,sizePage,criteria,true);
+		boolean isSortAsc;
+		if ("ASC".equals(sortAsc)) {
+			isSortAsc = true;
+		} else {
+			isSortAsc = false;
+		}
+		List<SkypeProfile> profilListDom = skypeProfileManagement.findSkypeProfileWithCriteriaPage(profilDom,numberPage,sizePage,criteria,isSortAsc);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("count", String.valueOf(profilListDom.size()));
 		
