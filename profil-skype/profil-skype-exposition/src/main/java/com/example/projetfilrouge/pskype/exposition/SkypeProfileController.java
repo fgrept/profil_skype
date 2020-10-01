@@ -59,6 +59,26 @@ public class SkypeProfileController {
 	@Autowired
 	private ICollaboraterManagment collabManagement;
 
+	@GetMapping("/get/{collaboraterId}")
+	@ApiOperation(value = "récupère le profil skype du collaborateur")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),
+			@ApiResponse(code = 304,message = "Collaborateur Id incorrect"),
+			@ApiResponse(code = 404,message = "Profil skype non trouvé pour le collaborateur en entrée")
+	})
+	public ResponseEntity<SkypeProfileDtoSearch> getByCollaboraterId(@PathVariable("collaboraterId") String collaboraterId) {
+
+		if (collaboraterId.length()>17) {
+			String msg = "id collaborateur : " + collaboraterId + "incorrect";
+			throw new ResponseStatusException(HttpStatus.NOT_MODIFIED, msg);
+		}
+		SkypeProfile skypeProfile = skypeProfileManagement.findSkypeProfilFromCollab(collaboraterId);
+		if (skypeProfile == null) {
+			String msg = "Profil skype non trouvé pour le collaborateur "+collaboraterId;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg);
+		}
+		return new ResponseEntity<SkypeProfileDtoSearch>(mapDomainToDtoSearch(skypeProfile), HttpStatus.OK);
+	}
 	
 	@Secured({"ROLE_RESP","ROLE_ADMIN"})
 	@PostMapping("/create")
@@ -184,8 +204,7 @@ public class SkypeProfileController {
 		}
 
 	}
-	
-//	@Secured({"ROLE_RESP","ROLE_ADMIN", "ROLE_USER"})
+
 	@GetMapping("/list/all")
 	@ApiOperation(value = "Récupère l'ensemble des profils skype stockés")
 	@ApiResponse(code = 200,message ="Ok, liste retournée")
