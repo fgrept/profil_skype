@@ -35,6 +35,22 @@ public class Site {
 		this.siteCity=city;
 	}
 
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+
+	public void setSiteAddress(String siteAddress) {
+		this.siteAddress = siteAddress;
+	}
+
+	public void setSitePostalCode(String sitePostalCode) {
+		this.sitePostalCode = sitePostalCode;
+	}
+
+	public void setSiteCity(String siteCity) {
+		this.siteCity = siteCity;
+	}
+
 	public Site(String code){
 		this.siteCode=code;
 	}

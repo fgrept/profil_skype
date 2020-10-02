@@ -151,6 +151,23 @@ public class Collaborater extends Person {
 		return true;
 	}
 
+	public void setCollaboraterId(String collaboraterId) {
+		this.collaboraterId = collaboraterId;
+	}
 
-	
+	public void setDeskPhoneNumber(String deskPhoneNumber) {
+		this.deskPhoneNumber = deskPhoneNumber;
+	}
+
+	public void setMobilePhoneNumber(String mobilePhoneNumber) {
+		this.mobilePhoneNumber = mobilePhoneNumber;
+	}
+
+	public void setMailAdress(String mailAdress) {
+		this.mailAdress = mailAdress;
+	}
+
+	public void setOrgaUnit(OrganizationUnity orgaUnit) {
+		this.orgaUnit = orgaUnit;
+	}
 }

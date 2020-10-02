@@ -48,7 +48,7 @@ public class BatchItCorrespondantProcessor implements ItemProcessor<ItCorrespond
 		
 	    Set<ConstraintViolation<ItCorrespondantDto>> constraintViolations = 
 	    	      validator.validate(item);
-	    if (constraintViolations.isEmpty() ) {
+	    if (constraintViolations.size() > 0 ) {
 	    	String sError = "Données de l'it correspondant incorrects en ligne : " + cptLigne;
 	    	log.error(sError);
 	    	return null;

@@ -46,9 +46,11 @@ public class BatchCollaboraterProcessor implements ItemProcessor<CollaboraterDto
 		
 	    Set<ConstraintViolation<CollaboraterDtoBatch>> constraintViolations = 
 	    	      validator.validate(item);
-	    if (constraintViolations.isEmpty() ) {
+
+	    if (constraintViolations.size() >0 ) {
 	    	String sError = "Données du collaborateur incorrects en ligne : " + cptLigne;
 	    	log.error(sError);
+	    	log.error(constraintViolations.toString());
 	    	return null;
 	      }
 		

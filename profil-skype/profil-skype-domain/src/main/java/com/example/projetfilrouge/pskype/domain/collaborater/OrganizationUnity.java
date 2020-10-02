@@ -46,5 +46,15 @@ public class OrganizationUnity {
 		return orgaSite;
 	}
 
+	public void setOrgaUnityCode(String orgaUnityCode) {
+		this.orgaUnityCode = orgaUnityCode;
+	}
 
+	public void setOrgaUnityType(String orgaUnityType) {
+		this.orgaUnityType = orgaUnityType;
+	}
+
+	public void setOrgaShortLabel(String orgaShortLabel) {
+		this.orgaShortLabel = orgaShortLabel;
+	}
 }
