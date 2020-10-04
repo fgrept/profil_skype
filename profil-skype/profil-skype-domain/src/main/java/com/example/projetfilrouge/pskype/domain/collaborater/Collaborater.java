@@ -170,4 +170,15 @@ public class Collaborater extends Person {
 	public void setOrgaUnit(OrganizationUnity orgaUnit) {
 		this.orgaUnit = orgaUnit;
 	}
+
+	@Override
+	public String toString() {
+		return "Collaborater{" +
+				"collaboraterId='" + collaboraterId + '\'' +
+				", deskPhoneNumber='" + deskPhoneNumber + '\'' +
+				", mobilePhoneNumber='" + mobilePhoneNumber + '\'' +
+				", mailAdress='" + mailAdress + '\'' +
+				", orgaUnit=" + orgaUnit +
+				'}';
+	}
 }

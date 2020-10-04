@@ -288,7 +288,7 @@ public class SkypeProfileController {
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteriaPage(@RequestBody SkypeProfileDtoSearch searchCriteria,@PathVariable("numberPage") int numberPage,
 																				   @PathVariable("sizePage") int sizePage, @PathVariable("criteria") String criteria, @PathVariable("sortAsc") String sortAsc){
 
-//		logger.info("profil DTO "+searchCriteria.toString());
+		logger.info("profil DTO "+searchCriteria.toString());
 		List<SkypeProfileDtoSearch> profilListDto = new ArrayList<SkypeProfileDtoSearch>();
 		if (numberPage<0) {
 			logger.error("numéro de page négatif");
@@ -302,16 +302,17 @@ public class SkypeProfileController {
 			criteria="";
 		}
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
-//		logger.info("profil domaine "+profilDom.toString());
+		logger.info("profil domaine "+profilDom.toString());
+		logger.info("Collaborateur du profil " + profilDom.getCollaborater().toString());
 		boolean isSortAsc;
-		if ("ASC".equals(sortAsc)) {
+		if ("ASC".equals(sortAsc.toUpperCase())) {
 			isSortAsc = true;
 		} else {
 			isSortAsc = false;
 		}
 		List<SkypeProfile> profilListDom = skypeProfileManagement.findSkypeProfileWithCriteriaPage(profilDom,numberPage,sizePage,criteria,isSortAsc);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("count", String.valueOf(profilListDom.size()));
+		responseHeaders.set("count", String.valueOf(skypeProfileManagement.findSkypeProfileWithCriteria(profilDom).size()));
 		
 		for (SkypeProfile skypeProfile : profilListDom) {
 			profilListDto.add(mapDomainToDtoSearch(skypeProfile));
