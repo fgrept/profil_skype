@@ -129,7 +129,9 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 		return repositorySkypeProfile.findAllSkypeProfileFilters(profil.isEnterpriseVoiceEnabled(), profil.getVoicePolicy(),
 				profil.getDialPlan(), profil.getSamAccountName(), profil.isExUmEnabled(),
 				profil.getExchUser(), profil.getStatusProfile(), profil.getCollaborater().getOrgaUnit().getOrgaUnityCode(),
-				profil.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode());
+				profil.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode(),
+				profil.getCollaborater().getLastNamePerson(),
+				profil.getCollaborater().getFirstNamePerson());
 	}
 	
 

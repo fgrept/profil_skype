@@ -175,6 +175,8 @@ public class Collaborater extends Person {
 	public String toString() {
 		return "Collaborater{" +
 				"collaboraterId='" + collaboraterId + '\'' +
+				", lastName='" + getLastNamePerson() + '\'' +
+				", firstName='" + getFirstNamePerson() + '\'' +
 				", deskPhoneNumber='" + deskPhoneNumber + '\'' +
 				", mobilePhoneNumber='" + mobilePhoneNumber + '\'' +
 				", mailAdress='" + mailAdress + '\'' +

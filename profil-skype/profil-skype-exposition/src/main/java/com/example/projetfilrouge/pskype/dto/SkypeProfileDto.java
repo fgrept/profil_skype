@@ -27,6 +27,7 @@ public class SkypeProfileDto {
 	private String samAccountName;
 	@Pattern(regexp = "^(true|false)$", message = "exUmEnabled doit être true ou false")
 	private String exUmEnabled;
+	@Pattern(regexp = "^(|Linked Mailbox)", message = "exchUser non renseigné ou égal à Linked Mailbox")
 	private String exchUser;
 	private String objectClass;
 	//statut du profil : activé, désactivé, expiré

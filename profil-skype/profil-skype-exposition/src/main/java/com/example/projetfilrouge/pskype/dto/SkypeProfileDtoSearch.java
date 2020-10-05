@@ -69,5 +69,15 @@ public class SkypeProfileDtoSearch extends SkypeProfileDto {
 	public void setSiteCode(String siteCode) {
 		this.siteCode = siteCode;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "SkypeProfileDtoSearch{" +
+				"expirationDate=" + expirationDate +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", orgaUnityCode='" + orgaUnityCode + '\'' +
+				", siteCode='" + siteCode + '\'' +
+				'}';
+	}
 }

@@ -82,7 +82,8 @@ public interface ISkypeProfileDomain {
 		 */
 		List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
 				String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser,
-				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode);
+				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode,
+				String lastName, String Firstname);
 		/**
 		 * Méthode permettant de restituer le nombre de profils skype existants
 		 * @return nombre de profil skype

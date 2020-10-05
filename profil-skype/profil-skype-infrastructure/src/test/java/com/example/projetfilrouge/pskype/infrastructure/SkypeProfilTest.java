@@ -183,12 +183,12 @@ public class SkypeProfilTest {
 				
 		assertAll(						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, null, null, null,"8812"))
+						findAllSkypeProfileFilters(null, null, null, null, null, null, null, null,"8812", null, null))
 						.hasSize(1)
 						.allMatch(s -> s.getSIP() == "sip:fabian.radelle@live.bnpparibas.com"),
 						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, null, null,"SDI2",null))
+						findAllSkypeProfileFilters(null, null, null, null, null, null, null,"SDI2",null, null, null))
 						.hasSize(2)
 						.allMatch(s -> s.getCollaborater().getOrgaUnit().getOrgaUnityCode() == "SDI2")
 				);
@@ -215,36 +215,36 @@ public class SkypeProfilTest {
 		
 		assertAll(
 				() -> assertThat(skypeProfilDomain.
-				findAllSkypeProfileFilters(false, null, null, null, null, null, null,null,null))
+				findAllSkypeProfileFilters(false, null, null, null, null, null, null,null,null, null, null))
 				.hasSize(1)
 				.allMatch(s -> s.isEnterpriseVoiceEnabled() == false)
 				.allMatch(s -> s.getSIP() == "sip:stefan.radelle@live.bnpparibas.com"),
 				
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(true, "InternationalNonAuthorized", null, null, null, null, null,null,null))
+						findAllSkypeProfileFilters(true, "InternationalNonAuthorized", null, null, null, null, null,null,null, null, null))
 						.hasSize(2)
 						.allMatch(s -> s.isEnterpriseVoiceEnabled() == true)
 						.allMatch(s -> s.getVoicePolicy() == "InternationalNonAuthorized"),
 						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, "InternationalNonAuthorized", "DP-FR", null, null, null, null,null,null))
+						findAllSkypeProfileFilters(null, "InternationalNonAuthorized", "DP-FR", null, null, null, null,null,null, null, null))
 						.hasSize(1)
 						.allMatch(s -> s.getVoicePolicy() == "InternationalNonAuthorized")
 						.allMatch(s -> s.getDialPlan() == "DP-FR"),
 						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, "M002117016", null, null, null,null,null))
+						findAllSkypeProfileFilters(null, null, null, "M002117016", null, null, null,null,null, null, null))
 						.hasSize(2)
 						.allMatch(s -> s.getSamAccountName() == "M002117016"),
 						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, "M002117016", true, null, null,null,null))
+						findAllSkypeProfileFilters(null, null, null, "M002117016", true, null, null,null,null, null, null))
 						.hasSize(1)
 						.allMatch(s -> s.getSamAccountName() == "M002117016")
 						.allMatch(s -> s.getSIP() == "sip:fabian.radelle@live.bnpparibas.com"),
 						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Google", null,null,null))
+						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Google", null,null,null, null, null))
 						.hasSize(1)
 						.allMatch(s -> s.getExchUser() == "Linked Google")
 						.allMatch(s -> s.getSIP() == "sip:paulo.radelle@live.bnpparibas.com")
@@ -275,7 +275,7 @@ public class SkypeProfilTest {
 		
 		assertAll(						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Mailbox", StatusSkypeProfileEnum.DISABLED,null,null))
+						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Mailbox", StatusSkypeProfileEnum.DISABLED,null,null, null, null))
 						.hasSize(1)
 						.allMatch(s -> s.getSIP() == "sip:stefan.radelle@live.bnpparibas.com")
 				);
