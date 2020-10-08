@@ -112,7 +112,26 @@ public class ItCorrespondantController {
 		}
 		
 	}
+	@GetMapping("get/{collaboraterId}")
+	@ApiOperation(value = "Récupère l'it correspondant à partir de son id annuaire")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
+			@ApiResponse(code = 400,message = "id annuaire incorrect en entrée"),
+			@ApiResponse(code = 404,message = "it correspondant non trouvé en base")
+	})
+	public ResponseEntity<ItCorrespondantDtoResult> getItCorrespondantById(@PathVariable("collaboraterId") String collaboraterId) {
 
+		if (collaboraterId.length()>17) {
+			String msg = "id collaborateur : " + collaboraterId + "incorrect";
+			throw new ResponseStatusException(HttpStatus.NOT_MODIFIED, msg);
+		}
+		ItCorrespondant itCorrespondantResult = userManagment.findItCorrespondantById(collaboraterId);
+		if (itCorrespondantResult == null) {
+			String msg = "Utilsateur non trouvé pour le collaborateur "+collaboraterId;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg);
+		}
+		return new ResponseEntity<ItCorrespondantDtoResult>(mapperDomainToDto(itCorrespondantResult), HttpStatus.OK);
+	}
 
 	/**
 	 * API permettant de récupérer l'ensemble des utilisateurs présents en table

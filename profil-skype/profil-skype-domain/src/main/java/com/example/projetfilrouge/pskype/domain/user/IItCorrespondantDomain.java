@@ -68,6 +68,12 @@ public interface IItCorrespondantDomain {
 	 * @return List<ItCorrespondant>
 	 */
 	List<ItCorrespondant> findAllItCorrespondantFilters(String id, String lastName, String firstName, String deskPhone, String mobilePhone, String mailAddress);
+
+	/**
+	 * Retourne les donénes it correspondant à partir de l'id annuaire
+	 * @param id id annuaire
+	 * @return ItCorrespondant
+	 */
 	ItCorrespondant findItCorrespondantByCollaboraterId(String id);
 /**
  * 
@@ -78,7 +84,7 @@ public interface IItCorrespondantDomain {
 
 	/**
 	 * Retourne le nombre d'it correspondant
-	 * @return
+	 * @return Long
 	 */
     Long countItCorrespondant();
 }

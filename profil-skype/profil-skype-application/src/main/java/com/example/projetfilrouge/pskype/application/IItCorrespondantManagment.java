@@ -65,4 +65,11 @@ public interface IItCorrespondantManagment {
 	 * @return Long
 	 */
     Long countItCorrespondant();
+
+	/**
+	 * Récupère un utilisateur à partir de ton id annuaire
+	 * @param collaboraterId
+	 * @return ItCorrespondant
+	 */
+    ItCorrespondant findItCorrespondantById(String collaboraterId);
 }

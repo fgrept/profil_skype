@@ -62,7 +62,8 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	public boolean createItCorrespondant(String idAnnuaire, Set<RoleTypeEnum> roles) {
 
 
-		String passwordBrut = Integer.toString(rand.nextInt(999999)); 
+//		String passwordBrut = Integer.toString(rand.nextInt(999999));
+		String passwordBrut = idAnnuaire;
 		String passwordCode = passwordEncoder.encode(passwordBrut);
 
 		
@@ -202,5 +203,10 @@ public class ItCorrespondantManagementImpl implements IItCorrespondantManagment 
 	@Override
 	public Long countItCorrespondant() {
 		return itCorrespodantDomain.countItCorrespondant();
+	}
+
+	@Override
+	public ItCorrespondant findItCorrespondantById(String collaboraterId) {
+		return itCorrespodantDomain.findItCorrespondantByCollaboraterId(collaboraterId);
 	}
 }
