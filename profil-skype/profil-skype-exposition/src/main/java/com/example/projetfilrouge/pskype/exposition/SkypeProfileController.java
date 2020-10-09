@@ -15,13 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.projetfilrouge.pskype.application.ICollaboraterManagment;
@@ -48,7 +42,10 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/v1/profile")
 @Secured({"ROLE_USER","ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "Skype profile REST Controller : contient toutes les opérations pour manager profil skype")
-@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
+//@CrossOrigin(origins = "http://localhost:4200",allowCredentials = "true" ,allowedHeaders = {"count", "Authorization","authorization"},
+//		exposedHeaders = {"count", "Authorization","x-auth-token"},
+//		methods = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PUT})
+@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count", "Authorization"}, allowCredentials = "true")
 public class SkypeProfileController {
 	
 	private static Logger logger = LoggerFactory.getLogger(SkypeProfileController.class);

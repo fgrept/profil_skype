@@ -279,10 +279,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					CriteriaBuilder criteriaBuilder) {
 				
 				List<Predicate> predicates = new ArrayList<>();
-//				if (enterpriseVoiceEnabled != null) {
-//					logger.debug("recherche par enterpriseVoiceEnabled ");
-//					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
-//				}
+				if (enterpriseVoiceEnabled != null) {
+					logger.debug("recherche par enterpriseVoiceEnabled ");
+					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+				}
 				
 				if (voicePolicy != null && !("".equals(voicePolicy))) {
 					logger.debug("recherche par voicePolicy ");
@@ -386,10 +386,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					CriteriaBuilder criteriaBuilder) {
 				
 				List<Predicate> predicates = new ArrayList<>();
-//				if (enterpriseVoiceEnabled != null) {
-//					logger.debug("recherche par enterpriseVoiceEnabled ");
-//					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
-//				}
+				if (enterpriseVoiceEnabled != null) {
+					logger.debug("recherche par enterpriseVoiceEnabled ");
+					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+				}
 				
 				if (voicePolicy != null && !("".equals(voicePolicy))) {
 					logger.info("recherche par voicePolicy");

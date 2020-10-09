@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/v1/user")
 @Secured("ROLE_ADMIN")
 @Api(value = "It correspondant REST Controller : contient toutes les opérations pour manager un It correspondant")
-@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
+//@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
 public class ItCorrespondantController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ItCorrespondantController.class);
