@@ -245,10 +245,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	@Override
 	public List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
-			String orgaUnityCode, String siteCode, String lastName, String firstName, Date expirationDate) {
+			String orgaUnityCode, String siteCode, String lastName, String firstName, Date expirationDate, String collaboraterId) {
 
 		List<SkypeProfileEntity> profilEntity = findAllSkypeProfileFilter(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile,
-				orgaUnityCode, siteCode, lastName, firstName, expirationDate);
+				orgaUnityCode, siteCode, lastName, firstName, expirationDate, collaboraterId);
 		
 		return entityMapperSkypeProfile.mapToDomainList(profilEntity);
 	}
@@ -266,7 +266,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	 */
 	private List<SkypeProfileEntity> findAllSkypeProfileFilter(Boolean enterpriseVoiceEnabled, String voicePolicy,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
-			String orgaUnityCode, String siteCode, String lastName, String firstName, Date expirationDate) {
+			String orgaUnityCode, String siteCode, String lastName, String firstName, Date expirationDate, String collaboraterId) {
 
 		return skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
 			
@@ -280,10 +280,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					CriteriaBuilder criteriaBuilder) {
 				
 				List<Predicate> predicates = new ArrayList<>();
-				if (enterpriseVoiceEnabled != null) {
-					logger.debug("recherche par enterpriseVoiceEnabled ");
-					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
-				}
+//				if (enterpriseVoiceEnabled != null) {
+//					logger.debug("recherche par enterpriseVoiceEnabled ");
+//					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+//				}
 				
 				if (voicePolicy != null && !("".equals(voicePolicy))) {
 					logger.debug("recherche par voicePolicy ");
@@ -334,8 +334,12 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("collaborater").get("firstName")),"%"+firstName.toLowerCase()+"%"));
 				}
 				if (expirationDate!= null  && !("".equals(expirationDate))) {
-					logger.info("recherche par expirationDate "+expirationDate);
+					logger.debug("recherche par expirationDate "+expirationDate);
 					predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("expirationDate"),expirationDate));
+				}
+				if (collaboraterId != null && !("".equals(collaboraterId))) {
+					logger.debug("recherche par collaboraterId "+collaboraterId);
+					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("collaboraterId"),collaboraterId));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}
@@ -362,6 +366,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					profilDom.getCollaborater().getFirstNamePerson(),
 					profilDom.getCollaborater().getLastNamePerson(),
 					profilDom.getExpirationDate(),
+					profilDom.getCollaborater().getCollaboraterId(),
 					PageRequest.of(numberPage,sizePage,Sort.by(sortCriteria).ascending()));
 		}else {
 			profilEntity = findAllSkypeProfilByPage(profilDom.isEnterpriseVoiceEnabled(),profilDom.getVoicePolicy(),profilDom.getDialPlan(),profilDom.getSamAccountName(),profilDom.isExUmEnabled(),profilDom.getExchUser(),profilDom.getStatusProfile(),
@@ -370,6 +375,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					profilDom.getCollaborater().getFirstNamePerson(),
 					profilDom.getCollaborater().getLastNamePerson(),
 					profilDom.getExpirationDate(),
+					profilDom.getCollaborater().getCollaboraterId(),
 					PageRequest.of(numberPage,sizePage,Sort.by(sortCriteria).descending()));
 		
 		}
@@ -378,9 +384,11 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	
 	private List<SkypeProfileEntity> findAllSkypeProfilByPage(Boolean enterpriseVoiceEnabled, String voicePolicy,
 															  String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
-															  String orgaUnityCode, String siteCode, String firstName, String lastName, Date expirationDate, Pageable pageable) {
+															  String orgaUnityCode, String siteCode, String firstName, String lastName, Date expirationDate, String collaboraterId,
+															  Pageable pageable) {
 
 		logger.info("Statut profil :"+statusProfile);
+		logger.info("collaboraterId: "+collaboraterId);
 		return skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
 			
 			/**
@@ -393,10 +401,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					CriteriaBuilder criteriaBuilder) {
 				
 				List<Predicate> predicates = new ArrayList<>();
-				if (enterpriseVoiceEnabled != null) {
-					logger.debug("recherche par enterpriseVoiceEnabled ");
-					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
-				}
+//				if (enterpriseVoiceEnabled != null) {
+//					logger.info("recherche par enterpriseVoiceEnabled ");
+//					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+//				}
 				
 				if (voicePolicy != null && !("".equals(voicePolicy))) {
 					logger.info("recherche par voicePolicy");
@@ -450,6 +458,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 				if (expirationDate!= null  && !("".equals(expirationDate))) {
 					logger.info("recherche par expirationDate "+expirationDate);
 					predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("expirationDate"),expirationDate));
+				}
+				if (collaboraterId != null && !("".equals(collaboraterId))) {
+					logger.info("recherche par collaboraterId "+collaboraterId);
+					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("collaboraterId"),collaboraterId));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}

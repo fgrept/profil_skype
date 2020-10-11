@@ -183,12 +183,12 @@ public class SkypeProfilTest {
 				
 		assertAll(						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, null, null, null,"8812", null, null, null))
+						findAllSkypeProfileFilters(null, null, null, null, null, null, null, null,"8812", null, null, null, null))
 						.hasSize(1)
 						.allMatch(s -> s.getSIP() == "sip:fabian.radelle@live.bnpparibas.com"),
 						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, null, null,"SDI2",null, null, null, null))
+						findAllSkypeProfileFilters(null, null, null, null, null, null, null,"SDI2",null, null, null, null, null))
 						.hasSize(2)
 						.allMatch(s -> s.getCollaborater().getOrgaUnit().getOrgaUnityCode() == "SDI2")
 				);
@@ -275,7 +275,7 @@ public class SkypeProfilTest {
 		
 		assertAll(						
 				() -> assertThat(skypeProfilDomain.
-						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Mailbox", StatusSkypeProfileEnum.DISABLED,null,null, null, null, null))
+						findAllSkypeProfileFilters(null, null, null, null, null, "Linked Mailbox", StatusSkypeProfileEnum.DISABLED,null,null, null, null, null, null))
 						.hasSize(1)
 						.allMatch(s -> s.getSIP() == "sip:stefan.radelle@live.bnpparibas.com")
 				);
