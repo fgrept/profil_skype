@@ -304,6 +304,7 @@ public class SkypeProfileController {
 		if (searchCriteria.getVoicePolicy() == null) {
 			searchCriteria.setVoicePolicy("");
 		}
+		searchCriteria.setVoicePolicy("voiceEnabled=".concat(searchCriteria.getEnterpriseVoiceEnabled()).concat("&").concat(searchCriteria.getVoicePolicy()));
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
 		logger.info("profil domaine "+profilDom.toString());
 		logger.info("Collaborateur du profil " + profilDom.getCollaborater().toString());
