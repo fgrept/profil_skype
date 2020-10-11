@@ -298,6 +298,12 @@ public class SkypeProfileController {
 		if (criteria == null) {
 			criteria="";
 		}
+		if (searchCriteria.getEnterpriseVoiceEnabled() == null) {
+			searchCriteria.setEnterpriseVoiceEnabled("");
+		}
+		if (searchCriteria.getVoicePolicy() == null) {
+			searchCriteria.setVoicePolicy("");
+		}
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
 		logger.info("profil domaine "+profilDom.toString());
 		logger.info("Collaborateur du profil " + profilDom.getCollaborater().toString());
@@ -348,6 +354,7 @@ public class SkypeProfileController {
 		Collaborater collab = new Collaborater(profilDto.getCollaboraterId(), profilDto.getLastName(),profilDto.getFirstName(),uo);
 
 		// suite du mapper pour les attributs de recherche du profil
+
 		SkypeProfile profilDom = new SkypeProfile(profilDto.getSIP(),
 				Boolean.valueOf(profilDto.getEnterpriseVoiceEnabled()),
 				profilDto.getVoicePolicy(),
@@ -362,6 +369,9 @@ public class SkypeProfileController {
 		return profilDom;
 		
 	}
+
+
+
 
 	
 	private SkypeProfileDtoSearch mapDomainToDtoSearch (SkypeProfile profil) {

@@ -28,9 +28,11 @@ public class SkypeProfileDtoSearch extends SkypeProfileDto {
 								 String samAccountName, String exUmEnabled, String exchUser, String objectClass,
 								 StatusSkypeProfileEnum statusProfile, Date expirationDate, String collaboraterId, String firstName,
 								 String lastName, String orgaUnityCode, String siteCode) {
-		super(sIP, enterpriseVoiceEnabled, voicePolicy, dialPlan,
+
+		super(sIP, enterpriseVoiceEnabled, "voiceEnabled=".concat(enterpriseVoiceEnabled).concat("&").concat(voicePolicy), dialPlan,
 				samAccountName, exUmEnabled, exchUser, objectClass,
 				collaboraterId, statusProfile);
+
 		this.expirationDate = expirationDate;
 		this.firstName = firstName;
 		this.lastName = lastName;

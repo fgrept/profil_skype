@@ -264,7 +264,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	 * @param exchUser
 	 * @return
 	 */
-	private List<SkypeProfileEntity> findAllSkypeProfileFilter(Boolean enterpriseVoiceEnabled, String voicePolicy,
+	private List<SkypeProfileEntity> findAllSkypeProfileFilter(Boolean enterpriseVoiceEnabled, String voicePolicyWithVoiceEnabled,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
 			String orgaUnityCode, String siteCode, String lastName, String firstName, Date expirationDate, String collaboraterId) {
 
@@ -280,11 +280,11 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					CriteriaBuilder criteriaBuilder) {
 				
 				List<Predicate> predicates = new ArrayList<>();
-//				if (enterpriseVoiceEnabled != null) {
-//					logger.debug("recherche par enterpriseVoiceEnabled ");
-//					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
-//				}
-				
+				if (voicePolicyWithVoiceEnabled.indexOf("voiceEnabled=&") == -1) {
+					logger.debug("recherche par enterpriseVoiceEnabled ");
+					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+				}
+				String voicePolicy = voicePolicyWithVoiceEnabled.substring(voicePolicyWithVoiceEnabled.indexOf("&")+1);
 				if (voicePolicy != null && !("".equals(voicePolicy))) {
 					logger.debug("recherche par voicePolicy ");
 					predicates.add(criteriaBuilder.equal(root.get("voicePolicy"),voicePolicy));
@@ -382,7 +382,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 		return entityMapperSkypeProfile.mapToDomainList(profilEntity);
 	}
 	
-	private List<SkypeProfileEntity> findAllSkypeProfilByPage(Boolean enterpriseVoiceEnabled, String voicePolicy,
+	private List<SkypeProfileEntity> findAllSkypeProfilByPage(Boolean enterpriseVoiceEnabled, String voicePolicyWithVoiceEnabled,
 															  String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
 															  String orgaUnityCode, String siteCode, String firstName, String lastName, Date expirationDate, String collaboraterId,
 															  Pageable pageable) {
@@ -401,11 +401,12 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					CriteriaBuilder criteriaBuilder) {
 				
 				List<Predicate> predicates = new ArrayList<>();
-//				if (enterpriseVoiceEnabled != null) {
-//					logger.info("recherche par enterpriseVoiceEnabled ");
-//					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
-//				}
-				
+				if (voicePolicyWithVoiceEnabled.indexOf("voiceEnabled=&") ==-1) {
+					logger.info("recherche par enterpriseVoiceEnabled ");
+					predicates.add(criteriaBuilder.equal(root.get("enterpriseVoiceEnabled"),enterpriseVoiceEnabled));
+				}
+
+				String voicePolicy = voicePolicyWithVoiceEnabled.substring(voicePolicyWithVoiceEnabled.indexOf("&")+1);
 				if (voicePolicy != null && !("".equals(voicePolicy))) {
 					logger.info("recherche par voicePolicy");
 					predicates.add(criteriaBuilder.equal(root.get("voicePolicy"),voicePolicy));
