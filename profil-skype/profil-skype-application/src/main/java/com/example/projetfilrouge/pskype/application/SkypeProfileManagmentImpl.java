@@ -131,7 +131,8 @@ public class SkypeProfileManagmentImpl implements ISkypeProfileManagement, ISkyp
 				profil.getExchUser(), profil.getStatusProfile(), profil.getCollaborater().getOrgaUnit().getOrgaUnityCode(),
 				profil.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode(),
 				profil.getCollaborater().getLastNamePerson(),
-				profil.getCollaborater().getFirstNamePerson());
+				profil.getCollaborater().getFirstNamePerson(),
+				profil.getExpirationDate());
 	}
 	
 

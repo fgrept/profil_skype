@@ -2,6 +2,7 @@ package com.example.projetfilrouge.pskype.infrastructure.skypeprofile;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -244,10 +245,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	@Override
 	public List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
-			String orgaUnityCode, String siteCode, String lastName, String firstName) {
+			String orgaUnityCode, String siteCode, String lastName, String firstName, Date expirationDate) {
 
 		List<SkypeProfileEntity> profilEntity = findAllSkypeProfileFilter(enterpriseVoiceEnabled, voicePolicy, dialPlan, samAccountName, exUmEnabled, exchUser, statusProfile,
-				orgaUnityCode, siteCode, lastName, firstName);
+				orgaUnityCode, siteCode, lastName, firstName, expirationDate);
 		
 		return entityMapperSkypeProfile.mapToDomainList(profilEntity);
 	}
@@ -265,7 +266,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	 */
 	private List<SkypeProfileEntity> findAllSkypeProfileFilter(Boolean enterpriseVoiceEnabled, String voicePolicy,
 			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
-			String orgaUnityCode, String siteCode, String lastName, String firstName) {
+			String orgaUnityCode, String siteCode, String lastName, String firstName, Date expirationDate) {
 
 		return skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
 			
@@ -332,6 +333,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					logger.debug("recherche par firstName "+firstName);
 					predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("collaborater").get("firstName")),"%"+firstName.toLowerCase()+"%"));
 				}
+				if (expirationDate!= null  && !("".equals(expirationDate))) {
+					logger.info("recherche par expirationDate "+expirationDate);
+					predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("expirationDate"),expirationDate));
+				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}
 
@@ -356,6 +361,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					profilDom.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode(),
 					profilDom.getCollaborater().getFirstNamePerson(),
 					profilDom.getCollaborater().getLastNamePerson(),
+					profilDom.getExpirationDate(),
 					PageRequest.of(numberPage,sizePage,Sort.by(sortCriteria).ascending()));
 		}else {
 			profilEntity = findAllSkypeProfilByPage(profilDom.isEnterpriseVoiceEnabled(),profilDom.getVoicePolicy(),profilDom.getDialPlan(),profilDom.getSamAccountName(),profilDom.isExUmEnabled(),profilDom.getExchUser(),profilDom.getStatusProfile(),
@@ -363,6 +369,7 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 					profilDom.getCollaborater().getOrgaUnit().getOrgaSite().getSiteCode(),
 					profilDom.getCollaborater().getFirstNamePerson(),
 					profilDom.getCollaborater().getLastNamePerson(),
+					profilDom.getExpirationDate(),
 					PageRequest.of(numberPage,sizePage,Sort.by(sortCriteria).descending()));
 		
 		}
@@ -370,8 +377,8 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 	}
 	
 	private List<SkypeProfileEntity> findAllSkypeProfilByPage(Boolean enterpriseVoiceEnabled, String voicePolicy,
-			String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
-			String orgaUnityCode, String siteCode, String firstName, String lastName, Pageable pageable) {
+															  String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser, StatusSkypeProfileEnum statusProfile,
+															  String orgaUnityCode, String siteCode, String firstName, String lastName, Date expirationDate, Pageable pageable) {
 
 		logger.info("Statut profil :"+statusProfile);
 		return skypeProfileRepository.findAll(new Specification<SkypeProfileEntity>() {
@@ -439,6 +446,10 @@ public class SkypeProfileRepositoryImpl implements ISkypeProfileDomain {
 				if (siteCode != null && !("".equals(siteCode))) {
 					logger.info("recherche par siteCode "+siteCode);
 					predicates.add(criteriaBuilder.equal(root.get("collaborater").get("orgaUnit").get("orgaSite").get("siteCode"),siteCode));
+				}
+				if (expirationDate!= null  && !("".equals(expirationDate))) {
+					logger.info("recherche par expirationDate "+expirationDate);
+					predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("expirationDate"),expirationDate));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}

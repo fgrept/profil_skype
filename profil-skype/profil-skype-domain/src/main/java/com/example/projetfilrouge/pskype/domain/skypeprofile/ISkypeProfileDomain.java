@@ -2,6 +2,7 @@ package com.example.projetfilrouge.pskype.domain.skypeprofile;
 
 import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -83,7 +84,7 @@ public interface ISkypeProfileDomain {
 		List<SkypeProfile> findAllSkypeProfileFilters(Boolean enterpriseVoiceEnabled, String voicePolicy,
 				String dialPlan, String samAccountName, Boolean exUmEnabled, String exchUser,
 				StatusSkypeProfileEnum statusProfile, String orgaUnityCode, String siteCode,
-				String lastName, String Firstname);
+				String lastName, String Firstname, Date expirationDate);
 		/**
 		 * Méthode permettant de restituer le nombre de profils skype existants
 		 * @return nombre de profil skype
