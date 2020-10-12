@@ -23,7 +23,11 @@ public class SkypeProfileDtoSearch extends SkypeProfileDto {
 	private String lastName;
 	private String orgaUnityCode;
 	private String siteCode;
-	
+
+	public SkypeProfileDtoSearch(){
+
+	}
+
 	public SkypeProfileDtoSearch(String sIP, String enterpriseVoiceEnabled, String voicePolicy, String dialPlan,
 								 String samAccountName, String exUmEnabled, String exchUser, String objectClass,
 								 StatusSkypeProfileEnum statusProfile, Date expirationDate, String collaboraterId, String firstName,

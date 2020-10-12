@@ -8,6 +8,7 @@ import com.example.projetfilrouge.pskype.domain.collaborater.Collaborater;
 import com.example.projetfilrouge.pskype.domain.collaborater.OrganizationUnity;
 import com.example.projetfilrouge.pskype.domain.collaborater.Site;
 import com.example.projetfilrouge.pskype.domain.skypeprofile.SkypeProfile;
+import com.example.projetfilrouge.pskype.dto.SkypeProfileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class SkypeProfileController {
 		SkypeProfile skypeProfile = skypeProfileManagement.findSkypeProfilFromCollab(collaboraterId);
 		if (skypeProfile == null) {
 			String msg = "Profil skype non trouvé pour le collaborateur "+collaboraterId;
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, msg);
+			return new ResponseEntity<SkypeProfileDtoSearch>(new SkypeProfileDtoSearch(), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<SkypeProfileDtoSearch>(mapDomainToDtoSearch(skypeProfile), HttpStatus.OK);
 	}
@@ -402,7 +403,7 @@ public class SkypeProfileController {
 				}
 			}	
 		}
-		
+
 		SkypeProfileDtoSearch profilDto = new SkypeProfileDtoSearch(profil.getSIP(), Boolean.toString(profil.isEnterpriseVoiceEnabled()), profil.getVoicePolicy(),
 				profil.getDialPlan(), profil.getSamAccountName(), Boolean.toString(profil.isExUmEnabled()), profil.getExchUser(), profil.getObjectClass(),
 				profil.getStatusProfile(), profil.getExpirationDate(),
