@@ -262,7 +262,15 @@ public class SkypeProfileController {
 	@ApiOperation(value = "Récupère l'ensemble des profils skype stockés en fonction de critères de recherche")
 	@ApiResponse(code = 200,message ="Ok, liste retournée")
 	public ResponseEntity<List<SkypeProfileDtoSearch>> listAllProfilByCriteria(@RequestBody SkypeProfileDtoSearch searchCriteria){
-		
+
+		if (searchCriteria.getEnterpriseVoiceEnabled() == null) {
+			searchCriteria.setEnterpriseVoiceEnabled("");
+		}
+		if (searchCriteria.getVoicePolicy() == null) {
+			searchCriteria.setVoicePolicy("");
+		}
+		searchCriteria.setVoicePolicy("voiceEnabled=".concat(searchCriteria.getEnterpriseVoiceEnabled()).concat("&").concat(searchCriteria.getVoicePolicy()));
+
 		SkypeProfile profilDom = mapDtoSearchToDomain(searchCriteria);
 		
 		List<SkypeProfile> profilListDom = skypeProfileManagement.findSkypeProfileWithCriteria(profilDom);
