@@ -128,7 +128,7 @@ public class ItCorrespondantController {
 		ItCorrespondant itCorrespondantResult = userManagment.findItCorrespondantById(collaboraterId);
 		if (itCorrespondantResult == null) {
 			String msg = "Utilsateur non trouvé pour le collaborateur "+collaboraterId;
-			return new ResponseEntity<ItCorrespondantDtoResult>(new ItCorrespondantDtoResult(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<ItCorrespondantDtoResult>(new ItCorrespondantDtoResult(), HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<ItCorrespondantDtoResult>(mapperDomainToDto(itCorrespondantResult), HttpStatus.OK);
 	}

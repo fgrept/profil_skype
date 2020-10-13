@@ -63,14 +63,12 @@ public class SkypeProfileEventController {
 		if (listEvents == null) {
 			logger.debug("aucun évènement trouvé pour le profil skype demandé");
 			return ResponseEntity.ok().header("count", "0").body(listEventsDto);
-//			return new ResponseEntity<List<SkypeProfileEventDto>>(listEventsDto, HttpStatus.OK);
 		}
 
 		for (SkypeProfileEvent skypeProfileEvent : listEvents) {
 			listEventsDto.add(mapperDomaintoDto(skypeProfileEvent));
 		}
 		return ResponseEntity.ok().header("count", String.valueOf(listEventsDto.size())).body(listEventsDto);
-//		return new ResponseEntity<List<SkypeProfileEventDto>>(listEventsDto, HttpStatus.OK);
 		
 	}
 	

@@ -73,7 +73,8 @@ public class SkypeProfileController {
 		SkypeProfile skypeProfile = skypeProfileManagement.findSkypeProfilFromCollab(collaboraterId);
 		if (skypeProfile == null) {
 			String msg = "Profil skype non trouvé pour le collaborateur "+collaboraterId;
-			return new ResponseEntity<SkypeProfileDtoSearch>(new SkypeProfileDtoSearch(), HttpStatus.NOT_FOUND);
+			logger.info(msg);
+			return new ResponseEntity<SkypeProfileDtoSearch>(new SkypeProfileDtoSearch(), HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<SkypeProfileDtoSearch>(mapDomainToDtoSearch(skypeProfile), HttpStatus.OK);
 	}
