@@ -62,7 +62,7 @@ public class SkypeProfileController {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),
 			@ApiResponse(code = 304,message = "Collaborateur Id incorrect"),
-			@ApiResponse(code = 404,message = "Profil skype non trouvé pour le collaborateur en entrée")
+			@ApiResponse(code = 204,message = "Profil skype non trouvé pour le collaborateur en entrée")
 	})
 	public ResponseEntity<SkypeProfileDtoSearch> getByCollaboraterId(@PathVariable("collaboraterId") String collaboraterId) {
 

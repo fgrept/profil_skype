@@ -96,6 +96,28 @@ public class CollaboraterController {
 		return ResponseEntity.ok().header("count", String.valueOf(dto.size())).body(dto);
 //		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
+
+	@GetMapping("/get/{collaboraterId}")
+	@ApiOperation(value = "récupère le profil skype du collaborateur")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),
+			@ApiResponse(code = 304,message = "Collaborateur Id incorrect"),
+			@ApiResponse(code = 204,message = "Profil skype non trouvé pour le collaborateur en entrée")
+	})
+	public ResponseEntity<CollaboraterDto> getByCollaboraterId(@PathVariable("collaboraterId") String collaboraterId) {
+
+		if (collaboraterId.length()>17) {
+			String msg = "id collaborateur : " + collaboraterId + "incorrect";
+			throw new ResponseStatusException(HttpStatus.NOT_MODIFIED, msg);
+		}
+		Collaborater collaborater = collaboraterManagment.findCollaboraterbyIdAnnuaire(collaboraterId);
+		if (collaborater == null) {
+			String msg = "Collaborateur non trouvé pour le collaborateur "+collaboraterId;
+			logger.info(msg);
+			return new ResponseEntity<CollaboraterDto>(new CollaboraterDto(), HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<CollaboraterDto>(mapperDomainToDto(collaborater), HttpStatus.OK);
+	}
 	
 	
 	@PostMapping("/list/criteria/{numberPage}/{sizePage}/{criteria}")
@@ -126,6 +148,7 @@ public class CollaboraterController {
 		return ResponseEntity.ok().header("count", String.valueOf(dto.size())).body(dto);
 //		return new ResponseEntity<List<CollaboraterDto>>(dto,HttpStatus.OK);
 	}
+
 	
 	
 	@PostMapping("/create")

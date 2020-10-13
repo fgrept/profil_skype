@@ -117,7 +117,7 @@ public class ItCorrespondantController {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, mise à jour effectuée"),
 			@ApiResponse(code = 400,message = "id annuaire incorrect en entrée"),
-			@ApiResponse(code = 404,message = "it correspondant non trouvé en base")
+			@ApiResponse(code = 204,message = "it correspondant non trouvé en base")
 	})
 	public ResponseEntity<ItCorrespondantDtoResult> getItCorrespondantById(@PathVariable("collaboraterId") String collaboraterId) {
 
