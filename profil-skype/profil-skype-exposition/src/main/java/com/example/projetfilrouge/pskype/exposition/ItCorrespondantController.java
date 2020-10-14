@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/v1/user")
-@Secured("ROLE_ADMIN")
+@Secured({"ROLE_USER","ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "It correspondant REST Controller : contient toutes les opérations pour manager un It correspondant")
 //@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
 public class ItCorrespondantController {
@@ -74,7 +74,7 @@ public class ItCorrespondantController {
 	 * @return
 	 */
 
-	
+	@Secured("ROLE_ADMIN")
 	@PostMapping("create")
 	@ApiOperation(value = "Crée un it correspondant")
 	@ApiResponses(value = {
@@ -180,7 +180,7 @@ public class ItCorrespondantController {
 		return ResponseEntity.ok().header("count", String.valueOf(listDto.size())).body(listDto);
 	}
 
-	
+	@Secured("ROLE_ADMIN")
 	@PutMapping("uprole/{id}/{role}")
 	@ApiOperation(value = "Met à jour un rôle à partir d'un id annuaire")
 	@ApiResponses(value = {
@@ -232,7 +232,8 @@ public class ItCorrespondantController {
 	 * @param oldPassword
 	 * @param newPassword
 	 * @return
-	 */	
+	 */
+
 	@PutMapping("/updatepassword/{id}/{oldpass}/{newpass}")
 	@ApiOperation(value = "Met à jour le mot de passe d'un utilisateur")
 	@ApiResponses(value = {
@@ -266,7 +267,7 @@ public class ItCorrespondantController {
 		}
 	}
 
-	
+	@Secured("ROLE_ADMIN")
 	@ApiOperation(value = "Supprime un utilisateur")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200,message = "Ok, suppression effectuée"),

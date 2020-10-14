@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/v1/collaborater")
-@Secured({"ROLE_RESP","ROLE_ADMIN"})
+@Secured({"ROLE_USER","ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "Collaborater REST Controller : contient toutes les opérations pour manager un collaborateur")
 //@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"})
 public class CollaboraterController {

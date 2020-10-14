@@ -35,7 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/v1/event")
-@Secured("ROLE_USER")
+@Secured({"ROLE_USER","ROLE_RESP","ROLE_ADMIN"})
 @Api(value = "Skype profile event REST Controller : contient toutes les opérations pour manager les événements d'un profil skype")
 //@CrossOrigin(origins="http://localhost:4200", allowedHeaders = "*", exposedHeaders = {"count"} )
 public class SkypeProfileEventController {
