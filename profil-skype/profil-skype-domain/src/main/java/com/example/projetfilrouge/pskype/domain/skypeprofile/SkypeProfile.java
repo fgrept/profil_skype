@@ -21,7 +21,7 @@ import java.util.Objects;
  */
 public class SkypeProfile {
 
-	//SIP : adresse mail skype. Ex : judicael.tige@live.bnpparibas.com
+	//SIP : adresse mail skype. Ex : martin.durand@live.example.com
 	private String SIP;
 	
 	private boolean enterpriseVoiceEnabled;
